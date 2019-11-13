@@ -1,0 +1,27 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es6",
+        "noImplicitAny": true,
+        "sourceMap": true,
+        "forceConsistentCasingInFileNames": true,
+        "noImplicitReturns": true,
+        "strictPropertyInitialization": false,
+        "declaration": true,
+        "pretty": true,
+        "strict": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true
+    },
+	"include": [
+		"generators/*",
+		"generators/*/*"
+	],
+	"exclude": [
+		"node_modules",
+		"**/*.spec.ts",
+		"templates"
+	]
+}

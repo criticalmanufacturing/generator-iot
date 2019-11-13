@@ -1,0 +1,8 @@
+.vscode
+*.ts
+!*.d.ts
+test
+coverage
+tsconfig.json
+tslint.json
+.git*
