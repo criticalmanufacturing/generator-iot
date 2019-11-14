@@ -86,6 +86,7 @@ If you are extending this package, it is easier to have it linked locally. Run t
 - Removed Dev dependency from driver package.json
 - Added gulpfile.js into driver
 - Fixed compiler errors in driver
+- Added missing entries in config (monitorApplication, SecurityPortal)
 
 **1.4.3**
 - Added gulp + codelyzer as devDependencies for taskPackage

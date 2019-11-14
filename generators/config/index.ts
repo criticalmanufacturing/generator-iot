@@ -5,8 +5,9 @@ class GeneratorConfig extends ConnectIoTGenerator {
 
     private values: any = {
         fileName: "config.json",
-        managerId: "JSValidationManager02",
-        cache: this.destinationPath("cache"),
+        managerId: "Manager01",
+        cache: this.destinationPath("cache").replace(/\\/g, "/"),
+        monitorApplication: this.destinationPath("cache").replace(/\\/g, "/")+ "/MonitorApplication/src/index.js",
 
         repository: "NPM",
         npm: {
@@ -15,7 +16,7 @@ class GeneratorConfig extends ConnectIoTGenerator {
             token: "",
         },
         directory: {
-            path: this.destinationPath("repository"),
+            path: this.destinationPath("repository").replace(/\\/g, "/"),
         },
 
         system: {
@@ -26,10 +27,9 @@ class GeneratorConfig extends ConnectIoTGenerator {
             useSsl: false,
             isLoadBalancingEnabled: false,
             authentication: {
-                mode: "Password",
-                domain: "dom",
-                username: "user",
-                password: "pass",
+                type: "Password",
+                settings: {
+                }
             }
         },
 
@@ -63,6 +63,7 @@ class GeneratorConfig extends ConnectIoTGenerator {
 
         // Basic information request
         this.values.managerId = await this.askScalar("What is the Automation Manager Id?", ValueType.Text, this.values.managerId);
+        this.values.monitorApplication = await this.askScalar("Where is the monitor application installed (full path to index.js)?", ValueType.Text, this.values.monitorApplication);
 
         // Repository
         this.log("");
@@ -91,11 +92,15 @@ class GeneratorConfig extends ConnectIoTGenerator {
         this.values.system.useSsl = Boolean(await this.askScalar("Are REST calls using SSL?", ValueType.Confirm, this.values.system.useSsl));
         this.values.system.timeout = Number(await this.askScalar("What is the REST calls timeout?", ValueType.Text, this.values.system.timeout));
 
-        this.values.system.authentication.mode = await this.askChoice("What is the authentication type?", ["Password"], this.values.system.authentication.mode);
-        if (this.values.system.authentication.mode === "Password") {
-            this.values.system.authentication.domain = await this.askScalar("  What is the user Domain name?", ValueType.Text, this.values.system.authentication.domain);
-            this.values.system.authentication.username = await this.askScalar("  What is the user name?", ValueType.Text, this.values.system.authentication.username);
-            this.values.system.authentication.password = await this.askScalar("  What is the user password?", ValueType.Password, this.values.system.authentication.password);
+        this.values.system.authentication.type = await this.askChoice("What is the authentication type?", ["Password", "SecurityPortal"], this.values.system.authentication.type);
+        if (this.values.system.authentication.type === "Password") {
+            this.values.system.authentication.settings.domain = await this.askScalar("  What is the user Domain name?", ValueType.Text, "DOMAIN");
+            this.values.system.authentication.settings.username = await this.askScalar("  What is the user name?", ValueType.Text, "user");
+            this.values.system.authentication.settings.password = await this.askScalar("  What is the user password?", ValueType.Password, "pass");
+        } else if (this.values.system.authentication.type === "SecurityPortal") {
+            this.values.system.authentication.settings.clientId = await this.askScalar("  What is the Id of the client?", ValueType.Text, "MES");
+            this.values.system.authentication.settings.accessToken = await this.askScalar("  What is the generated long term Access Token?", ValueType.Text, "");
+            this.values.system.authentication.settings.openIdConfiguration = await this.askScalar("  What is the Security Portal OpenId address?", ValueType.Text, `http://${this.values.system.address}:11000/tenant/${this.values.system.tenantName}/.well-known/openid-configuration`);
         }
 
         // Log Transports
