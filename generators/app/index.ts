@@ -28,6 +28,7 @@ class GeneratorApp extends ConnectIoTGenerator {
         this.log("  " + chalk.yellow("task") + "         -> Create the skeleton for a Task");
         this.log("  " + chalk.yellow("converter") + "    -> Create the skeleton for a Converter");
         this.log("  " + chalk.yellow("driver") + "       -> Create a basic package code for a new Protocol Driver");
+        this.log("  " + chalk.yellow("fontgen") + "      -> Create a font based on SVG icons to use with Tasks Packages");
         this.log("");
     }
 
