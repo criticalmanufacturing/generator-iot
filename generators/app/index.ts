@@ -1,8 +1,8 @@
 import * as path from "path";
 import { ConnectIoTGenerator } from "../base";
-import chalk from "chalk";
 
-var yosay = require('yosay');
+const chalk = require("chalk");
+var yosay = require("yosay");
 import { Answers } from "yeoman-generator";
 
 class GeneratorApp extends ConnectIoTGenerator {

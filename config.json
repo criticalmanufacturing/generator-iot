@@ -1,0 +1,53 @@
+{
+  "id": "Manager01",
+  "cache": "N:/CMF/generator-iot/cache",
+  "hostName": "localhost",
+  "monitorApplication": "N:/CMF/generator-iot/cache/MonitorApplication/src/index.js",
+  "repository": {
+    "type": "Npm",
+    "settings": {
+      "url": "http://127.0.0.1:4873/",
+      "tokenType": "Bearer",
+      "token": ""
+    }
+  },
+  "system": {
+    "tenantName": "CoreDevelopment",
+    "address": "localhost",
+    "port": 9083,
+    "timeout": 60000,
+    "useSsl": false,
+    "isLoadBalancingEnabled": false,
+    "authentication": {
+      "type": "SecurityPortal",
+      "settings": {
+        "clientId": "MES",
+        "accessToken": "",
+        "openIdConfiguration": "http://localhost:11000/tenant/CoreDevelopment/.well-known/openid-configuration"
+      }
+    }
+  },
+  "_storage": {
+    "type": "Directory",
+    "settings": {
+      "path": "c:/Persistency",
+      "retentionTime": 0
+    }
+  },
+  "logging": [
+    {
+      "id": 62542,
+      "type": "File",
+      "options": {
+        "level": "info",
+        "filename": "",
+        "dirname": "",
+        "maxSize": "10m",
+        "maxFiles": "30d"
+      },
+      "applications": [
+        "*"
+      ]
+    }
+  ]
+}

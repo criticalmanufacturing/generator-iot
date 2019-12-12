@@ -1,5 +1,5 @@
 import { ConnectIoTGenerator, ValueType } from "../base";
-import chalk from "chalk";
+const chalk = require("chalk");
 
 class GeneratorConfig extends ConnectIoTGenerator {
 
@@ -60,11 +60,11 @@ class GeneratorConfig extends ConnectIoTGenerator {
      */
     // https://www.npmjs.com/package/inquirer
     async prompting() {
-
         // Basic information request
         this.values.managerId = await this.askScalar("What is the Automation Manager Id?", ValueType.Text, this.values.managerId);
         this.values.monitorApplication = await this.askScalar("Where is the monitor application installed (full path to index.js)?", ValueType.Text, this.values.monitorApplication);
 
+        
         // Repository
         this.log("");
         this.log(chalk.bold.bgCyan("Repository settings"));
@@ -175,6 +175,7 @@ class GeneratorConfig extends ConnectIoTGenerator {
         configData.id = this.values.managerId;
         configData.cache = this.values.cache;
         configData.hostName = "localhost";
+        configData.monitorApplication = this.values.monitorApplication;
 
         // Repository section
         configData.repository = {};

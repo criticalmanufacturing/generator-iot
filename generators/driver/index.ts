@@ -1,5 +1,6 @@
 import { ConnectIoTGenerator, ValueType } from "../base";
-import chalk from "chalk";
+
+const chalk = require("chalk");
 
 class DriverConfig extends ConnectIoTGenerator {
 
