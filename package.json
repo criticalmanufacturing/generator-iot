@@ -1,6 +1,6 @@
 {
   "name": "@criticalmanufacturing/generator-iot",
-  "version": "1.4.4",
+  "version": "1.5.0",
   "description": "Connect IoT Scaffolding",
   "files": [
     "generators/*.js",
@@ -13,17 +13,20 @@
     "yeoman-generator"
   ],
   "dependencies": {
-    "chalk": "^2.4.1",
-    "yeoman-generator": "^2.0.5",
-    "yo": "^2.0.3",
-    "yosay": "^1.2.0"
+    "chalk": "^3.0.0",
+    "punycode": "^2.1.1",
+    "webfonts-generator": "^0.4.0",
+    "yeoman-generator": "^4.2.0",
+    "yo": "^3.1.1",
+    "yosay": "^2.0.2"
   },
   "devDependencies": {
     "@types/chalk": "^2.2.0",
-    "@types/node": "^9.4.0",
-    "@types/yeoman-generator": "^2.0.1",
+    "@types/node": "^12.12.17",
+    "@types/punycode": "^2.1.0",
+    "@types/yeoman-generator": "^3.1.4",
     "@types/yosay": "0.0.29",
-    "typescript": "^2.7.1"
+    "typescript": "^3.7.3"
   },
   "license": "GPL-3.0",
   "author": "Critical Manufacturing",

@@ -65,7 +65,7 @@ export class ConnectIoTGenerator extends Generator {
             default: def,
         }]);
 
-        return (<IoTValueType>IoTValueType[answer.result]);
+        return (<IoTValueType>(<any>IoTValueType)[answer.result]);
     }
 
     /**
