@@ -1,4 +1,5 @@
 import { ConnectIoTGenerator, ValueType } from "../base";
+import * as path from "path";
 
 class GeneratorTasksPackage extends ConnectIoTGenerator {
 
@@ -54,6 +55,18 @@ class GeneratorTasksPackage extends ConnectIoTGenerator {
         files.forEach((template) => {
             this.fs.copyTpl(this.templatePath("test", "unit", template), this.destinationPath(this.values.directory, "test", "unit", template), this.values);
         });
+
+        // We also need to update the root's .dev-tasks.js so this new package is included in the global install and build tasks
+        const possiblePaths = [".dev-tasks.json", path.join("..", ".dev-tasks.json")];
+        let filePath = possiblePaths.map(p => `${this.destinationPath(p)}`).find(p => this.fs.exists(p));
+
+        if (filePath != null) {
+            let fileContent = this.fs.readJSON(this.destinationPath(filePath));
+            if (fileContent.packages.indexOf(this.values.directory) < 0) {
+            fileContent.packages.push(this.values.directory);  
+            }
+            this.fs.writeJSON(filePath, fileContent);  
+        }
     }
 
     install() {
