@@ -10,3 +10,4 @@ coverage
 tsconfig.json
 tslint.json
 .git*
+font/svg

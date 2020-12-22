@@ -1,10 +1,9 @@
 import * as yargs from "yargs";
 import * as path from "path";
-import * as io from "fs";
 import { container } from "./inversify.config";
-import { TYPES as COMMUNICATION_TYPES } from "@criticalmanufacturing/connect-iot-driver";
+import { handleCompiledAddons, ConfigurationSectionDriver } from "@criticalmanufacturing/connect-iot-driver";
 import { Runner } from "@criticalmanufacturing/connect-iot-driver";
-import { TYPES as COMMON_TYPES, Logger, Utils, Communication } from "@criticalmanufacturing/connect-iot-common";
+import { TYPES as COMMON_TYPES, Logger, Utils, Configuration } from "@criticalmanufacturing/connect-iot-common";
 
 
 yargs.usage("Usage: $0 [options]").wrap(0);
@@ -32,6 +31,7 @@ yargs.help("h").alias("h", "help");
 let logger: Logger;
 if (yargs.argv) {
     logger = container.get<Logger>(COMMON_TYPES.Logger);
+    const configuration = container.get<Configuration.Configuration>(COMMON_TYPES.Configuration);
 
     let configurationFile: string = <string>yargs.argv.config;
     if (!path.isAbsolute(configurationFile)) {
@@ -39,30 +39,29 @@ if (yargs.argv) {
     }
 
     // Prepare logger
-    container.bind(COMMUNICATION_TYPES.ConfigurationFile).toConstantValue(configurationFile);
     logger.setIdentificationTokens({
+        id: <string>yargs.argv.id,
         applicationName: "Driver<%= identifier %>",
         pid: process.pid,
         componentId: yargs.argv.componentId || "Driver<%= identifier %>",
         entityName: yargs.argv.entityName,
     });
-    logger.setLogTransportsFromConfigurationFile(configurationFile);
+
+    // Parse and validate configuration
+    configuration.setup(configurationFile);
+    configuration.registerConfiguration(new ConfigurationSectionDriver(logger));
+    configuration.registerConfiguration(new Configuration.ConfigurationSectionSslConfig({ sectionPath: "driver/processCommunication", description: "Process communication with Controller (from driver)", order: 31, validateAsServer: true, dumpSection: "processCommunication"}, logger));
+    configuration.registerConfiguration(new Configuration.ConfigurationSectionSslConfig({ sectionPath: "monitor/processCommunication", description: "Process communication with Monitor", order: 32, validateAsServer: false, dumpSection: "monitorProcessCommunication"}, logger));
+    configuration.parseAndValidate();
+
+    // Inject extra information of the driver (the sections are assured by the previous calls)
+    configuration.data.driver.monitorProcessCommunication = configuration.data.monitor.processCommunication;
+
+    logger.setLogTransports(configuration.data.logging);
 
     logger.info(`Starting <%= identifier %> driver with pid "${process.pid}".`);
     logger.debug(`Command line: ${Utils.objectToString(yargs.argv)}`);
     logger.info(`  ConfigurationFile='${configurationFile}'`);
-    let configurationObject = undefined;
-    let monitorSslConfig: Communication.SslConfig = Object.assign({}, Communication.sslConfigDefaults);
-    let driversSslConfig: Communication.SslConfig = Object.assign({}, Communication.sslConfigDefaults);
-    if (io.existsSync(configurationFile)) {
-        configurationObject = JSON.parse(io.readFileSync(configurationFile, "utf8"));
-        if (configurationObject) {
-            if (configurationObject.processCommunication != null) {
-                monitorSslConfig = Communication.validateSslConfig(Object.assign(monitorSslConfig, configurationObject.processCommunication.monitor || { }), true);
-                driversSslConfig = Communication.validateSslConfig(Object.assign(driversSslConfig, configurationObject.processCommunication.driver || { }), true);
-            }
-        }
-    }
 
     // Run Driver Runner (Connection with Monitor, and interface with controller)
     Runner.run({
@@ -72,7 +71,7 @@ if (yargs.argv) {
             host: <string>yargs.argv.monitorHost,
             port: <number>yargs.argv.monitorPort,
             securityToken: <string>yargs.argv.monitorToken,
-            sslConfig: <Communication.SslConfig>monitorSslConfig
+            sslConfig: configuration.data.driver.monitorProcessCommunication,
         },
         device: {
             controller: {
@@ -80,14 +79,22 @@ if (yargs.argv) {
                 serverHost: <string>yargs.argv.serverHost,
                 serverPort: <number>yargs.argv.serverPort
             },
-            sslConfiguration: <Communication.SslConfig>driversSslConfig
+            sslConfiguration: configuration.data.driver.processCommunication,
         }
     }).then(() => {
         logger.info(`<%= identifier %> Driver process started with success`);
-    }).catch((error: Error) => {
+    }).catch((error) => {
         logger.error(`<%= identifier %> Driver process failed to start!`);
         logger.error(error.message);
-        process.exit(1);
+        logger.error(error.stack);
+
+        const internalLogger: any = (<any>(logger))._winston;
+        internalLogger.on("finish", () => {
+            process.exit(1);
+        });
+        setTimeout(() => {
+            internalLogger.end();
+        }, 2000);
     });
 }
 

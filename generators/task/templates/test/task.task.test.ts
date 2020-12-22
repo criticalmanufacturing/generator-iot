@@ -54,13 +54,13 @@ describe("<%= className %> Task tests", () => {
                     }
 
                     // Trigger the test
-                    async onChanges(changes: Task.Changes): Promise<void> {
-                        validate(changes);
+                    async onInit(): Promise<void> {
+                        trigger(this._outputs);
                     }
 
                     // Validate the results
-                    async onInit(): Promise<void> {
-                        trigger(this._outputs);
+                    async onChanges(changes: Task.Changes): Promise<void> {
+                        validate(changes);
                     }
                 })
             }
