@@ -7,7 +7,7 @@ class DriverConfig extends ConnectIoTGenerator {
     private values: any = {
         directory: "driver-sample",
         packageName: "@criticalmanufacturing/connect-iot-driver-sample",
-        packageVersion: "7.2.0",
+        packageVersion: "8.0.0",
         identifier: "Sample",
         identifierCamel: "",
         hasCommands: true
@@ -77,7 +77,6 @@ class DriverConfig extends ConnectIoTGenerator {
     }
 
     end() {
-        this.log("For this version, it is recommended to run the command 'npm dedupe' after installing the npm packages.");
     }
 }
 
