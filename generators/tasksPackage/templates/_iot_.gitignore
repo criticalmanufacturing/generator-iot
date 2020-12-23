@@ -48,3 +48,5 @@ coverage/
 test/e2e/obj/
 test/**/bin
 .connect_iot_package_done
+!font/**/*.css
+!font/svg/font.js
