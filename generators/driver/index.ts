@@ -7,7 +7,7 @@ class DriverConfig extends ConnectIoTGenerator {
     private values: any = {
         directory: "driver-sample",
         packageName: "@criticalmanufacturing/connect-iot-driver-sample",
-        packageVersion: "6.2.0",
+        packageVersion: "8.0.0",
         identifier: "Sample",
         identifierCamel: "",
         hasCommands: true
@@ -47,6 +47,12 @@ class DriverConfig extends ConnectIoTGenerator {
         files.forEach((template) => {
             this.fs.copyTpl(this.templatePath(template), this.destinationPath(this.values.directory, template), this.values);
         });
+
+         // Visual Studio settings
+         files = ["settings.json"];
+         files.forEach((template) => {
+             this.fs.copyTpl(this.templatePath("_iot_.vscode", template), this.destinationPath(this.values.directory, ".vscode", template), this.values);
+         });
 
         // Driver implementation classes
         files = ["index.ts", "types.ts", "inversify.config.ts", "communicationSettings.ts", "driverImplementation.ts"];

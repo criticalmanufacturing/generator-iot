@@ -5,7 +5,7 @@ class GeneratorTasksPackage extends ConnectIoTGenerator {
     private values: any = {
         directory: "controller-engine-custom-tasks",
         packageName: "@criticalmanufacturing/connect-iot-controller-engine-custom-tasks",
-        packageVersion: "6.4.0",
+        packageVersion: "8.0.0",
     };
 
     constructor(args: any, opts: any) {
@@ -47,6 +47,12 @@ class GeneratorTasksPackage extends ConnectIoTGenerator {
         files = ["metadata.ts"];
         files.forEach((template) => {
             this.fs.copyTpl(this.templatePath("src", template), this.destinationPath(this.values.directory, "src", template), this.values);
+        });
+
+        // Font classes
+        files = ["font.js"];
+        files.forEach((template) => {
+            this.fs.copyTpl(this.templatePath("font/svg", template), this.destinationPath(this.values.directory, "font/svg", template), this.values);
         });
 
         // Tests

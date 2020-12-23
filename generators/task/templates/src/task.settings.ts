@@ -54,6 +54,8 @@ export class <%= className %>Settings extends TaskSettingsBase implements ng.OnI
 
     /** Triggered when the task is created and define the default values */
     public ngOnInit(): void {
+        const currentSettings = Object.assign({}, this.settings);
+        Object.assign(this.settings, <%= className %>Task.SETTINGS_DEFAULTS, currentSettings);
 
         if (this.task != null) {
             this._taskInstance = (<any>this.task)._taskInstance;

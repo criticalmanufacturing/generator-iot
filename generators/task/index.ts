@@ -7,6 +7,8 @@ class GeneratorTask extends ConnectIoTGenerator {
         className: "",                    // pascal case
         title: "Black Box",
         icon: "icon-core-connect-iot-lg-logmessage",
+        hasInputs: false,
+        hasOutputs: false,
         isForProtocol: false,
     };
 
@@ -28,6 +30,8 @@ class GeneratorTask extends ConnectIoTGenerator {
         this.values.name = this.camelCaseValue(await this.askScalar("What is task name?", ValueType.Text, this.values.name));
         this.values.title = await this.askScalar("What is the task title?", ValueType.Text, this.values.title);
         this.values.icon = await this.askScalar("What is the icon name?", ValueType.Text, this.values.icon);
+        this.values.hasInputs = await this.askScalar("Will this task have dynamic inputs?", ValueType.Confirm, this.values.hasInputs);
+        this.values.hasOutputs = await this.askScalar("Will this task have dynamic outputs?", ValueType.Confirm, this.values.hasOutputs);
         this.values.isForProtocol = await this.askScalar("Is this task used by the protocol driver?", ValueType.Confirm, this.values.isForProtocol);
 
         // Values converted

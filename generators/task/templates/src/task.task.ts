@@ -1,6 +1,13 @@
 import { Task, Dependencies, System, DI, TYPES, Utilities } from "@criticalmanufacturing/connect-iot-controller-engine";
+import { TaskDefaultSettings } from "@criticalmanufacturing/connect-iot-controller-engine/src/system";
 import i18n from "./i18n/<%= name %>.default";
 
+/** Default values for settings */
+export const SETTINGS_DEFAULTS: <%= className %>Settings = {
+    inputs: [],
+    outputs: [],
+    message: ""
+}
 
 /**
  * @whatItDoes
@@ -58,6 +65,8 @@ export class <%= className %>Task implements Task.TaskInstance, <%= className %>
 
 
     /** Settings */
+    inputs: Task.TaskInput[];
+    outputs: Task.TaskOutput[];
     /** Properties Settings */
     message: string;
 
@@ -104,6 +113,6 @@ export class <%= className %>Task implements Task.TaskInstance, <%= className %>
 
 // Add settings here
 /** <%= className %> Settings object */
-export interface <%= className %>Settings {
+export interface <%= className %>Settings extends TaskDefaultSettings {
     message: string;
 }

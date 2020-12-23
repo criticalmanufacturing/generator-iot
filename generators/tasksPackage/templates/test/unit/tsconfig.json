@@ -6,16 +6,21 @@
         "types": [
             "reflect-metadata", "node", "mocha"
         ],
-        "noImplicitAny": false,
         "sourceMap": true,
         "forceConsistentCasingInFileNames": true,
-        "strictPropertyInitialization": false,
-        "noImplicitReturns": false,
+        "noImplicitReturns": true,
         "declaration": true,
         "pretty": true,
-        "strict": false,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "moduleResolution": "node"        
+        "moduleResolution": "node",
+        // strict rules:
+        "noImplicitAny": false,
+        "noImplicitThis": false,
+        "alwaysStrict": true,
+        "strictBindCallApply": false,
+        "strictNullChecks": false,
+        "strictFunctionTypes": false,
+        "strictPropertyInitialization": false    
     }
 }
