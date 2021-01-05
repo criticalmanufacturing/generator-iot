@@ -5,6 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "build": "tsc",
+    "watchPackage": "tsc --preserveWatchOutput -w",
+    "watchTests": "tsc -p test/unit --preserveWatchOutput -w",
     "start": "npm run build -- -w | node node_modules/nodemon/bin/nodemon src/index.js --ignore test/",
     "test": "node node_modules/mocha/bin/mocha test/**/*.test.js test/*.test.js --timeout 30000 --exit",
     "cover": "node node_modules/istanbul/lib/cli cover node_modules/mocha/bin/_mocha test/**/*.test.js test/*.test.js",
