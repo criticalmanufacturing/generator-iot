@@ -40,8 +40,8 @@
     "typescript": "^3.7.2"
   },
   "dependencies": {
-    "@criticalmanufacturing/connect-iot-common": "dev-72x",
-    "@criticalmanufacturing/connect-iot-driver": "dev-72x",
+    "@criticalmanufacturing/connect-iot-common": "<ChangeThisForTheTargetVersion>",
+    "@criticalmanufacturing/connect-iot-driver": "<ChangeThisForTheTargetVersion>",
     "inversify": "^5.0.1",
     "moment": "^2.24.0",
     "reflect-metadata": "~0.1.10",
