@@ -5,6 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "build": "tsc",
+    "watchPackage": "tsc --preserveWatchOutput -w",
+    "watchTests": "tsc -p test/unit --preserveWatchOutput -w",
     "start": "npm run build -- -w | node node_modules/nodemon/bin/nodemon src/index.js --ignore test/",
     "test": "node node_modules/mocha/bin/mocha test/**/*.test.js test/*.test.js --timeout 30000 --exit",
     "cover": "node node_modules/istanbul/lib/cli cover node_modules/mocha/bin/_mocha test/**/*.test.js test/*.test.js",
@@ -21,8 +23,8 @@
   "devDependencies": {
     "@types/chai": "4.2.11",
     "@types/chai-spies": "1.0.1",
-	"@types/core-js": "2.5.0",
-	"@types/fs-extra": "5.0.5",
+	  "@types/core-js": "2.5.0",
+    "@types/fs-extra": "5.0.5",
     "@types/mocha": "7.0.2",
     "@types/node": "12.12.6",
     "@types/semver": "7.1.0",
@@ -38,8 +40,8 @@
     "typescript": "3.8.3"
   },
   "dependencies": {
-    "@criticalmanufacturing/connect-iot-common": "dev-80x",
-    "@criticalmanufacturing/connect-iot-driver": "dev-80x",
+    "@criticalmanufacturing/connect-iot-common": "<ChangeThisForTheTargetVersion>",
+    "@criticalmanufacturing/connect-iot-driver": "<ChangeThisForTheTargetVersion>",
     "inversify": "5.0.1",
     "moment": "2.26.0",
     "reflect-metadata": "0.1.13",

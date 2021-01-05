@@ -29,10 +29,10 @@
     "@types/node": "12.12.6",
     "chai": "4.2.0",
     "chai-spies": "1.0.0",
-    "cmf.core": "dev-80x",
-    "cmf.core.business.controls": "dev-80x",
-    "cmf.core.connect.iot": "dev-80x",
-    "cmf.core.controls": "dev-80x",
+    "cmf.core": "<ChangeThisForTheTargetVersion>",
+    "cmf.core.business.controls": "<ChangeThisForTheTargetVersion>",
+    "cmf.core.connect.iot": "<ChangeThisForTheTargetVersion>",
+    "cmf.core.controls": "<ChangeThisForTheTargetVersion>",
     "istanbul": "0.4.5",
     "mocha": "7.1.1",
     "mocha-junit-reporter": "1.23.3",
@@ -44,7 +44,7 @@
     "codelyzer": "4.5.0"
   },
   "dependencies": {
-    "@criticalmanufacturing/connect-iot-controller-engine": "dev-80x",
+    "@criticalmanufacturing/connect-iot-controller-engine": "<ChangeThisForTheTargetVersion>",
     "inversify": "5.0.1",
     "moment": "2.26.0"
   },
