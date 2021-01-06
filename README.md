@@ -16,11 +16,9 @@ npm i -g @criticalmanufacturing/generator-iot@80x
 ```
 > **Note** Starting from 7.2.0, each combination of Critical Manufacturing MES version (Major + Minor) will have a dedicated generator to make it easier to keep compatibility.
 >
-> For versions 7.2.0, 7.2.1, 7.2.2, ..., 7.2.\*,  use the tag `72x` (
-> `npm i -g @criticalmanufacturing/generator-iot@72x`
+> For versions 7.2.0, 7.2.1, 7.2.2, ..., 7.2.\*, use the tag `72x` (`npm i -g @criticalmanufacturing/generator-iot@72x`)
 >
-> For versions 8.0.0, 8.0.1, 8.0.2, ..., 8.0.\*, use the tag `80x`
-> `npm i -g @criticalmanufacturing/generator-iot@80x`
+> For versions 8.0.0, 8.0.1, 8.0.2, ..., 8.0.\*, use the tag `80x` (`npm i -g @criticalmanufacturing/generator-iot@80x`)
 
 # Apps
 
