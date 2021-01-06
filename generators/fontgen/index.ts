@@ -8,7 +8,7 @@ class GeneratorFontGen extends ConnectIoTGenerator {
         super(args, opts);
 
         if (!this.fs.exists(this.destinationPath("font.js"))) {
-            this.env.error(new Error(`Unable to find 'font.js' file. Make sure you are running the command from the location where you have the fonts (SVGs + font.js metadata file)`));
+            this.env.error(new Error(`Unable to find 'font.js' file in the current directory. Make sure you are running the command from the location where you have the fonts (SVGs + font.js metadata file)`));
         }
     }
 
