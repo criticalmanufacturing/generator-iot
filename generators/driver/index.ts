@@ -44,7 +44,7 @@ class DriverConfig extends ConnectIoTGenerator {
             this.fs.copyTpl(this.templatePath(key), this.destinationPath(this.values.directory, value), this.values);
         });
 
-        let files: string[] = ["package.json", "README.md", "tsconfig.json", "tslint.json", "gulpfile.js"];
+        let files: string[] = ["package.json", "README.md", "tsconfig.json", "tslint.json", "gulpfile.js", "packConfig.json"];
         files.forEach((template) => {
             this.fs.copyTpl(this.templatePath(template), this.destinationPath(this.values.directory, template), this.values);
         });
