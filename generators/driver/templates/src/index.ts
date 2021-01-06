@@ -45,6 +45,7 @@ if (yargs.argv) {
         pid: process.pid,
         componentId: yargs.argv.componentId || "Driver<%= identifier %>",
         entityName: yargs.argv.entityName,
+        managerId: yargs.argv.managerId,
     });
 
     // Parse and validate configuration
@@ -83,10 +84,10 @@ if (yargs.argv) {
         }
     }).then(() => {
         logger.info(`<%= identifier %> Driver process started with success`);
-    }).catch((error) => {
+    }).catch((error: Error) => {
         logger.error(`<%= identifier %> Driver process failed to start!`);
         logger.error(error.message);
-        logger.error(error.stack);
+        logger.error(error.stack || "<UnknownCallStack>");
 
         const internalLogger: any = (<any>(logger))._winston;
         internalLogger.on("finish", () => {

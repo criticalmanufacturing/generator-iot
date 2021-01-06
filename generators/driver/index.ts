@@ -37,7 +37,8 @@ class DriverConfig extends ConnectIoTGenerator {
             ["_iot_.gitattributes", ".gitattributes"],
             ["_iot_.gitignore", ".gitignore"],
             ["_iot_.npmignore", ".npmignore"],
-            ["_iot_.npmrc", ".npmrc"]
+            ["_iot_.npmrc", ".npmrc"],
+            ["_iot_.connect_iot_package_done", ".connect_iot_package_done"],
         ]);
         filesWithRename.forEach((value, key) => {
             this.fs.copyTpl(this.templatePath(key), this.destinationPath(this.values.directory, value), this.values);
@@ -49,7 +50,7 @@ class DriverConfig extends ConnectIoTGenerator {
         });
 
          // Visual Studio settings
-         files = ["settings.json"];
+         files = ["settings.json", "launch.json"];
          files.forEach((template) => {
              this.fs.copyTpl(this.templatePath("_iot_.vscode", template), this.destinationPath(this.values.directory, ".vscode", template), this.values);
          });

@@ -13,7 +13,9 @@
     "vs:buildAndTest": "npm run build && npm run vs:test",
     "vs:test": "node node_modules/istanbul/lib/cli cover node_modules/mocha/bin/_mocha --report cobertura --report lcov test/*.js test/**/*.js -- --timeout 30000 --exit --reporter mocha-junit-reporter --reporter-options mochaFile=./test/test-results.xml",
     "pretest": "npm run build",
-    "watch": "npm run build -- -w | node node_modules/mocha/bin/mocha --timeout 30000 --exit --reporter min -w test/*.test.js test/**/*.test.js"
+    "watch": "npm run build -- -w | node node_modules/mocha/bin/mocha --timeout 30000 --exit --reporter min -w test/*.test.js test/**/*.test.js",
+
+    "postinstall": "ren node_modules\\vinyl-fs\\node_modules\\graceful-fs _graceful-fs_incompatible_with_node12"
   },
   "keywords": [
     "CMF",
@@ -21,6 +23,7 @@
     "Agent"
   ],
   "devDependencies": {
+    "@criticalmanufacturing/dev-tasks": "dev",
     "@types/chai": "4.2.11",
     "@types/chai-spies": "1.0.1",
 	  "@types/core-js": "2.5.0",
@@ -30,6 +33,8 @@
     "@types/semver": "7.1.0",
     "@types/uuid": "7.0.3",
     "@types/yargs": "15.0.4",
+    "graceful-fs": "4.2.3",
+    "gulp": "3.9.1",
     "chai": "4.2.0",
     "chai-spies": "1.0.0",
     "istanbul": "0.4.5",

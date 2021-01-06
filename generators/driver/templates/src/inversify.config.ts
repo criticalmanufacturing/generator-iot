@@ -7,10 +7,10 @@ import { <%= identifier %>DeviceDriver } from "./driverImplementation";
 
 const container = new Container();
 container.parent = driverContainer;
-container.parent.bind<Container>(TYPES.Injector).toConstantValue(container);
+container.parent?.bind<Container>(TYPES.Injector).toConstantValue(container);
 
 container.bind("dummy").toConstantValue("dummy"); // Needed to bypass constructor issue with node 12.16 and eventemitter
 // Must place in parent otherwise the driver(common) will not find this
-container.parent.bind<DeviceDriver>(COMMUNICATION_TYPES.Device.Driver).to(<%= identifier %>DeviceDriver).inSingletonScope();
+container.parent?.bind<DeviceDriver>(COMMUNICATION_TYPES.Device.Driver).to(<%= identifier %>DeviceDriver).inSingletonScope();
 
 export { container };
