@@ -11,7 +11,8 @@ For versions 8.0.0, 8.0.1, 8.0.2, ..., 8.0.\*, use the tag `80x` to install and 
 ```npm i -g @criticalmanufacturing/generator-iot@80x```
 
 <br>Each version will have it's own dedicated branch
-https://github.com/criticalmanufacturing/generator-iot/tree/72x<br>
+https://github.com/criticalmanufacturing/generator-iot/tree/72x
+
 https://github.com/criticalmanufacturing/generator-iot/tree/80x<br>
 ...
 <br><br><br><br>
