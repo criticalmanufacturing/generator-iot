@@ -39,6 +39,7 @@ jspm_packages
 # Custom Ignore settings
 *.js
 !gulpfile.js
+!font.js
 *.map
 *.d.ts
 test-results.xml
