@@ -20,9 +20,6 @@ class GeneratorApp extends ConnectIoTGenerator {
 
         this.log(this.usage()); // .help() show all command line parameters 
         this.log("");
-        this.log(chalk.cyan("Setup apps:"));
-        this.log("  " + chalk.yellow("config") + "    -> Create a configuration file to use with Automation Manager");
-        this.log("");
         this.log(chalk.cyan("Development apps:"));
         this.log("  " + chalk.yellow("tasksPackage") + " -> Create a new basic package code for custom Tasks/Converters");
         this.log("  " + chalk.yellow("task") + "         -> Create the skeleton for a Task");

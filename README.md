@@ -1,6 +1,22 @@
 Connect IoT Yeoman Generator
 ========= 
 
+# Generator Versioning
+Starting from 7.2.0, each combination of Critical Manufacturing MES version (Major + Minor) will have a dedicated generator to make it easier to keep compatibility.
+
+For versions 7.2.0, 7.2.1, 7.2.2, ..., 7.2.\*, use the tag `72x` to install and update the generators<br>
+```npm i -g @criticalmanufacturing/generator-iot@72x```
+
+For versions 8.0.0, 8.0.1, 8.0.2, ..., 8.0.\*, use the tag `80x` to install and update the generators<br>
+```npm i -g @criticalmanufacturing/generator-iot@80x```
+
+<br>Each version will have it's own dedicated branch
+https://github.com/criticalmanufacturing/generator-iot/tree/72x
+https://github.com/criticalmanufacturing/generator-iot/tree/80x<br>
+...
+<br><br><br><br>
+
+
 **generator-iot** is a set of scaffolding templates that enable CMF customization teams, partners and customers to easily start a new task, converter or protocol driver within `Critical Manufacturing MES` Equipment Integration module (Connect IoT).
 
 Getting Started
@@ -26,15 +42,6 @@ For both multiple and single choice, use the cursor (Up/Down) to move between th
 
 All questions are considered answered when the Enter key is pressed.
 
-## Config
-The `Connect IoT` architecture require a configuration file with definitions and instruction mandatory. This App helps creating it.
-
-On the location where you want to store the configs, open a terminal window and run:
-
-```
-yo @criticalmanufacturing/iot:config
-```
-Answer all questions and the file will be created and can be used immediately.
 
 ## tasksPackage
 Use this app to create a new custom package structure help you getting started. Of course, you still need to implement the tasks and converters (there are also apps to help you)
