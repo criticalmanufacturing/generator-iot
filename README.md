@@ -12,9 +12,16 @@ npm i -g yo
 
 To start using this generator, it is advisable to have it installed globally (-g setting in NPM).
 ```
-npm i -g @criticalmanufacturing/generator-iot
+npm i -g @criticalmanufacturing/generator-iot@72x
 ```
+> **Note** Starting from 7.2.0, each combination of Critical Manufacturing MES version (Major + Minor) will have a dedicated generator to make it easier to keep compatibility.
+>
+> For versions 7.2.0, 7.2.1, 7.2.2, ..., 7.2.\*, use the tag `72x` (`npm i -g @criticalmanufacturing/generator-iot@72x`)
+>
+> For versions 8.0.0, 8.0.1, 8.0.2, ..., 8.0.\*, use the tag `80x` (`npm i -g @criticalmanufacturing/generator-iot@80x`)
+
 # Apps
+
 To see at any time, the list of available apps, open a terminal window and run:
 ```
 yo @criticalmanufacturing/iot
@@ -25,16 +32,6 @@ There are different types of questions that will be displayed interactively. Som
 For both multiple and single choice, use the cursor (Up/Down) to move between the choices and use the Space bar to select/unselect.
 
 All questions are considered answered when the Enter key is pressed.
-
-## Config
-The `Connect IoT` architecture require a configuration file with definitions and instruction mandatory. This App helps creating it.
-
-On the location where you want to store the configs, open a terminal window and run:
-
-```
-yo @criticalmanufacturing/iot:config
-```
-Answer all questions and the file will be created and can be used immediately.
 
 ## tasksPackage
 Use this app to create a new custom package structure help you getting started. Of course, you still need to implement the tasks and converters (there are also apps to help you)
@@ -126,70 +123,7 @@ If you are extending this package, it is easier to have it linked locally. Run t
 <!-- C:\Users\jpsantos\AppData\Roaming\npm\node_modules\@criticalmanufacturing\generator-iot -> N:\COMMON\EI\Business\Scaffolding\generator-iot -->
 
 # Version History
-**Next**
- - History will be maintained in the Github page for now on
+History is maintained in the Github page
 
-**1.4.4**
-- Removed Chokidar dependency from driver
-- Removed Dev dependency from driver package.json
-- Added gulpfile.js into driver
-- Fixed compiler errors in driver
-- Added missing entries in config (monitorApplication, SecurityPortal)
+https://github.com/criticalmanufacturing/generator-iot/releases
 
-**1.4.3**
-- Added gulp + codelyzer as devDependencies for taskPackage
-
-**1.4.2**
-- Added fonts section in taskPackage metadata
-
-**1.4.1**
-- Updated template driver for ssl implementation
-
-**1.4.0**
-- Updated dependencies versions for driver package
-- Updated dependencies versions for tasks packages
-- Fix driver source code to support new version of typescript
-- Add entityName command parameter in driver
-- Add commandParameter extension file in driver
-- Add settings in tasksPackage to suppress generated files from VSCode
-
-**1.3.1**
-- Removed invalid entries from .gitignore file
-- removed tgz file from previous package
-- removed development entry from .npmrc
-
-**1.3.0**
-- Fixed missing entries in task settings code behind
-- Fixed typos in task
-- Updated gulpfile.js in tasksPackage
-- Fixed dependencies in taskPackage
-- Added template .less file in tasks
-- Added missing comments in task designer file
-
-**1.2.3**
-- Several fixes and cleanup on the driver template
-
-**1.2.2**
-- Added missing gulpfile.js file back into tasksPackage template
-
-**1.2.1**
-- Added componentId to driver app command line
-
-**1.2.0**
-- Updated driver app
-
-**1.1.0**
-- Added tasksPackage app
-- Added task app
-- Small bug fixes 
-
-**1.0.2** 
-- Updated driver template
-
-**1.0.1** 
-- Fixed template generation of the driver with hidden files included
-- Added missing IoT datatype Boolean
-- Added test example for converter
-
-**1.0.0**
-- First version

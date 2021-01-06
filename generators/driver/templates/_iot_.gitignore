@@ -42,4 +42,3 @@ jspm_packages
 *.d.ts
 test-results.xml
 coverage/
-.connect_iot_package_done

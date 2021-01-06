@@ -14,7 +14,9 @@
     "vs:buildAndTest": "npm run build && npm run vs:test",
     "vs:test": "node node_modules/istanbul/lib/cli cover node_modules/mocha/bin/_mocha --report cobertura --report lcov test/*.test.js test/**/*.test.js -- --timeout 5000 --exit --reporter mocha-junit-reporter --reporter-options mochaFile=./test/test-results.xml",
     "pretest": "npm run build",
-    "watch": "npm run build -- -w | node node_modules/mocha/bin/mocha --timeout 5000 --exit --reporter min -w test/*.test.js test/**/*.test.js"
+    "watch": "npm run build -- -w | node node_modules/mocha/bin/mocha --timeout 5000 --exit --reporter min -w test/*.test.js test/**/*.test.js",
+
+    "postinstall": "if exist node_modules\\vinyl-fs\\node_modules\\graceful-fs ren node_modules\\vinyl-fs\\node_modules\\graceful-fs _graceful-fs_incompatible_with_node12"
   },
   "keywords": [
     "CMF",
@@ -27,6 +29,7 @@
     "@types/chai-spies": "^1.0.0",
     "@types/mocha": "^5.2.6",
     "@types/node": "^11.13.5",
+    "graceful-fs": "4.2.3",
     "chai": "^4.2.0",
     "chai-spies": "^1.0.0",
     "cmf.core": "<ChangeThisForTheTargetVersion>",

@@ -3,6 +3,7 @@ import { CommunicationState, PropertyValuePair } from "@criticalmanufacturing/co
 import { Property, EventOccurrence, PropertyValue, Command, Event as EquipmentEvent, DeviceDriverBase, CommandParameter } from "@criticalmanufacturing/connect-iot-driver";
 import { <%= identifier %>CommunicationSettings, <%= identifierCamel %>DefaultCommunicationSettings, validateCommunicationParameters } from "./communicationSettings";
 import { validateProperties, validateEvents, validateEventProperties, validateCommands, validateCommandParameters } from "./extendedData/index";
+import { Utils } from "@criticalmanufacturing/connect-iot-common";
 import { TYPES } from "./types";
 
 @injectable()
@@ -174,8 +175,8 @@ export class <%= identifier %>DeviceDriver extends DeviceDriverBase {
             // Fill results and check if the trigger properties have been the cause of the event occurrence
             if (values) {
                 for (let eventProperty of event.properties) {
-                    if (values.hasOwnProperty(eventProperty.deviceId)) {
-                        let value: any = (<any>values)[eventProperty.deviceId];
+                    if (values.has(eventProperty.deviceId)) {
+                        let value: any = values.get(eventProperty.deviceId);
 
                         let propertyValue: PropertyValue = {
                             propertyName: eventProperty.name,
@@ -214,8 +215,8 @@ export class <%= identifier %>DeviceDriver extends DeviceDriverBase {
         if (raw == null)
             return(undefined);
 
-        // Convert the value
-        // ...
+        // Convert the value (this is an example)
+        raw = Utils.convertValueToType(raw, toType);
 
         // return same thing (could not convert it?)
         return(raw);
