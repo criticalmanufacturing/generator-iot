@@ -30,9 +30,16 @@ npm i -g yo
 
 To start using this generator, it is advisable to have it installed globally (-g setting in NPM).
 ```
-npm i -g @criticalmanufacturing/generator-iot
+npm i -g @criticalmanufacturing/generator-iot@80x
 ```
+> **Note** Starting from 7.2.0, each combination of Critical Manufacturing MES version (Major + Minor) will have a dedicated generator to make it easier to keep compatibility.
+>
+> For versions 7.2.0, 7.2.1, 7.2.2, ..., 7.2.\*, use the tag `72x` (`npm i -g @criticalmanufacturing/generator-iot@72x`)
+>
+> For versions 8.0.0, 8.0.1, 8.0.2, ..., 8.0.\*, use the tag `80x` (`npm i -g @criticalmanufacturing/generator-iot@80x`)
+
 # Apps
+
 To see at any time, the list of available apps, open a terminal window and run:
 ```
 yo @criticalmanufacturing/iot
@@ -43,7 +50,6 @@ There are different types of questions that will be displayed interactively. Som
 For both multiple and single choice, use the cursor (Up/Down) to move between the choices and use the Space bar to select/unselect.
 
 All questions are considered answered when the Enter key is pressed.
-
 
 ## tasksPackage
 Use this app to create a new custom package structure help you getting started. Of course, you still need to implement the tasks and converters (there are also apps to help you)
@@ -127,6 +133,75 @@ To run the app, execute the following command under the `svg` directory:
 yo @criticalmanufacturing/iot:fontgen
 ```
 
+
+
+## packagePacker
+
+It is not desirable to have Internet services (NPM, GitHub, etc) as a dependency for the packages that would run on a production environment.
+
+To bypass such dependency, we provide a tool that will pack all the package dependencies from a development environment into a ready-to-be-used package.
+
+The steps this tool executes in background are somehow complicated, but, in a nutshell, it will statically analyze all the dependencies of the package and subsequent dependencies and merge everything into a single `index.js` file. Some other dependencies, like configurations, certificates, node addons (*.node) are also added into the resulting package, however, to keep everything in a clean state, some post-processing steps are needed and this tool supports them up to some extent.
+
+In a terminal window run:
+
+```
+yo @criticalmanufacturing/iot:packagePacker --help
+```
+
+The following parameters can be supplied:
+
+| **Parameter** | Type      | Default                  | Description                                                  |
+| ------------- | --------- | ------------------------ | ------------------------------------------------------------ |
+| i, input      | `String`  | `${cwd}`                 | Location of the package to pack (directory where the `package.json` is located) |
+| o, output     | `String`  |                          | (optional) When defined, it is the directory where the `.tgz` package file will be placed |
+| t, temp       | `String`  | `${cwd}\__TEMP__`        | Temporary directory where the processed files will be placed |
+| c, config     | `String`  | `${cwd}\packConfig.json` | Location where the file with the post-processing instructions is located |
+| a, addons     | `String`  |                          | Location where the binary addons (`\*.node`) are located. Required to prepare a package that is cross-platform, cross-architecture and supporting multiple Node versions.<br />**Note**: Due to the complexity of this option, the usage is not described in this documentation and requires some support from our company |
+| d, debug      | `Boolean` | `false`                  | Activate the debug mode. This mode will not delete the temporary directory allowing the user to properly define the post-processing directives |
+| v, version    | `String`  |                          | Flag that allows to override the version defined in the `package.json` into an user-defined value |
+
+### Configuration file structure
+
+The configuration is a .json file that identifies the type of package and declare post-packing actions to perform to organize, clean and possibly, fix some issues with the result structure.
+
+```json
+{
+    "type": "<Package Type>",
+    "postActions": [
+        { "type": "<ActionType>", "parameter1": "value1", "parameter2": "value2", "...": "..." },
+        { "type": "<ActionType>", "parameter1": "value1", "parameter2": "value2", "...": "..." }
+    ]
+}
+```
+
+Possible Package Types:
+
+| Type           | Description                                                  |
+| -------------- | ------------------------------------------------------------ |
+| `TasksPackage` | Represents a package used to contain `Tasks` and `Converters`. The result package will be ready for runtime (no internet dependencies) and for design-time (all `.js`, `.html`, `.css`, etc) required by the GUI but not required for the runtime. |
+| `Component`    | Represents a package that is only used for runtime (driver, etc) |
+
+Possible Post Actions:
+
+| Structure                                                    | Description                                                  | Example                                                      |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `DeleteFile`(`source`)                                       | Deletes the file `source`                                    | ```{ "type": "DeleteFile", "source": "${Temp}/completion.sh.hbs" }``` |
+| `DeleteDirectory`(`source`)                                  | Deletes the directory `source`                               | ```{ "type": "DeleteDirectory", "source": "${Temp}/locales" }``` |
+| `CopyDirectory`(`source`, `destination`)                     | Copies the entire directory structure from `source` into `destination` | ```{ "type": "CopyDirectory", "source": "font", "destination": "${Temp}/font" }``` |
+| `CopyFile`(`file`, `source`, `destination`)                  | Copy the file `file` located in the directory `source` into the directory `destination` | ```{ "type": "CopyFile", "source": "${Source}/certificates/default.pem", "destination": "${Temp}/examples" }``` |
+| `MoveFile`(`file`, `source`, `destination`)                  | Moves the file `file` located in the directory `source` into the directory `destination` | ```{ "type": "MoveFile", "file": "client_selfsigned_cert_2048.pem", "source": "${Temp}", "destination": "${Temp}/certificates" }`` |
+| `ReplaceText`(`source`, `search`, `replace`, `isRegularExpression`) | In the file `source`, tried to find all occurrences of `search` and replaces them with `replace`. If `isRegularExpression` the search is expected to be a valid regular expression.<br />*Note: Make sure the `replaced` value is not captured again by the `search` value, otherwise, the process will enter into an infinite loop.* | ```{ "type": "ReplaceText", "source": "${Temp}/index.js", "search":"\"client_selfsigned_cert_2048.pem\"", "replace": "\"/../certificates/client_selfsigned_cert_2048.pem\"" }```<br />`{ "type": "ReplaceText", "source": "${Temp}/index.js", "search":"__webpack_require__\\(\\d*\\)\\('HID-hidraw.node'\\)", "replace": "require(__webpack_require__.ab + \"/../lib/hid-hidraw.node\")", "isRegularExpression": true }` |
+
+Some tokens can be used in the Post Actions to be replaced according to the environment/command line arguments:
+
+| Token            | Description                                   |
+| ---------------- | --------------------------------------------- |
+| `${Source}`      | Source location (argument `i`, `input`)       |
+| `${Destination}` | Destination location (argument `o`, `output`) |
+| `${Temp}`        | Temporary location (argument `t`, `temp`)     |
+| `${Addons}`      | Addons location (argument `a`, `addons`)      |
+
 # Development tips
 
 If you are extending this package, it is easier to have it linked locally. Run the following command from the root directory of the package:
@@ -135,70 +210,7 @@ If you are extending this package, it is easier to have it linked locally. Run t
 <!-- C:\Users\jpsantos\AppData\Roaming\npm\node_modules\@criticalmanufacturing\generator-iot -> N:\COMMON\EI\Business\Scaffolding\generator-iot -->
 
 # Version History
-**Next**
- - History will be maintained in the Github page for now on
+History is maintained in the Github page
 
-**1.4.4**
-- Removed Chokidar dependency from driver
-- Removed Dev dependency from driver package.json
-- Added gulpfile.js into driver
-- Fixed compiler errors in driver
-- Added missing entries in config (monitorApplication, SecurityPortal)
+https://github.com/criticalmanufacturing/generator-iot/releases
 
-**1.4.3**
-- Added gulp + codelyzer as devDependencies for taskPackage
-
-**1.4.2**
-- Added fonts section in taskPackage metadata
-
-**1.4.1**
-- Updated template driver for ssl implementation
-
-**1.4.0**
-- Updated dependencies versions for driver package
-- Updated dependencies versions for tasks packages
-- Fix driver source code to support new version of typescript
-- Add entityName command parameter in driver
-- Add commandParameter extension file in driver
-- Add settings in tasksPackage to suppress generated files from VSCode
-
-**1.3.1**
-- Removed invalid entries from .gitignore file
-- removed tgz file from previous package
-- removed development entry from .npmrc
-
-**1.3.0**
-- Fixed missing entries in task settings code behind
-- Fixed typos in task
-- Updated gulpfile.js in tasksPackage
-- Fixed dependencies in taskPackage
-- Added template .less file in tasks
-- Added missing comments in task designer file
-
-**1.2.3**
-- Several fixes and cleanup on the driver template
-
-**1.2.2**
-- Added missing gulpfile.js file back into tasksPackage template
-
-**1.2.1**
-- Added componentId to driver app command line
-
-**1.2.0**
-- Updated driver app
-
-**1.1.0**
-- Added tasksPackage app
-- Added task app
-- Small bug fixes 
-
-**1.0.2** 
-- Updated driver template
-
-**1.0.1** 
-- Fixed template generation of the driver with hidden files included
-- Added missing IoT datatype Boolean
-- Added test example for converter
-
-**1.0.0**
-- First version

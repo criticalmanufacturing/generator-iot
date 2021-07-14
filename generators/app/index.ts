@@ -20,12 +20,15 @@ class GeneratorApp extends ConnectIoTGenerator {
 
         this.log(this.usage()); // .help() show all command line parameters 
         this.log("");
+        this.log(chalk.cyan("Deployment apps:"));
+        this.log("  " + chalk.yellow("packagePacker") + " -> Create a self-packaged package for deployment");
+        this.log("");
         this.log(chalk.cyan("Development apps:"));
-        this.log("  " + chalk.yellow("tasksPackage") + " -> Create a new basic package code for custom Tasks/Converters");
-        this.log("  " + chalk.yellow("task") + "         -> Create the skeleton for a Task");
-        this.log("  " + chalk.yellow("converter") + "    -> Create the skeleton for a Converter");
-        this.log("  " + chalk.yellow("driver") + "       -> Create a basic package code for a new Protocol Driver");
-        this.log("  " + chalk.yellow("fontgen") + "      -> Create a font based on SVG icons to use with Tasks Packages");
+        this.log("  " + chalk.yellow("tasksPackage") + "  -> Create a new basic package code for custom Tasks/Converters");
+        this.log("  " + chalk.yellow("task") + "          -> Create the skeleton for a Task");
+        this.log("  " + chalk.yellow("converter") + "     -> Create the skeleton for a Converter");
+        this.log("  " + chalk.yellow("driver") + "        -> Create a basic package code for a new Protocol Driver");
+        this.log("  " + chalk.yellow("fontgen") + "       -> Create a font based on SVG icons to use with Tasks Packages");
         this.log("");
     }
 

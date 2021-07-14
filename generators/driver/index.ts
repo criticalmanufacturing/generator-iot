@@ -7,7 +7,7 @@ class DriverConfig extends ConnectIoTGenerator {
     private values: any = {
         directory: "driver-sample",
         packageName: "@criticalmanufacturing/connect-iot-driver-sample",
-        packageVersion: "7.2.0",
+        packageVersion: "8.0.0",
         identifier: "Sample",
         identifierCamel: "",
         hasCommands: true
@@ -37,19 +37,20 @@ class DriverConfig extends ConnectIoTGenerator {
             ["_iot_.gitattributes", ".gitattributes"],
             ["_iot_.gitignore", ".gitignore"],
             ["_iot_.npmignore", ".npmignore"],
-            ["_iot_.npmrc", ".npmrc"]
+            ["_iot_.npmrc", ".npmrc"],
+            ["_iot_.connect_iot_package_done", ".connect_iot_package_done"],
         ]);
         filesWithRename.forEach((value, key) => {
             this.fs.copyTpl(this.templatePath(key), this.destinationPath(this.values.directory, value), this.values);
         });
 
-        let files: string[] = ["package.json", "README.md", "tsconfig.json", "tslint.json", "gulpfile.js"];
+        let files: string[] = ["package.json", "README.md", "tsconfig.json", "tslint.json", "gulpfile.js", "packConfig.json"];
         files.forEach((template) => {
             this.fs.copyTpl(this.templatePath(template), this.destinationPath(this.values.directory, template), this.values);
         });
 
          // Visual Studio settings
-         files = ["settings.json"];
+         files = ["settings.json", "launch.json"];
          files.forEach((template) => {
              this.fs.copyTpl(this.templatePath("_iot_.vscode", template), this.destinationPath(this.values.directory, ".vscode", template), this.values);
          });
@@ -77,7 +78,6 @@ class DriverConfig extends ConnectIoTGenerator {
     }
 
     end() {
-        this.log("For this version, it is recommended to run the command 'npm dedupe' after installing the npm packages.");
     }
 }
 
