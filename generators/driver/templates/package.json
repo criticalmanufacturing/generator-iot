@@ -23,7 +23,7 @@
     "Agent"
   ],
   "devDependencies": {
-    "@criticalmanufacturing/dev-tasks": "dev-81x",
+    "@criticalmanufacturing/dev-tasks": "dev-82x",
     "@types/chai": "4.2.11",
     "@types/chai-spies": "1.0.1",
 	  "@types/core-js": "2.5.0",

@@ -7,7 +7,7 @@ class DriverConfig extends ConnectIoTGenerator {
     private values: any = {
         directory: "driver-sample",
         packageName: "@criticalmanufacturing/connect-iot-driver-sample",
-        packageVersion: "8.1.0",
+        packageVersion: "8.2.0",
         identifier: "Sample",
         identifierCamel: "",
         hasCommands: true

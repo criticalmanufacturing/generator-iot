@@ -5,7 +5,7 @@ class GeneratorTasksPackage extends ConnectIoTGenerator {
     private values: any = {
         directory: "controller-engine-custom-tasks",
         packageName: "@criticalmanufacturing/connect-iot-controller-engine-custom-tasks",
-        packageVersion: "8.1.0",
+        packageVersion: "8.2.0",
         identifier: "MyTasksPackage",
         identifierLower: ""
     };
