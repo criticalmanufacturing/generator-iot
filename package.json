@@ -1,6 +1,6 @@
 {
   "name": "@criticalmanufacturing/generator-iot",
-  "version": "8.0.2",
+  "version": "8.1.0",
   "description": "Connect IoT Scaffolding",
   "files": [
     "generators/*.js",
@@ -12,28 +12,28 @@
     "IoT",
     "yeoman-generator"
   ],
+  "devDependencies": {
+    "@types/chalk": "2.2.0",
+    "@types/node": "12.12.17",
+    "@types/punycode": "2.1.0",
+    "@types/yeoman-generator": "5.2.1",
+    "@types/yosay": "2.0.0",
+    "@types/fs-extra": "9.0.12",
+    "@types/glob": "7.1.4",
+    "@types/uuid": "8.3.1",
+    "typescript": "4.3.5"
+  },
   "dependencies": {
     "@zeit/ncc": "0.21.1",
-    "chalk": "^3.0.0",
-    "punycode": "^2.1.1",
-    "webfonts-generator": "^0.4.0",
-    "yeoman-generator": "^4.2.0",
-    "yo": "^3.1.1",
-    "yosay": "^2.0.2",
-    "fs-extra": "9.0.0",
-    "uuid": "7.0.3",
-    "glob": "7.1.3"
-  },
-  "devDependencies": {
-    "@types/chalk": "^2.2.0",
-    "@types/node": "^12.12.17",
-    "@types/punycode": "^2.1.0",
-    "@types/yeoman-generator": "^3.1.4",
-    "@types/yosay": "0.0.29",
-    "@types/fs-extra": "8.1.0",
-    "@types/glob": "7.1.1",
-    "@types/uuid": "7.0.2",
-    "typescript": "^3.7.3"
+    "chalk": "4.1.1",
+    "fs-extra": "10.0.0",
+    "glob": "7.1.7",
+    "punycode": "2.1.1",
+    "uuid": "8.3.2",
+    "webfonts-generator": "0.4.0",
+    "yeoman-generator": "5.4.0",
+    "yo": "4.2.0",
+    "yosay": "2.0.2"
   },
   "license": "GPL-3.0",
   "author": "Critical Manufacturing",

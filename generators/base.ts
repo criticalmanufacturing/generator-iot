@@ -8,7 +8,9 @@ export class ConnectIoTGenerator extends Generator {
         super(args, opts);
 
         // Disable the conflicts by forcing everything
-        (<any>this).conflicter.force = true;
+        if ((<any>this).conflicter != null) {
+            (<any>this).conflicter.force = true;
+        }
     }
 
     /** Simply camel cases the passed in value. All parameters should follow this rule. */

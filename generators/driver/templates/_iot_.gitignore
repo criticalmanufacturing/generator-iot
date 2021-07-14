@@ -42,3 +42,4 @@ jspm_packages
 *.d.ts
 test-results.xml
 coverage/
+!gulpfile.js
