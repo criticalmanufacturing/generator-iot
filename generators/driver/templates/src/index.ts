@@ -5,11 +5,14 @@ import { handleCompiledAddons, ConfigurationSectionDriver } from "@criticalmanuf
 import { Runner } from "@criticalmanufacturing/connect-iot-driver";
 import { TYPES as COMMON_TYPES, Logger, Utils, Configuration } from "@criticalmanufacturing/connect-iot-common";
 
+yargs.reset();
+yargs.strict(false);
 
 yargs.usage("Usage: $0 [options]").wrap(0);
 
 // Id
 yargs.option("id", { type: "string", description: "Unique identifier of the driver instance Id", required: true });
+yargs.option("managerId", { type: "string", default: "", description: "Name of the Manager running the Automation Instance", required: false });
 yargs.option("componentId", { type: "string", default: "", description: "Component Id of the Automation Instance", required: false });
 yargs.option("entityName", { type: "string", default: "", description: "System entity name associated with the driver", required: false });
 
@@ -35,7 +38,7 @@ if (yargs.argv) {
 
     let configurationFile: string = <string>yargs.argv.config;
     if (!path.isAbsolute(configurationFile)) {
-        configurationFile = path.join(__dirname, configurationFile);
+        configurationFile = path.resolve(process.cwd(), configurationFile);
     }
 
     // Prepare logger
@@ -99,10 +102,16 @@ if (yargs.argv) {
     });
 }
 
-
 process.on("uncaughtException", (error: Error) => {
     if (logger) {
-        logger.emerg(`Unexpected error occurred: ${error.message}`);
-        logger.emerg(`Trying to recover...`);
+        logger.error(`Unexpected error occurred: ${error.message}\r\n${error.stack || ""}`);
+        logger.error(`Trying to recover...`);
     }
 });
+
+process.on("unhandledRejection", (reason: any, promise: Promise<any>) => {
+    if (logger) {
+        logger.error(`unhandledRejection: ${reason.message || "Unknown promise rejection occurred"}\r\n${reason.stack || ""}`);
+    }
+});
+
