@@ -69,6 +69,7 @@ export class <%= identifier %>DeviceDriver extends DeviceDriverBase {
             // Notify the communication was a success and it is now ready for the setup process
             this.setCommunicationState(CommunicationState.Setup);
         } catch (error) {
+            this.logger.error(`Failed to connect to device: ${error.message}`);
             this.setCommunicationState(CommunicationState.ConnectingFailed);
         }
     }
@@ -83,7 +84,9 @@ export class <%= identifier %>DeviceDriver extends DeviceDriverBase {
         try {
             // Disconnect to the equipment
             // ...
-        } catch (err) { }
+        } catch (error) {
+            this.logger.error(`Failed to disconnect from device: ${error.message}`);
+        }
 
         this.setCommunicationState(CommunicationState.Disconnected);
     }

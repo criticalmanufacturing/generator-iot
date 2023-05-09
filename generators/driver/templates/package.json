@@ -14,7 +14,6 @@
     "vs:test": "node node_modules/istanbul/lib/cli cover node_modules/mocha/bin/_mocha --report cobertura --report lcov test/*.js test/**/*.js -- --timeout 30000 --exit --reporter mocha-junit-reporter --reporter-options mochaFile=./test/test-results.xml",
     "pretest": "npm run build",
     "watch": "npm run build -- -w | node node_modules/mocha/bin/mocha --timeout 30000 --exit --reporter min -w test/*.test.js test/**/*.test.js",
-
     "postinstall": "if exist node_modules\\vinyl-fs\\node_modules\\graceful-fs ren node_modules\\vinyl-fs\\node_modules\\graceful-fs _graceful-fs_incompatible_with_node12"
   },
   "keywords": [
@@ -26,7 +25,7 @@
     "@criticalmanufacturing/dev-tasks": "dev-82x",
     "@types/chai": "4.2.11",
     "@types/chai-spies": "1.0.1",
-	  "@types/core-js": "2.5.0",
+    "@types/core-js": "2.5.0",
     "@types/fs-extra": "8.1.0",
     "@types/mocha": "7.0.2",
     "@types/node": "12.12.6",
@@ -71,32 +70,32 @@
         "eventProperty": [],
         "command": [],
         "commandParameter": []
-      }
-    },
-    "deviceIds": {
-      "property": {
-        "label": "Unique Property",
-        "description": "Describe what the user should enter here",
-        "mandatory": true,
-        "unique": true
       },
-      "event": {
-        "label": "Unique Event",
-        "description": "Describe what the user should enter here",
-        "mandatory": true,
-        "unique": true
+      "deviceIds": {
+        "property": {
+          "label": "Unique Property",
+          "description": "Describe what the user should enter here",
+          "mandatory": true,
+          "unique": true
+        },
+        "event": {
+          "label": "Unique Event",
+          "description": "Describe what the user should enter here",
+          "mandatory": true,
+          "unique": true
+        },
+        "command": {
+          "label": "Unique Command",
+          "description": "Describe what the user should enter here",
+          "mandatory": true,
+          "unique": true
+        }
       },
-      "command": {
-        "label": "Unique Command",
-        "description": "Describe what the user should enter here",
-        "mandatory": true,
-        "unique": true
+      "characteristics": {
+        "hasProperties": true,
+        "hasEvents": true,
+        "hasCommands": true
       }
-    },
-    "characteristics": {
-      "hasProperties": true,
-      "hasEvents": true,
-      "hasCommands": true
     }
   }
 }
