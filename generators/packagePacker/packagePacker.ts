@@ -1,12 +1,12 @@
+import { container } from "./inversify.config";
 import { spawnSync } from "child_process";
 import * as io from "fs-extra";
 import * as path from "path";
-import * as glob from "glob";
-import * as os from "os";
-import * as uuid from "uuid";
 import { Configuration, Action, ActionType, Addon, ComponentType } from "./configuration";
-const ncc = require("@zeit/ncc");
-const childProcess = require("child_process");
+const ncc = require("@vercel/ncc");
+import { TemplatesProcessor } from "./processors/templates";
+import { TYPES } from "./types";
+import { Paths } from "./processors/paths";
 
 export class PackagePacker {
 
@@ -16,12 +16,12 @@ export class PackagePacker {
 
         const source: string = <string>options.i || <string>options.input || process.cwd();
         const destination: string = <string>options.o || <string>options.output || "";
-        const temp: string = <string>options.t || <string>options.temp || `${source}\\__TEMP__`;
+        let temp: string = <string>options.t || <string>options.temp || `${source}\\__TEMP__`;
         const configurationFile: string = <string>options.c || <string>options.config || `${source}\\packConfig.json`;
         const addons: string = <string>options.a || <string>options.addons;
         const version: string = <string>options.v || <string>options.version || "";
         const debug: boolean = <boolean>options.d || <boolean>options.debug || false;
-        let mappedAddons: string | undefined = undefined;
+        // let mappedAddons: string | undefined = undefined;
 
         console.log(`Using the following settings:`);
         console.log(`   Source        : ${source}`);
@@ -50,42 +50,58 @@ export class PackagePacker {
             process.exit(1);
         }
 
+        // JS: No longer need - Node already supports UNCs
         // Network drive for the addons=Map + mklink
-        if (addons.startsWith("\\\\")) {
-            this.run("net", [ "use", addons]);
-            mappedAddons = path.join(os.tmpdir(), uuid.v4());
+        // if (addons.startsWith("\\\\")) {
+        //     this.run("net", [ "use", addons]);
+        //     mappedAddons = path.join(os.tmpdir(), uuid.v4());
 
-            const command = `mklink /d "${mappedAddons}" "${addons}"`;
-            const output = childProcess.execSync(command).toString().trim();
-            console.log(output);
+        //     const command = `mklink /d "${mappedAddons}" "${addons}"`;
+        //     const output = childProcess.execSync(command).toString().trim();
+        //     console.log(output);
 
-            console.log(`   Addons (map)  : ${mappedAddons}`);
-        }
+        //     console.log(`   Addons (map)  : ${mappedAddons}`);
+        // }
+
+        const paths = container.get<Paths>(TYPES.Paths);
+        paths.setup(source, destination, temp, addons);
 
         // Monkey patch the ncc to allow parsing package.json files with unicode starting values
         // This will only perform once, but attempted every time
-        this.replaceTextInFile(path.resolve(__dirname, "..", "node_modules", "@zeit", "ncc", "dist", "ncc", "index.js.cache.js"), "r=JSON.parse(n.toString(\"utf-8\"))", "r=JSON.parse(n.toString(\"utf-8\").trim())", false);
+        // this.replaceTextInFile(path.resolve(__dirname, "..", "node_modules", "@zeit", "ncc", "dist", "ncc", "index.js.cache.js"), "r=JSON.parse(n.toString(\"utf-8\"))", "r=JSON.parse(n.toString(\"utf-8\").trim())", false);
 
 
         const configuration: Configuration = JSON.parse(io.readFileSync(configurationFile, "utf8"));
 
         // Prepare temp Directory
-        this.deleteDirectory(temp);
-        this.createDirectory(temp);
-
         if (configuration.type === ComponentType.TasksPackage) {
-            // Tasks packages don't export anything
-            this.generateTasksPackageExportFile(path.join(source, "src", "metadata.js"), path.join(source, "src", "index.js"));
+            temp = io.readJSONSync(path.join(source, "ng-package.json")).dest;
+
+            if (!io.existsSync(temp)) {
+                console.error("\x1b[31m", `'${temp}' doesn't exist! Did you forget to run 'ng build'?`, "\x1b[0m");
+                process.exit(1);
+            }
+        } else {
+            this.deleteDirectory(temp);
+            this.createDirectory(temp);
         }
 
         // Pack package
         const packs = configuration.packs || [];
         if (packs.length === 0) {
-            packs.push({
-                directory: "src",
-                source: "index.js",
-                destination: "index.js",
-            });
+            if (configuration.type === ComponentType.TasksPackage) {
+                packs.push({
+                    directory: "src",
+                    source: "public-api-runtime.js",
+                    destination: "index.js",
+                });
+            } else {
+                packs.push({
+                    directory: "src",
+                    source: "index.js",
+                    destination: "index.js",
+                });
+            }
         }
 
         for (const pack of packs) {
@@ -97,17 +113,20 @@ export class PackagePacker {
                 pack.destination || "index.js");
         }
 
+        if (configuration.type !== ComponentType.TasksPackage) {
+            // Copy necessary files to generate package
+
+            this.copyFile("npm-shrinkwrap.json", source, temp);
+            this.copyFile(".npmignore", source, temp);
+            this.copyFile(".npmrc", source, temp);
+            this.copyFile("README.md", source, temp);
+            this.copyFile("package.json", source, temp);
+        }
 
         if (configuration.type === ComponentType.TasksPackage) {
             this.deleteFile(path.join(source, "src", "index.js"));
         }
-        this.copyFile("npm-shrinkwrap.json", source, temp);
 
-        // Copy necessary files to generate package
-        this.copyFile("package.json", source, temp);
-        this.copyFile(".npmignore", source, temp);
-        this.copyFile(".npmrc", source, temp);
-        this.copyFile("README.md", source, temp);
         this.setPackageJsonAsPacked(path.join(temp, "package.json"));
         if (version != null && version !== "") {
             this.changePackageJsonVersion(path.join(temp, "package.json"), version);
@@ -116,14 +135,11 @@ export class PackagePacker {
         // TasksPackages must have the dependencies for the GUI. All others, clear them
         if (configuration.type !== ComponentType.TasksPackage) {
             this.removeDependenciesFromPackageJson(path.join(temp, "package.json"));
-        } else {
-            // Patch publish script to have an "Upper level" path
-            this.patchPublishScriptFromPackageJson(path.join(temp, "package.json"));
         }
 
         // Copy .node files (Addons)
         (configuration.addons || []).forEach((addon: Addon) => {
-            const sourceAddonDir: string = path.join(mappedAddons || addons, addon.name, addon.version);
+            const sourceAddonDir: string = path.join(/*mappedAddons ||*/ addons, addon.name, addon.version);
             const destinationAddonDir: string = path.join(temp, "addons", addon.name);
             this.createDirectory(path.join(temp, "addons"));
             this.createDirectory(destinationAddonDir);
@@ -133,8 +149,12 @@ export class PackagePacker {
             }
         });
 
-        if (mappedAddons != null) {
-            this.deleteDirectory(mappedAddons);
+
+        // Process any template action
+        if (configuration.templates != null) {
+            const destination = path.join(temp, "package.json");
+
+            container.get<TemplatesProcessor>(TYPES.Processors.Templates).process(configuration.templates, destination);
         }
 
         // process Post actions
@@ -157,6 +177,7 @@ export class PackagePacker {
                 case ActionType.CopyDirectory: this.copyDirectory (actionSource, actionDestination); break;
                 case ActionType.CopyFile: this.copyFile (action.file || "", actionSource, actionDestination); break;
                 case ActionType.MoveFile: this.moveFile (action.file || "", actionSource, actionDestination); break;
+                case ActionType.RenameFile: this.renameFile(actionSource, actionDestination); break;
                 case ActionType.ReplaceText: this.replaceTextInFile(actionSource, action.search || "", action.replace || "", action.isRegularExpression || false); break;
             }
         });
@@ -165,12 +186,6 @@ export class PackagePacker {
         // Place index.js into src directory
         this.createDirectory(path.join(temp, "src"));
         if (configuration.type === ComponentType.TasksPackage) {
-            // Tasks package must maintain the original src structure to allow being used in the GUI
-            this.copyDirectory(path.join(source, "src"), path.join(temp, "src"));
-
-            // Also, keep the "metadata.js" as the original one for the Gui, use the index.js for runtime
-            // renameFile(path.join(temp, "index.js"), path.join(temp, "metadata.js"));
-            // moveFile("metadata.js", temp, path.join(temp, "src"));
             this.moveFile("index.js", temp, path.join(temp, "src"));
         } else {
             for (const pack of packs) {
@@ -311,7 +326,7 @@ export class PackagePacker {
     private copyDirectory = function (source: string, destination: string): void {
         if (io.existsSync(source)) {
             io.copySync(source, destination, {
-                recursive: true,
+                // recursive: true,
                 overwrite: true,
                 preserveTimestamps: true,
             });
@@ -444,10 +459,29 @@ export class PackagePacker {
      * @param searchPath Full path to search
      * @param extension Glob expression
      */
-    private findByExtension(searchPath: string, extension: string): string | string[] {
-        const results = glob.sync(searchPath + "/" + extension);
-
-        return (results.map((value) => { return(path.basename(value)); }));
+    private findByExtension(searchPath: string, extension: string, basePath?: string): string | string[] {
+        if (extension.startsWith("*.")) {
+            extension = extension.substring(1);
+        }
+    
+        basePath = basePath ?? "";
+    
+        const result: string[] = [];
+    
+        const files = io.readdirSync(searchPath);
+        for (let i = 0; i < files.length; i++) {
+            const filename = path.join(searchPath, files[i]);
+            const stat = io.lstatSync(filename);
+    
+            if (stat.isDirectory()) {
+                result.push(...this.findByExtension(filename, extension, basePath + `/${path.basename(filename)}`));
+            } else if (filename.endsWith(extension) || extension === "*") {
+                result.push(path.join(basePath, path.basename(filename)));
+            }
+        }
+    
+        return (result);
+    
     }
 
     /**

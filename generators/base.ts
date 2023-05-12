@@ -1,6 +1,4 @@
 import * as Generator from 'yeoman-generator';
-import * as fs from "fs";
-import * as path from "path";
 
 export class ConnectIoTGenerator extends Generator {
 

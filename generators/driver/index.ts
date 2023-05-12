@@ -1,13 +1,11 @@
 import { ConnectIoTGenerator, ValueType } from "../base";
 
-const chalk = require("chalk");
-
 class DriverConfig extends ConnectIoTGenerator {
 
     private values: any = {
         directory: "driver-sample",
         packageName: "@criticalmanufacturing/connect-iot-driver-sample",
-        packageVersion: "8.2.0",
+        packageVersion: "10.0.0",
         identifier: "Sample",
         identifierCamel: "",
         hasCommands: true

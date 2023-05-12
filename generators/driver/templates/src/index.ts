@@ -5,7 +5,7 @@ import { handleCompiledAddons, ConfigurationSectionDriver } from "@criticalmanuf
 import { Runner } from "@criticalmanufacturing/connect-iot-driver";
 import { TYPES as COMMON_TYPES, Logger, Utils, Configuration } from "@criticalmanufacturing/connect-iot-common";
 
-yargs.reset();
+yargs(process.argv.slice(2));
 yargs.strict(false);
 
 yargs.usage("Usage: $0 [options]").wrap(0);
@@ -33,22 +33,24 @@ yargs.help("h").alias("h", "help");
 // Start driver runner if all mandatory parameters are provided
 let logger: Logger;
 if (yargs.argv) {
+    const argv: any = yargs.argv;
+
     logger = container.get<Logger>(COMMON_TYPES.Logger);
     const configuration = container.get<Configuration.Configuration>(COMMON_TYPES.Configuration);
 
-    let configurationFile: string = <string>yargs.argv.config;
+    let configurationFile: string = <string>argv.config;
     if (!path.isAbsolute(configurationFile)) {
         configurationFile = path.resolve(process.cwd(), configurationFile);
     }
 
     // Prepare logger
     logger.setIdentificationTokens({
-        id: <string>yargs.argv.id,
+        id: <string>argv.id,
         applicationName: "Driver<%= identifier %>",
         pid: process.pid,
-        componentId: yargs.argv.componentId || "Driver<%= identifier %>",
-        entityName: yargs.argv.entityName,
-        managerId: yargs.argv.managerId,
+        componentId: argv.componentId || "Driver<%= identifier %>",
+        entityName: argv.entityName,
+        managerId: argv.managerId,
     });
 
     // Parse and validate configuration
@@ -69,19 +71,19 @@ if (yargs.argv) {
 
     // Run Driver Runner (Connection with Monitor, and interface with controller)
     Runner.run({
-        id: <string>yargs.argv.id,
+        id: <string>argv.id,
         monitor: {
             reconnectInterval: 1000,
-            host: <string>yargs.argv.monitorHost,
-            port: <number>yargs.argv.monitorPort,
-            securityToken: <string>yargs.argv.monitorToken,
+            host: <string>argv.monitorHost,
+            port: <number>argv.monitorPort,
+            securityToken: <string>argv.monitorToken,
             sslConfig: configuration.data.driver.monitorProcessCommunication,
         },
         device: {
             controller: {
                 buffering: 30000,
-                serverHost: <string>yargs.argv.serverHost,
-                serverPort: <number>yargs.argv.serverPort
+                serverHost: <string>argv.serverHost,
+                serverPort: <number>argv.serverPort
             },
             sslConfiguration: configuration.data.driver.processCommunication,
         }

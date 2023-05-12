@@ -1,3 +1,4 @@
+import { Template } from "./models/template";
 
 /** Type of package to process */
 export enum ComponentType {
@@ -19,6 +20,8 @@ export enum ActionType {
     CopyFile = "CopyFile",
     /** Move single file */
     MoveFile = "MoveFile",
+    /** Rename single file */
+    RenameFile = "RenameFile",
     /** Replace text with another one */
     ReplaceText = "ReplaceText",
 }
@@ -27,10 +30,14 @@ export enum ActionType {
 export interface Configuration {
     /** Component Type */
     type: ComponentType;
+    /** Packages to ignore */
+    ignore?: string[];
     /** List of files to fully pack (will use src/index.js as default) */
     packs?: Pack[];
     /** Addons required for the package */
     addons?: Addon[];
+    /** Templates used to generate the entry in package.json */
+    templates?: Template[];
     /** List of actions to post perform */
     postActions?: Action[];
 }

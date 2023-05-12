@@ -1,9 +1,5 @@
-import * as path from "path";
 import { ConnectIoTGenerator } from "../base";
-
-const chalk = require("chalk");
 var yosay = require("yosay");
-import { Answers } from "yeoman-generator";
 
 class GeneratorApp extends ConnectIoTGenerator {
 
@@ -20,16 +16,10 @@ class GeneratorApp extends ConnectIoTGenerator {
 
         this.log(this.usage()); // .help() show all command line parameters 
         this.log("");
-        this.log(chalk.cyan("Deployment apps:"));
-        this.log("  " + chalk.yellow("packagePacker") + " -> Create a self-packaged package for deployment");
-        this.log("");
-        this.log(chalk.cyan("Development apps:"));
-        this.log("  " + chalk.yellow("tasksPackage") + "  -> Create a new basic package code for custom Tasks/Converters");
-        this.log("  " + chalk.yellow("task") + "          -> Create the skeleton for a Task");
-        this.log("  " + chalk.yellow("converter") + "     -> Create the skeleton for a Converter");
-        this.log("  " + chalk.yellow("driver") + "        -> Create a basic package code for a new Protocol Driver");
-        this.log("  " + chalk.yellow("fontgen") + "       -> Create a font based on SVG icons to use with Tasks Packages");
-        this.log("");
+        console.log("\x1b[36m", "Deployment apps:", "\x1b[0m");
+        console.log("\x1b[33m", "  packagePacker", "\x1b[0m", " -> Create a self-packaged package for deployment");
+        console.log("\x1b[36m", "Development apps:", "\x1b[0m");
+        console.log("\x1b[33m", "  driver", "\x1b[0m", "        -> Create a basic package code for a new Protocol Driver");
     }
 
     prompting() {
