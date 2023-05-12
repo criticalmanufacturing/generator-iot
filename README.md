@@ -30,7 +30,7 @@ npm i -g yo
 
 To start using this generator, it is advisable to have it installed globally (-g setting in NPM).
 ```
-npm i -g @criticalmanufacturing/generator-iot@80x
+npm i -g @criticalmanufacturing/generator-iot@100x
 ```
 > **Note** Starting from 7.2.0, each combination of Critical Manufacturing MES version (Major + Minor) will have a dedicated generator to make it easier to keep compatibility.
 >
@@ -51,7 +51,7 @@ For both multiple and single choice, use the cursor (Up/Down) to move between th
 
 All questions are considered answered when the Enter key is pressed.
 
-## tasksPackage
+<!-- ## tasksPackage
 Use this app to create a new custom package structure help you getting started. Of course, you still need to implement the tasks and converters (there are also apps to help you)
 
 In a terminal window with the path where the entire package directory will be created, run:
@@ -76,7 +76,7 @@ To create a new converter, make sure you have a terminal window open on the path
 yo @criticalmanufacturing/iot:converter
 ```
 Answer all questions and the converter will be created on the `src/converters` directory of the package.
-The code generated is the skeleton on the converter (base structure), so you have to implement the logic before it is usable.
+The code generated is the skeleton on the converter (base structure), so you have to implement the logic before it is usable. -->
 
 ## driver
 The driver is the implementation of a protocol.
@@ -89,7 +89,7 @@ yo @criticalmanufacturing/iot:driver
 ```
 Answer all questions and a new directory with the protocol driver will be available and ready for you to implement the communication logic.
 
-## fontgen
+<!-- ## fontgen
 
 Tasks Packages can have their own set of icons to assign to each of the custom tasks. This generator is necessary to convert a set of `svg` files into a web font compatible with `Critical Manufacturing MES`.
 
@@ -131,7 +131,7 @@ To run the app, execute the following command under the `svg` directory:
 
 ```
 yo @criticalmanufacturing/iot:fontgen
-```
+``` -->
 
 
 

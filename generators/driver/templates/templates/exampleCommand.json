@@ -1,0 +1,25 @@
+{
+    "command": [
+        {
+            "Name": "Valid Event Setting",
+            "Description": "Valid Event Setting",
+            "DeviceCommandId": "SETEV",
+            "ExtendedData": {
+                "executionMode": "SendRequest",
+                "destination": "TargetDevice"
+            },
+            "CommandParameters": [
+                {
+                    "Name": "machineName",
+                    "DataType": "String",
+                    "AutomationProtocolDataType": "String"
+                },
+                {
+                    "Name": "eventList",
+                    "DataType": "Object",
+                    "AutomationProtocolDataType": "Object"
+                }
+            ]
+        }
+    ]
+}

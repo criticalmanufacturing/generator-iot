@@ -1,0 +1,53 @@
+{
+    "property": [
+        {
+            "Name": "newState",
+            "Description": "New State",
+            "DevicePropertyId": "NewState",
+            "DataType": "Integer",
+            "IsWritable": true,
+            "IsReadable": true,
+            "AutomationProtocolDataType": "Integer",
+            "ExtendedData": {
+                "propertyType": "NewState",
+                "identifierType": "None"
+            }
+        },
+        {
+            "Name": "oldState",
+            "Description": "Old State",
+            "DevicePropertyId": "OldState",
+            "DataType": "Integer",
+            "IsWritable": true,
+            "IsReadable": true,
+            "AutomationProtocolDataType": "Integer",
+            "ExtendedData": {
+                "propertyType": "OldState",
+                "identifierType": "None"
+            }
+        }
+    ],
+    "event": [
+        {
+            "Name": "StationStateChanged",
+            "Description": "Station State Changed",
+            "DeviceEventId": "CFX.ResourcePerformance.StationStateChanged",
+            "IsEnabled": true,
+            "ExtendedData": {
+                "eventTrigger": "CFX.ResourcePerformance.StationStateChanged"
+            },
+            "EventProperties": [
+                {
+                    "Property": "newState",
+                    "Order": 1,
+                    "ExtendedData": {}
+                },
+                {
+                    "Property": "oldState",
+                    "Order": 2,
+                    "ExtendedData": {}
+                }
+            ]
+        }
+    ]
+}

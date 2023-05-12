@@ -1,6 +1,8 @@
 {
     "type": "Component",
 
+    "templates": "${Source}/templates/",
+    
     "postActions": [
         { "type": "DeleteFile", "source": "${Temp}/completion.sh.hbs" },
         { "type": "DeleteDirectory", "source": "${Temp}/src" },
