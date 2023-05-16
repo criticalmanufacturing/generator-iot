@@ -1,6 +1,6 @@
 {
   "name": "@criticalmanufacturing/generator-iot",
-  "version": "8.2.1",
+  "version": "10.0.1",
   "description": "Connect IoT Scaffolding",
   "files": [
     "generators/*.js",
