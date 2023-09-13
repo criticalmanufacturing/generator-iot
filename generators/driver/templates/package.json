@@ -41,8 +41,8 @@
     "typescript": "4.9.5"
   },
   "dependencies": {
-    "@criticalmanufacturing/connect-iot-common": "<ChangeThisForTheTargetVersion>",
-    "@criticalmanufacturing/connect-iot-driver": "<ChangeThisForTheTargetVersion>",
+    "@criticalmanufacturing/connect-iot-common": "release-1010",
+    "@criticalmanufacturing/connect-iot-driver": "release-1010",
     "inversify": "6.0.1",
     "moment": "2.29.4",
     "reflect-metadata": "0.1.13",

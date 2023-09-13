@@ -30,7 +30,7 @@ npm i -g yo
 
 To start using this generator, it is advisable to have it installed globally (-g setting in NPM).
 ```
-npm i -g @criticalmanufacturing/generator-iot@100x
+npm i -g @criticalmanufacturing/generator-iot@101x
 ```
 > **Note** Starting from 7.2.0, each combination of Critical Manufacturing MES version (Major + Minor) will have a dedicated generator to make it easier to keep compatibility.
 >
