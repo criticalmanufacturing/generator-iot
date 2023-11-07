@@ -6,6 +6,8 @@ export enum ComponentType {
     Component = "Component",
     /** Tasks package (must process the metadata file) */
     TasksPackage = "TasksPackage",
+    /** Tasks library (must process the metadata file) */
+    TasksLibrary = "TasksLibrary",
 }
 
 /** Possible action to perform */

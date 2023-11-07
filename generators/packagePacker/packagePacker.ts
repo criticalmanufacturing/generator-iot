@@ -86,6 +86,11 @@ export class PackagePacker {
             this.createDirectory(temp);
         }
 
+        if (configuration.type === ComponentType.TasksLibrary) {
+            // Tasks packages don't export anything
+            this.generateTasksPackageExportFile(path.join(source, "src", "metadata.js"), path.join(source, "src", "index.js"));
+        }
+
         // Pack package
         const packs = configuration.packs || [];
         if (packs.length === 0) {
