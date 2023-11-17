@@ -6,7 +6,7 @@ class GeneratorTasksPackage extends ConnectIoTGenerator {
         directory: "controller-engine-custom-tasks",
         packageName: "@criticalmanufacturing/connect-iot-controller-engine-custom-tasks",
         packageVersion: "10.2.0",
-        identifier: "MyTasksLibrary",
+        identifier: "My Tasks Library",
         targetSystemVersion: "10.2.0",
         dependsOnScope: "[]",
         mandatoryForScope: "[]",

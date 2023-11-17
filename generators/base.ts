@@ -136,7 +136,7 @@ export class ConnectIoTGenerator extends Generator {
             if (startIndex !== endIndex) {
                 let prefix: string = fileContent[startIndex + 1].trimRight();
                 prefix = prefix.slice(0, prefix.length - prefix.trim().length);
-                value = prefix + value.trim();
+                value = prefix + prefix + value.trim();
             }
 
             if (!alreadyInjected) {
@@ -167,6 +167,8 @@ export class ConnectIoTGenerator extends Generator {
         }
         return ("notSupportedPleaseFix");
     }
+
+    
 
      /**
      * Return the TypeScript name corresponding type for the IoT data type

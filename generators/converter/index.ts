@@ -1,13 +1,12 @@
 import { ConnectIoTGenerator, ValueType, IoTValueType } from "../base";
-
-const chalk = require("chalk");
+import { LibraryMetadata } from "../packagePacker/models/library";
 
 class GeneratorConverter extends ConnectIoTGenerator {
 
     private values: any = {
         name: "somethingToSomething", // camel case
         className: "",                    // pascal case
-        title: "something To Something",
+        title: "Something To Something",
         input: IoTValueType.Any,
         output: IoTValueType.Any,
 
@@ -92,7 +91,7 @@ class GeneratorConverter extends ConnectIoTGenerator {
             this.env.error(new Error("Unable to find 'metadata.ts' file. Make sure you are running the command from the root directory (same as package.json)"));
         }
 
-        this.injectInFile(destinationFile, "converters: [", "],", `"${this.values.name}",\r\n`);
+        this.injectInFile(destinationFile, "converters: [", "]", `"${this.values.name}",\r\n`);
 
         let filesWithRename: Map<string, string> = new  Map<string, string>([
             ["index.ts", "index.ts"],
@@ -102,10 +101,45 @@ class GeneratorConverter extends ConnectIoTGenerator {
             this.fs.copyTpl(this.templatePath("src", key), this.destinationPath("src", "converters", this.values.name, value), this.values);
         });
         
-        this.fs.copyTpl(this.templatePath("src", "i18n", "converter.default.ts"), this.destinationPath("src", "converters", this.values.name, "i18n", `${this.values.name}.default.ts`), this.values);
+        // this.fs.copyTpl(this.templatePath("src", "i18n", "converter.default.ts"), this.destinationPath("src", "converters", this.values.name, "i18n", `${this.values.name}.default.ts`), this.values);
 
         // test
         this.fs.copyTpl(this.templatePath("test", "converter.converter.test.ts"), this.destinationPath("test", "unit", "converters", this.values.name, `${this.values.name}.converter.test.ts`), this.values);
+
+
+        // Create the Json template
+        var parameters: any = undefined;
+        if (this.values.hasParameters === true) {
+            parameters = {};
+
+            let inputParameters: Map<string, IoTValueType> = this.values.parameters;
+            inputParameters.forEach((value, key) => {
+                if (value !== IoTValueType.Enum) {
+                    parameters[key] = value;
+                } else {
+                    parameters[key] = {
+                        // displayName: key, // Future...
+                        dataType: value,
+                        enumValues: [ "First Option", "Second Option", "etc" ]
+                    }
+                }
+            });
+        }
+
+        const converterTemplate: LibraryMetadata = {
+            converters: [
+                {
+                    name: this.values.name,
+                    displayName: this.values.title,
+                    inputDataType: this.values.input,
+                    outputDataType: this.values.output,
+                    parameters: parameters,
+                }
+            ],
+            tasks: []
+        };
+
+        this.fs.writeJSON(this.destinationPath("templates", `converter_${this.values.name}.json`), converterTemplate);
     }
 
     /**

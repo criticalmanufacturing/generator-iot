@@ -5,6 +5,7 @@ export const TYPES = {
     Paths: Symbol("Paths"),
 
     Processors: {
-        Templates: Symbol("TemplatesProcessor"),
+        DriverTemplates: Symbol("DriverTemplatesProcessor"),
+        LibraryTemplates: Symbol("LibraryTemplatesProcessor"),
     }
 };

@@ -37,6 +37,8 @@
   },
   "dependencies": {
     "@criticalmanufacturing/connect-iot-controller-engine": "<%= targetSystemVersionProcessed %>",
+    "cmf-lbos": "<%= targetSystemVersionProcessed %>",
+    
     "reflect-metadata": "0.1.13",
     "inversify": "6.0.1",
     "moment": "2.29.4"

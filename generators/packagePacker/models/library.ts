@@ -63,19 +63,19 @@ export interface Library {
  */
 export interface LibraryMetadata {
     /** List of Converters available in this library version */
-    converters: LibraryConverter[];
+    converters?: LibraryConverter[];
     /** List of Tasks available in this library */
-    tasks: LibraryTask[];
+    tasks?: LibraryTask[];
 }
 
 /** format of the Metadata portion that represents a single converter  */
 export interface LibraryConverter {
-    /** Name of the converter */
+    /** Name of the converter, also name of the Runtime Class where the converter code can be located/executed */
     name: string;
     /** Name of the converter that will be used to display in the GUI, defaults to Name if not defined */
     displayName?: string;
-    /**Name of the Runtime Class where the converter code can be located/executed */
-    class: string;
+    // /**Name of the Runtime Class where the converter code can be located/executed */
+    // class: string;
     /** Type of the input where this converter can act */
     inputDataType: string;
     /** Type of the output this converter will emit */
@@ -83,6 +83,12 @@ export interface LibraryConverter {
     /** Json object containing the parameters available to configure the behavior of the converter */
     parameters?: any;
 }
+
+export const LibraryConverterDefaults: LibraryConverter = {
+    name: "",
+    inputDataType: "Any",
+    outputDataType: "Any",
+};
 
 export interface LibraryConverterParameter {
     /** Data type of the converter */
@@ -98,16 +104,16 @@ export interface LibraryConverterParameter {
 }
 
 export interface LibraryTask {
-    /**	Name of the Task, will be used to display in the GUI */
+    /**	Name of the Task, will be used to display in the GUI, also name of the Runtime Class where the task code can be located/executed */
     name: string;
     /**	Name of the task that will be used to display in the GUI, defaults to Name if not defined */
     displayName: string;
-    /** Name of the Runtime Class where the task code can be located/executed */
-    class: string;
+    // /** Name of the Runtime Class where the task code can be located/executed */
+    // class: string;
     /* Name of the icon if it was loaded as a font in the gui */
-    iconClass: string;
+    iconClass?: string;
     /** Data of the SVG to draw the icon in the button and task (will be ignored if an IconClass is set) */
-    iconSVG: string;
+    iconSVG?: string;
     /** Flag indicating if this ask is to be related with a protocol scope */
     isProtocol: boolean;
     /** Flag indicating if this task is to be related in a controller scope. Note: It is possible for a task to be usable in both Controller and Protocol scope (Code, EntityInstance, etc) */
@@ -122,10 +128,21 @@ export interface LibraryTask {
     dependsOnScope: Scope[];
     
     
-    inputs: {[key: string]: string | TaskInputType};
-    outputs	: {[key: string]: string | TaskOutputType};
-    settings: {[key: string]: SettingsTab};
+    inputs?: {[key: string]: string | TaskInputType};
+    outputs?: {[key: string]: string | TaskOutputType};
+    settings?: {[key: string]: SettingsTab};
 }
+
+export const LibraryTaskDefaults: LibraryTask = {
+    name: "",
+    displayName: "",
+    isProtocol: false,
+    isController: false,
+    lifecycle: TaskLifeCycle.Productive,
+    lifecycleMessage: "",
+    dependsOnProtocol: [],
+    dependsOnScope: [ Scope.ConnectIoT, Scope.FactoryAutomation, Scope.EnterpriseIntegration ],
+};
 
 export interface TaskInputType {
     /** Type of input port */

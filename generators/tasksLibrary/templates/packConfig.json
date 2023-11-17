@@ -1,7 +1,6 @@
 {
-    "type": "TasksPackage",
+    "type": "TasksLibrary",
+    "templates": "${Source}/templates/",
     "postActions": [
-        { "type": "CopyDirectory", "source": "font", "destination": "${Temp}/font" },
-        { "type": "DeleteDirectory", "source": "${Temp}/font/svg" }
     ]
 }

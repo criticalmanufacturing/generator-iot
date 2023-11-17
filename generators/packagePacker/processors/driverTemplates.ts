@@ -7,7 +7,7 @@ import { TYPES } from "../types";
 import { Paths } from "./paths";
 
 @injectable()
-export class TemplatesProcessor {
+export class DriverTemplatesProcessor {
 
     @inject(TYPES.Logger)
     private _logger: Log;
@@ -97,12 +97,12 @@ export class TemplatesProcessor {
             const newOne = Object.assign({}, JsonTemplatePropertyDefaults, property);
 
             // Check if there is another with the same name
-            const existing = (this._finalTemplates.property ?? []).find(p => p.Name === property.Name);
+            const existing = (this._finalTemplates.property ?? []).find(p => p.Name === newOne.Name);
             if (existing != null) {
                 const existingJson = JSON.stringify(existing);
                 const newOneJson = JSON.stringify(newOne);
                 if (existingJson !== newOneJson) {
-                    this._logger.Warn(` [Templates]   Overwriting property '${property.Name}' with a new one`);
+                    this._logger.Warn(` [Templates]   Overwriting property '${newOne.Name}' with a new one`);
 
                     Object.assign(existing, newOne);
                 }
@@ -129,12 +129,12 @@ export class TemplatesProcessor {
             let validateEvent: boolean = false;
 
             // Check if there is another with the same name
-            const existing = (this._finalTemplates.event ?? []).find(p => p.Name === event.Name);
+            const existing = (this._finalTemplates.event ?? []).find(p => p.Name === newOne.Name);
             if (existing != null) {
                 const existingJson = JSON.stringify(existing);
                 const newOneJson = JSON.stringify(newOne);
                 if (existingJson !== newOneJson) {
-                    this._logger.Warn(` [Templates]   Overwriting event '${event.Name}' with a new one`);
+                    this._logger.Warn(` [Templates]   Overwriting event '${newOne.Name}' with a new one`);
 
                     Object.assign(existing, newOne);
                     validateEvent = true;
@@ -169,12 +169,12 @@ export class TemplatesProcessor {
             }
 
             // Check if there is another with the same name
-            const existing = (this._finalTemplates.command ?? []).find(p => p.Name === command.Name);
+            const existing = (this._finalTemplates.command ?? []).find(p => p.Name === newOne.Name);
             if (existing != null) {
                 const existingJson = JSON.stringify(existing);
                 const newOneJson = JSON.stringify(newOne);
                 if (existingJson !== newOneJson) {
-                    this._logger.Warn(` [Templates]   Overwriting command '${command.Name}' with a new one`);
+                    this._logger.Warn(` [Templates]   Overwriting command '${newOne.Name}' with a new one`);
 
                     Object.assign(existing, newOne);
                 }
