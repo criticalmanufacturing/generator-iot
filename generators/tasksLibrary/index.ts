@@ -5,9 +5,15 @@ class GeneratorTasksPackage extends ConnectIoTGenerator {
     private values: any = {
         directory: "controller-engine-custom-tasks",
         packageName: "@criticalmanufacturing/connect-iot-controller-engine-custom-tasks",
-        packageVersion: "8.2.0",
-        identifier: "MyTasksPackage",
-        identifierLower: ""
+        packageVersion: "10.2.0",
+        identifier: "MyTasksLibrary",
+        targetSystemVersion: "10.2.0",
+        dependsOnScope: "[]",
+        mandatoryForScope: "[]",
+        dependsOnProtocol: "",
+        mandatoryForProtocol: "",
+
+        targetSystemVersionProcessed: "",
     };
 
     constructor(args: any, opts: any) {
@@ -16,11 +22,23 @@ class GeneratorTasksPackage extends ConnectIoTGenerator {
 
     /** Will prompt the user about all settings */
     async prompting() {
-        this.values.directory = await this.askScalar("What is the identifier (directory name)?", ValueType.Text, this.values.directory);
+        this.values.directory = await this.askScalar("What is the directory name?", ValueType.Text, this.values.directory);
         this.values.packageName = await this.askScalar("What is the full package name?", ValueType.Text, this.values.packageName);
         this.values.packageVersion = await this.askScalar("What is the package version?", ValueType.Text, this.values.packageVersion);
-        this.values.identifier = await this.askScalar("What is the package identifier (Do not enter spaces)?", ValueType.Text, this.values.identifier);
-        this.values.identifierLower = this.values.identifier.trim().toLocaleLowerCase();
+        this.values.identifier = await this.askScalar("What is the library name?", ValueType.Text, this.values.identifier);
+        this.values.targetSystemVersion = await this.askScalar("What is the target system (MES) version", ValueType.Text, this.values.targetSystemVersion);
+
+        this.values.dependsOnScope = JSON.stringify(await this.askMultipleChoices("On which scopes this library can be used", ["ConnectIoT", "FactoryAutomation", "EnterpriseIntegration"], ["ConnectIoT", "FactoryAutomation", "EnterpriseIntegration"]));
+        this.values.mandatoryForScope = JSON.stringify(await this.askMultipleChoices("On which scopes this library is *mandatory* (selected by default)", ["ConnectIoT", "FactoryAutomation", "EnterpriseIntegration"], []));
+        this.values.dependsOnProtocol = await this.askScalar("Is this library specific for any protocol? If so, list the names separated ny comma", ValueType.Text, this.values.dependsOnProtocol);
+        this.values.mandatoryForProtocol = await this.askScalar("Is this library *mandatory* for any protocol? If so, list the names separated ny comma", ValueType.Text, this.values.dependsOnProtocol);
+
+
+        // Post process values
+        this.values.targetSystemVersionProcessed = `release-${this.values.targetSystemVersion.split(".").join("")}`; // release-1003
+        this.values.dependsOnProtocol = (this.values.dependsOnProtocol.trim()) === "" ? "[]" : this.values.dependsOnProtocol = JSON.stringify(this.values.dependsOnProtocol.split(","));
+        this.values.mandatoryForProtocol = (this.values.mandatoryForProtocol.trim()) === "" ? "[]" : this.values.mandatoryForProtocol = JSON.stringify(this.values.mandatoryForProtocol.split(","));
+        
     }
 
     /** Copy all files to destination directory with the settings defined in the previous step */
@@ -37,7 +55,7 @@ class GeneratorTasksPackage extends ConnectIoTGenerator {
             this.fs.copyTpl(this.templatePath(key), this.destinationPath(this.values.directory, value), this.values);
         });
 
-        let files: string[] = ["package.json", "README.md", "tsconfig.json", "tslint.json", "gulpfile.js", "packConfig.json"];
+        let files: string[] = ["package.json", "README.md", "tsconfig.json", "tslint.json", "packConfig.json"];
         files.forEach((template) => {
             this.fs.copyTpl(this.templatePath(template), this.destinationPath(this.values.directory, template), this.values);
         });
@@ -52,12 +70,6 @@ class GeneratorTasksPackage extends ConnectIoTGenerator {
         files = ["metadata.ts"];
         files.forEach((template) => {
             this.fs.copyTpl(this.templatePath("src", template), this.destinationPath(this.values.directory, "src", template), this.values);
-        });
-
-        // Font classes
-        files = ["font.js"];
-        files.forEach((template) => {
-            this.fs.copyTpl(this.templatePath("font/svg", template), this.destinationPath(this.values.directory, "font/svg", template), this.values);
         });
 
         // Tests

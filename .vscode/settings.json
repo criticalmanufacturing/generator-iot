@@ -54,6 +54,7 @@
         "commack",
         "coreclr",
         "crit",
+        "criticalmanufacturing",
         "dataid",
         "drack",
         "edge",
@@ -65,5 +66,6 @@
         "onlack",
         "rptid",
         "use"
-    ]
+    ],
+    "workbench.tree.indent": 16
 }
