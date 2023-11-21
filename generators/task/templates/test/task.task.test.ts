@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import { Task, System, TYPES, DI } from "@criticalmanufacturing/connect-iot-controller-engine";
 import EngineTestSuite from "@criticalmanufacturing/connect-iot-controller-engine/test";
-<% if(isForProtocol === true) { %>import { DriverProxyMock } from "@criticalmanufacturing/connect-iot-controller-engine/test/mocks/driverProxy.mock";<% } %>
+<% if(isProtocol === true) { %>import { DriverProxyMock } from "@criticalmanufacturing/connect-iot-controller-engine/test/mocks/driverProxy.mock";<% } %>
 // import { DataStoreMock } from "@criticalmanufacturing/connect-iot-controller-engine/test/mocks/dataStore.mock";
 import * as chai from "chai";
 
@@ -13,7 +13,7 @@ import <%= className %>TaskModule from "../../../../src/tasks/<%= name %>/index"
 
 describe("<%= className %> Task tests", () => {
 
-<% if(isForProtocol === true) { %>
+<% if(isProtocol === true) { %>
     let driverMock: DriverProxyMock;
     beforeEach(() => {
         driverMock = new DriverProxyMock();
@@ -70,7 +70,7 @@ describe("<%= className %> Task tests", () => {
             { sourceId: "0", outputName: `error`, targetId: "1", inputName: "error", },
             // Add more links needed here...
         ],
-        <% if(isForProtocol === true) { %>driverMock<% } %><% if(isForProtocol === false) { %>undefined<% } %>,
+        <% if(isProtocol === true) { %>driverMock<% } %><% if(isProtocol === false) { %>undefined<% } %>,
         (containerId) => {
             // Change what you need in the container
             // Example:

@@ -123,9 +123,9 @@ export interface LibraryTask {
     /**	Message to display to the user when a task is marked as Deprecated indicating the user what he should use instead. Note: Only used when Lifecyle != Productive */
     lifecycleMessage: string;
     /**	List of protocol drivers (separated by comma “,”) this task depends on to be available. Example: “@criticalmanufacturing/connect-iot-driver-oib”. Leave empty (default) for no dependency which means, available for all protocol drivers */
-    dependsOnProtocol: string[];
+    dependsOnProtocol?: string[];
     /** List of scopes (separated by comma “,”) this task depends on to be available. Leave empty (default) for no dependency which means, available for all scopes */
-    dependsOnScope: Scope[];
+    dependsOnScope?: Scope[];
     
     
     inputs?: {[key: string]: string | TaskInputType};
@@ -157,7 +157,7 @@ export interface TaskInputType {
 
 export interface TaskOutputType {
     /** Type of input port */
-    type: TaskInputTypeType;
+    type: TaskOutputTypeType;
     /** Data type of the input (used when Type is static) */
     dataType: string;
     /** Text to be displayed in the Gui, defaults to Name if not defined */
@@ -194,5 +194,5 @@ export interface SettingsSetting {
     timerType != null && timerType !== “CronJob” */
     condition?: string;
     /** Extra settings to use to model the behavior of the field. These settings are different per control to use */
-    settings: any;    
+    settings?: any;    
 }

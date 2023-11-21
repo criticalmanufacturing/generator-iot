@@ -17,6 +17,7 @@ class GeneratorApp extends ConnectIoTGenerator {
         console.log("\x1b[36m", "Development apps:", "\x1b[0m");
         console.log("\x1b[33m", "  driver", "\x1b[0m", "        -> Create a basic package code for a new Protocol Driver");
         console.log("\x1b[33m", "  tasksLibrary", "\x1b[0m", "  -> Create an empty task library package");
+        console.log("\x1b[33m", "  task", "\x1b[0m", "          -> Create a new task to be used in a tasks library package");
         console.log("\x1b[33m", "  converter", "\x1b[0m", "     -> Create a new converter to be used in a tasks library package");
     }
 

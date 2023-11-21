@@ -1,12 +1,8 @@
 import { Task, Dependencies, System, DI, TYPES, Utilities } from "@criticalmanufacturing/connect-iot-controller-engine";
-import { TaskDefaultSettings } from "@criticalmanufacturing/connect-iot-controller-engine/src/system";
-import i18n from "./i18n/<%= name %>.default";
 
 /** Default values for settings */
 export const SETTINGS_DEFAULTS: <%= className %>Settings = {
-    inputs: [],
-    outputs: [],
-    message: ""
+    <%- settingsDefaults %>
 }
 
 /**
@@ -29,33 +25,17 @@ export const SETTINGS_DEFAULTS: <%= className %>Settings = {
  * ### Settings
  * See {@see <%= className %>Settings}
  */
-@Task.Task({
-    name: i18n.TITLE,
-    iconClass: "<%= icon %>",
-    inputs: {
-        activate: Task.INPUT_ACTIVATE,
-
-        // Add more inputs here
-        // example: containerId: System.PropertyValueType.String,
-    },
-    outputs: {
-        // Add more outputs here:
-        // Example:  notifyMessage: System.PropertyValueType.String,
-        success: Task.OUTPUT_SUCCESS,
-        error: Task.OUTPUT_ERROR
-    }<% if(isForProtocol === true) { %>,
-    protocol: Task.TaskProtocol.All<% } %>
-})
+@Task.Task()
 export class <%= className %>Task implements Task.TaskInstance, <%= className %>Settings {
 
     /** Accessor helper for untyped properties and output emitters. */
-    [key: string]: any;
+    // [key: string]: any;
 
     /** **Inputs** */
     /** Activate task execution */
     public activate: any = undefined;
-    // ... more inputs
 
+    <%- inputsInterface %>
 
     /** **Outputs** */
     /** To output a success notification */
@@ -63,16 +43,14 @@ export class <%= className %>Task implements Task.TaskInstance, <%= className %>
     /** To output an error notification */
     public error: Task.Output<Error> = new Task.Output<Error>();
 
+    <%- outputsInterface %>
 
-    /** Settings */
-    inputs: Task.TaskInput[];
-    outputs: Task.TaskOutput[];
     /** Properties Settings */
-    message: string;
+    <%= settingsInterface %>
 
     @DI.Inject(TYPES.Dependencies.Logger)
     private _logger: Dependencies.Logger;
-<% if(isForProtocol === true) { %>
+<% if(isProtocol === true) { %>
     @DI.Inject(TYPES.System.Driver)
     private _driverProxy: System.DriverProxy;<% } %>
 
@@ -105,14 +83,10 @@ export class <%= className %>Task implements Task.TaskInstance, <%= className %>
     /** Cleanup internal data, unregister any event handler, etc */
     async onDestroy(): Promise<void> {
     }
-
-    // On every tick (use instead of onChanges if necessary)
-    // async onCheck(): Promise<void> {
-    // }
 }
 
 // Add settings here
 /** <%= className %> Settings object */
-export interface <%= className %>Settings extends TaskDefaultSettings {
-    message: string;
+export interface <%= className %>Settings extends System.TaskDefaultSettings {
+    <%= settingsInterface %>
 }

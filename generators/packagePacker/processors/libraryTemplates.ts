@@ -44,11 +44,16 @@ export class LibraryTemplatesProcessor {
             // Assume a path!
             templateRules = this._paths.transform(templateRules);
 
-            const files = io.readdirSync(templateRules);
-            for (let file of files) {
-                if (file.endsWith(".json")) {
-                    this.merge(path.join(templateRules, file));
+            if (!io.existsSync(templateRules)) {
+                this._logger.Warn(` [Templates] Directory '${templateRules}' doesn't exist`);
+            } else {
+                const files = io.readdirSync(templateRules);
+                for (let file of files) {
+                    if (file.endsWith(".json")) {
+                        this.merge(path.join(templateRules, file));
+                    }
                 }
+            
             }
         } else {
             // Process each template entry
