@@ -53,6 +53,7 @@ class GeneratorTask extends ConnectIoTGenerator {
         outputsInterface: "",
         settingsInterface: "",
         settingsDefaults: "",
+        testSettingsDefaults: "",
     };
     private asking: boolean = false;
 
@@ -77,6 +78,10 @@ class GeneratorTask extends ConnectIoTGenerator {
         this.values.icon = await this.askScalar("What is the icon class name (leave empty to use svg instead)?", ValueType.Text, this.values.icon);
         if (this.values.icon === "") {
             this.values.svg = await this.askScalar("What is the svg data (value inside d=\"\")?", ValueType.Text, this.values.svg);
+            if (this.values.svg === "") {
+                // this.values.svg = "M981.333333 319.84v-0.36c0-0.32 0-0.666667-0.04-0.953333v-0.353334c-0.033333-0.373333-0.073333-0.753333-0.126666-1.12v-0.126666a20.56 20.56 0 0 0-0.56-2.666667v-0.08a21.213333 21.213333 0 0 0-1.506667-3.853333l-0.053333-0.093334c-0.24-0.473333-0.493333-0.933333-0.766667-1.38l-118.666667-197.626666a53.593333 53.593333 0 0 0-45.733333-25.893334H210.12a53.593333 53.593333 0 0 0-45.733333 25.893334L45.806667 308.86c-0.273333 0.446667-0.526667 0.9-0.766667 1.333333l-0.053333 0.106667a21.273333 21.273333 0 0 0-1.506667 3.84v0.086667a20.666667 20.666667 0 0 0-0.56 2.666666v0.133334c-0.053333 0.373333-0.093333 0.746667-0.126667 1.12v0.353333c0 0.32 0 0.633333-0.04 0.953333v565.853334a53.393333 53.393333 0 0 0 53.333334 53.333333H928a53.393333 53.393333 0 0 0 53.333333-53.333333V320v-0.16z m-158.3-186.666667L922.32 298.666667h-202.446667L668.666667 128h145.206666a10.72 10.72 0 0 1 9.153334 5.18zM341.333333 341.333333h341.333334v170.666667H341.333333z m282.793334-213.333333L675.333333 298.666667H348.666667l51.2-170.666667z m-423.153334 5.18a10.72 10.72 0 0 1 9.146667-5.18H355.333333l-51.2 170.666667H101.68zM938.666667 885.333333a10.666667 10.666667 0 0 1-10.666667 10.666667H96a10.666667 10.666667 0 0 1-10.666667-10.666667V341.333333h213.333334v192a21.333333 21.333333 0 0 0 21.333333 21.333334h384a21.333333 21.333333 0 0 0 21.333333-21.333334V341.333333h213.333334z m-128-96a21.333333 21.333333 0 0 1 21.333333-21.333333 21.333333 21.333333 0 1 1-21.333333 21.333333z m-64-21.333333a21.333333 21.333333 0 0 1 0 42.666667H618.666667a21.333333 21.333333 0 0 1 0-42.666667z";
+                this.values.icon = "icon-core-tasks-connect-iot-lg-customlbo";
+            }
         }
 
         this.values.isProtocol = await this.askScalar("Is this task used by the protocol driver?", ValueType.Confirm, this.values.isProtocol);
@@ -538,6 +543,8 @@ class GeneratorTask extends ConnectIoTGenerator {
                             this.values.settingsInterface += `\t/** ${setting.infoMessage ?? setting.displayName ?? setting.name} */\r\n`;
                             this.values.settingsInterface += `\t${setting.settingKey}: ${this.toJSType(<any>this.pascalCaseValue(setting.dataType ?? "String"))};\r\n`;
                             this.values.settingsDefaults += `\t${setting.settingKey}: ${JSON.stringify(setting.defaultValue)},\r\n`;
+                            this.values.testSettingsDefaults += `\t\t\t\t${setting.settingKey}: ${JSON.stringify(setting.defaultValue)},\r\n`;
+
                         }
                     }
                 }
@@ -546,6 +553,7 @@ class GeneratorTask extends ConnectIoTGenerator {
 
         this.values.settingsInterface = this.values.settingsInterface.trim();
         this.values.settingsDefaults = this.values.settingsDefaults.trim();
+        this.values.testSettingsDefaults = this.values.testSettingsDefaults.trim();
 
         console.log("*");
         console.log(this.values.inputsInterface);

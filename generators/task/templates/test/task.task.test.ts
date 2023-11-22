@@ -33,7 +33,7 @@ describe("<%= className %> Task tests", () => {
             class: <%= className %>TaskModule,
             id: "0",
             settings: settings || <<%= className %>Settings>{
-                message: ""
+                <%- testSettingsDefaults %>
             }
         };
 
