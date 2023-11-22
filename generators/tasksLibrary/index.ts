@@ -31,7 +31,7 @@ class GeneratorTasksPackage extends ConnectIoTGenerator {
         this.values.dependsOnScope = JSON.stringify(await this.askMultipleChoices("On which scopes this library can be used", ["ConnectIoT", "FactoryAutomation", "EnterpriseIntegration"], ["ConnectIoT", "FactoryAutomation", "EnterpriseIntegration"]));
         this.values.mandatoryForScope = JSON.stringify(await this.askMultipleChoices("On which scopes this library is *mandatory* (selected by default)", ["ConnectIoT", "FactoryAutomation", "EnterpriseIntegration"], []));
         this.values.dependsOnProtocol = await this.askScalar("Is this library specific for any protocol? If so, list the names separated ny comma", ValueType.Text, this.values.dependsOnProtocol);
-        this.values.mandatoryForProtocol = await this.askScalar("Is this library *mandatory* for any protocol? If so, list the names separated ny comma", ValueType.Text, this.values.dependsOnProtocol);
+        this.values.mandatoryForProtocol = await this.askScalar("Is this library *mandatory* for any protocol? If so, list the names separated by comma", ValueType.Text, this.values.dependsOnProtocol);
 
 
         // Post process values

@@ -487,9 +487,6 @@ class GeneratorTask extends ConnectIoTGenerator {
      * Will copy the templates for the framework tailoring all the files with the base framework it's extending from.
      */
     copyTemplates() {
-
-        let dump = "";
-        
         // inputs
         for (const inputName in this.values.inputs) {
             if (this.values.inputs.hasOwnProperty(inputName)) {
@@ -554,12 +551,6 @@ class GeneratorTask extends ConnectIoTGenerator {
         this.values.settingsInterface = this.values.settingsInterface.trim();
         this.values.settingsDefaults = this.values.settingsDefaults.trim();
         this.values.testSettingsDefaults = this.values.testSettingsDefaults.trim();
-
-        console.log("*");
-        console.log(this.values.inputsInterface);
-        console.log("*");
-        
-
 
         // Add new task entry in metadata file
         const destinationFile = this.destinationPath("src", "metadata.ts");

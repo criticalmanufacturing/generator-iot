@@ -68,7 +68,7 @@ export class <%= className %>Task implements Task.TaskInstance, <%= className %>
 
             // or
             this._logger.error(`Something very wrong just happened! Log it!`);
-            throw new Error ("Will stop processing, but Error output will be triggered with this value");
+            this.error.emit(new Error ("Will stop processing, but Error output will be triggered with this value"));
         }
     }
 

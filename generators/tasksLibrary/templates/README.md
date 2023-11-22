@@ -1,3 +1,3 @@
-# Connect IoT - Your Tasks/Converters Custom Package
+# Connect IoT - Your Tasks/Converters Library Package
 
 Describe your new package here
