@@ -10,7 +10,7 @@ class GeneratorTask extends ConnectIoTGenerator {
         icon: "",
         svg: "",
         isProtocol: false,
-        isController: false,
+        isController: true,
         lifecycle: "Productive",
         lifecycleMessage: "",
         dependsOnProtocol: "",
@@ -86,6 +86,7 @@ class GeneratorTask extends ConnectIoTGenerator {
 
         this.values.isProtocol = await this.askScalar("Is this task used by the protocol driver?", ValueType.Confirm, this.values.isProtocol);
         if (this.values.isProtocol) {
+            this.values.isController = false; // By default should not be for both
             this.values.isController = await this.askScalar("Will this task be also usable without the driver connection?", ValueType.Confirm, this.values.isController);
         }
 
