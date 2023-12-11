@@ -1,6 +1,6 @@
 {
   "name": "@criticalmanufacturing/generator-iot",
-  "version": "10.2.1",
+  "version": "10.2.2",
   "description": "Connect IoT Scaffolding",
   "files": [
     "generators/*.js",
@@ -15,8 +15,9 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git@github.com:criticalmanufacturing/generator-iot.git"
+    "url": "git@github.com:criticalmanufacturing/generator-iot.git#102x"
   },
+  "homepage": "https://github.com/criticalmanufacturing/generator-iot/tree/102x",
   "devDependencies": {
     "@types/chalk": "2.2.0",
     "@types/fs-extra": "11.0.3",
