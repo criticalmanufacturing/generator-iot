@@ -31,7 +31,7 @@ class DriverConfig extends ConnectIoTGenerator {
     /** Copy all files to destination directory with the settings defined in the previous step */
     copyTemplates() {
         // Base files:
-        let filesWithRename: Map<string, string> = new  Map<string, string>([
+        let filesWithRename: Map<string, string> = new Map<string, string>([
             ["_iot_.gitattributes", ".gitattributes"],
             ["_iot_.gitignore", ".gitignore"],
             ["_iot_.npmignore", ".npmignore"],
@@ -42,16 +42,16 @@ class DriverConfig extends ConnectIoTGenerator {
             this.fs.copyTpl(this.templatePath(key), this.destinationPath(this.values.directory, value), this.values);
         });
 
-        let files: string[] = ["package.json", "README.md", "tsconfig.json", "tslint.json", "gulpfile.js", "packConfig.json"];
+        let files: string[] = ["package.json", "README.md", "tsconfig.json", ".eslintignore", ".eslintrc.json", "packConfig.json"];
         files.forEach((template) => {
             this.fs.copyTpl(this.templatePath(template), this.destinationPath(this.values.directory, template), this.values);
         });
 
-         // Visual Studio settings
-         files = ["settings.json", "launch.json"];
-         files.forEach((template) => {
-             this.fs.copyTpl(this.templatePath("_iot_.vscode", template), this.destinationPath(this.values.directory, ".vscode", template), this.values);
-         });
+        // Visual Studio settings
+        files = ["settings.json", "launch.json"];
+        files.forEach((template) => {
+            this.fs.copyTpl(this.templatePath("_iot_.vscode", template), this.destinationPath(this.values.directory, ".vscode", template), this.values);
+        });
 
         // Driver implementation classes
         files = ["index.ts", "types.ts", "inversify.config.ts", "communicationSettings.ts", "driverImplementation.ts"];
@@ -76,6 +76,7 @@ class DriverConfig extends ConnectIoTGenerator {
     }
 
     end() {
+        this.log("If the project was created with ngx-iot-schematics and there's a workspace please add the entry for the driver under package.json workspaces. If you wish to inherit and run commands from the root");
     }
 }
 

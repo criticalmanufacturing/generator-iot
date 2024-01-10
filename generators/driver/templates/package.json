@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "build": "tsc",
+    "lint": "eslint ./**/*.ts",
     "watchPackage": "tsc --preserveWatchOutput -w",
     "watchTests": "tsc -p test/unit --preserveWatchOutput -w",
     "start": "npm run build -- -w | node node_modules/nodemon/bin/nodemon src/index.js --ignore test/",
@@ -53,7 +54,7 @@
   "__CMF_ONLY__cmfLinkDependencies": {
     "@criticalmanufacturing/connect-iot-common": "file:../common",
     "@criticalmanufacturing/connect-iot-driver": "file:../driver"
-},
+  },
   "author": "Critical Manufacturing",
   "criticalManufacturing": {
     "automationProtocol": {
