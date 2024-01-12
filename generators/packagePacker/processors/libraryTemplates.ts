@@ -45,7 +45,7 @@ export class LibraryTemplatesProcessor {
             templateRules = this._paths.transform(templateRules);
 
             if (!io.existsSync(templateRules)) {
-                this._logger.Warn(` [Templates] Directory '${templateRules}' doesn't exist`);
+                throw new Error(` [Templates] Directory '${templateRules}' doesn't exist`);
             } else {
                 const files = io.readdirSync(templateRules);
                 for (let file of files) {
@@ -53,7 +53,7 @@ export class LibraryTemplatesProcessor {
                         this.merge(path.join(templateRules, file));
                     }
                 }
-            
+
             }
         } else {
             // Process each template entry

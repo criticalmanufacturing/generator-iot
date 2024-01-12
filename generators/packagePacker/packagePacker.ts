@@ -161,8 +161,9 @@ export class PackagePacker {
 
             switch (configuration.type) {
                 case ComponentType.Component: container.get<DriverTemplatesProcessor>(TYPES.Processors.DriverTemplates).process(configuration.templates, destination);
+                case ComponentType.TasksPackage:
                 case ComponentType.TasksLibrary: container.get<LibraryTemplatesProcessor>(TYPES.Processors.LibraryTemplates).process(configuration.templates, destination);
-            }            
+            }
         }
 
         // process Post actions
