@@ -160,9 +160,13 @@ export class PackagePacker {
             const destination = path.join(temp, "package.json");
 
             switch (configuration.type) {
-                case ComponentType.Component: container.get<DriverTemplatesProcessor>(TYPES.Processors.DriverTemplates).process(configuration.templates, destination);
+                case ComponentType.Component: 
+                    container.get<DriverTemplatesProcessor>(TYPES.Processors.DriverTemplates).process(configuration.templates, destination);
+                    break;
                 case ComponentType.TasksPackage:
-                case ComponentType.TasksLibrary: container.get<LibraryTemplatesProcessor>(TYPES.Processors.LibraryTemplates).process(configuration.templates, destination);
+                case ComponentType.TasksLibrary:
+                    container.get<LibraryTemplatesProcessor>(TYPES.Processors.LibraryTemplates).process(configuration.templates, destination);
+                    break;
             }
         }
 
