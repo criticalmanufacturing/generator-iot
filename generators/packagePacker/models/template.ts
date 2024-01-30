@@ -34,7 +34,7 @@ export const JsonTemplatePropertyDefaults: JsonTemplateProperty = {
     IsWritable: true,
     IsReadable: true,
     AutomationProtocolDataType: "",
-    ExtendedData: { }
+    ExtendedData: {}
 };
 
 export interface JsonTemplateEventProperty {
@@ -46,7 +46,7 @@ export interface JsonTemplateEventProperty {
 export const JsonTemplateEventPropertyDefaults: JsonTemplateEventProperty = {
     Property: "",
     Order: -1,
-    ExtendedData: { }
+    ExtendedData: {}
 };
 
 export interface JsonTemplateEvent {
@@ -63,7 +63,7 @@ export const JsonTemplateEventDefaults: JsonTemplateEvent = {
     Description: "",
     DeviceEventId: "",
     IsEnabled: true,
-    ExtendedData: { },
+    ExtendedData: {},
     EventProperties: [],
 };
 
@@ -80,7 +80,7 @@ export const JsonTemplateCommandDefaults: JsonTemplateCommand = {
     Name: "",
     Description: "",
     DeviceCommandId: "",
-    ExtendedData: { },
+    ExtendedData: {},
     CommandParameters: [],
 };
 
@@ -103,7 +103,7 @@ export const JsonTemplateCommandParameterDefaults: JsonTemplateCommandParameter 
     AutomationProtocolDataType: "",
     DefaultValue: "",
     IsMandatory: true,
-    ExtendedData: { }
+    ExtendedData: {}
 };
 
 export interface JsonTemplate {
@@ -111,4 +111,10 @@ export interface JsonTemplate {
     event?: JsonTemplateEvent[];
     command?: JsonTemplateCommand[];
 }
+
+export interface JsonDatatype {
+    name: string;
+    description?: string;
+}
+
 

@@ -1,4 +1,4 @@
-import { JsonTemplate, JsonTemplateCommand, JsonTemplateCommandDefaults, JsonTemplateCommandParameterDefaults, JsonTemplateEvent, JsonTemplateEventDefaults, JsonTemplateEventPropertyDefaults, JsonTemplateProperty, JsonTemplatePropertyDefaults, Template, TemplateType } from "../models/template";
+import { JsonDatatype, JsonTemplate, JsonTemplateCommand, JsonTemplateCommandDefaults, JsonTemplateCommandParameterDefaults, JsonTemplateEvent, JsonTemplateEventDefaults, JsonTemplateEventPropertyDefaults, JsonTemplateProperty, JsonTemplatePropertyDefaults, Template, TemplateType } from "../models/template";
 import { Log } from "./log";
 import * as io from "fs-extra";
 import * as path from "path";
@@ -15,12 +15,14 @@ export class DriverTemplatesProcessor {
     private _paths: Paths;
 
     private _finalTemplates: JsonTemplate = {};
+    private _protocolDatatypes: Array<JsonDatatype> = [];
 
     public process(templateRules: string | Template[], destination: string): void {
         let json: any = io.readJSONSync(destination);
         let automationProtocol: any = json.criticalManufacturing.automationProtocol;
 
-        this._finalTemplates = automationProtocol.templates ?? { };
+        this._protocolDatatypes = automationProtocol.dataTypes ?? [];
+        this._finalTemplates = automationProtocol.templates ?? {};
         if (this._finalTemplates != null && (this._finalTemplates.property != null || this._finalTemplates.event != null)) {
             this._logger.Warn(" [Templates] Existing templates found in the package.json file found. Merging the new ones with the existing");
         }
@@ -98,6 +100,10 @@ export class DriverTemplatesProcessor {
 
             // Check if there is another with the same name
             const existing = (this._finalTemplates.property ?? []).find(p => p.Name === newOne.Name);
+            if (!this._protocolDatatypes.find(obj => obj.name === newOne.AutomationProtocolDataType)) {
+                throw new Error(`Property '${newOne.Name}'contains an invalid Automation Protocol DataType '${newOne.AutomationProtocolDataType}'`);
+            }
+
             if (existing != null) {
                 const existingJson = JSON.stringify(existing);
                 const newOneJson = JSON.stringify(newOne);
@@ -117,13 +123,14 @@ export class DriverTemplatesProcessor {
     private mergeEvents(events: JsonTemplateEvent[]) {
         events.forEach(event => {
             const newOne = Object.assign({}, JsonTemplateEventDefaults, event);
+            let set = new Set<number>();
             for (let i = 0; i < (newOne.EventProperties ?? []).length; i++) {
                 (newOne.EventProperties ?? [])[i] = Object.assign({}, JsonTemplateEventPropertyDefaults, (newOne.EventProperties ?? [])[i]);
 
-                // Fix order if needed
-                if ((newOne.EventProperties ?? [])[i].Order === -1) {
-                    (newOne.EventProperties ?? [])[i].Order = i + 1;
-                }
+                const eventProperty = (newOne.EventProperties ?? [])[i];
+                set = this.validateOrder(set, "Event", newOne.Name, eventProperty.Property, eventProperty.Order ?? -1, i);
+
+                (newOne.EventProperties ?? [])[i].Order = [...set][set.size - 1];
             }
 
             let validateEvent: boolean = false;
@@ -159,13 +166,16 @@ export class DriverTemplatesProcessor {
     private mergeCommands(commands: JsonTemplateCommand[]) {
         commands.forEach(command => {
             const newOne = Object.assign({}, JsonTemplateCommandDefaults, command);
+            let set = new Set<number>();
             for (let i = 0; i < (newOne.CommandParameters ?? []).length; i++) {
                 (newOne.CommandParameters ?? [])[i] = Object.assign({}, JsonTemplateCommandParameterDefaults, (newOne.CommandParameters ?? [])[i]);
-
-                // Fix order if needed
-                if ((newOne.CommandParameters ?? [])[i].Order === -1) {
-                    (newOne.CommandParameters ?? [])[i].Order = i + 1;
+                if (!this._protocolDatatypes.find(obj => obj.name === (newOne.CommandParameters ?? [])[i].AutomationProtocolDataType)) {
+                    throw new Error(`Command '${newOne.Name}' with Command Parameter '${(newOne.CommandParameters ?? [])[i].Name}' contains an invalid Automation Protocol DataType '${(newOne.CommandParameters ?? [])[i].AutomationProtocolDataType}'`);
                 }
+
+                const commandParameter = (newOne.CommandParameters ?? [])[i];
+                set = this.validateOrder(set, "Command", newOne.Name, commandParameter.Name, commandParameter.Order ?? -1, i);
+                (newOne.CommandParameters ?? [])[i].Order = [...set][set.size - 1];
             }
 
             // Check if there is another with the same name
@@ -184,5 +194,17 @@ export class DriverTemplatesProcessor {
                 this._logger.Info(` [Templates]   Found new command '${newOne.Name}'`);
             }
         });
+    }
+
+    private validateOrder(set: Set<number>, type: string, name: string, item: string, order: number, iteration: number): Set<number> {
+        // Fix order if needed
+        if (order === -1) {
+            order = iteration + 1;
+        }
+        if (set.has(order)) {
+            throw new Error(`In '${type}' '${name}', parameter '${item}' has a repeated order '${order}'`)
+        }
+        set.add(order);
+        return set;
     }
 }
