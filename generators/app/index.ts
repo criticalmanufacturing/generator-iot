@@ -8,7 +8,7 @@ class GeneratorApp extends ConnectIoTGenerator {
 
         this.option("keep", { type: Boolean, default: false });
 
-        this.log(yosay('Welcome to the Connect IoT 10.2.x scaffolding tool!'));
+        this.log(yosay(`Welcome to the Connect IoT ${this.getVersion()} scaffolding tool!`));
 
         this.log(this.usage()); // .help() show all command line parameters 
         this.log("");

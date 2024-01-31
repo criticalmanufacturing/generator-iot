@@ -1,19 +1,4 @@
-       
-        // this.argument('packageName', { type: String, required: true });
-        // console.log(args);
-        // console.log(opts);
-        // this.values.fileName = this.camelCaseValue(this.options.packageName);
-        // // Prepend the package suffix if not present
-        // if (!this.options.packageName.startsWith(`${this.ctx.packagePrefix}.`)) {
-        //   this.options.packageName = `${this.ctx.packagePrefix}.${this.options.packageName}`;
-        // }
-    
-        // // If this command was not executed from the root, exit    
-        // if (this.config.get("isRoot") !== true) {
-        //   this.env.error(new Error("Please execute this command outside a package. Hint: use the root of the repository."));
-        // } 
-
-        
+  
 import { ConnectIoTGenerator, ValueType, IoTValueType } from "../base";
 import { PackagePacker } from "./packagePacker";
 
@@ -43,6 +28,9 @@ class GeneratorPackagePacker extends ConnectIoTGenerator {
      * Will copy the templates for the framework tailoring all the files with the base framework it's extending from.
      */
     public async copyTemplates(): Promise<void> {
+        console.log(`Using scaffolding version '${this.getVersion()}'\n`);
+
+
         const generator = new PackagePacker();
         await generator.go(this.options);
     }

@@ -1,4 +1,6 @@
 import * as Generator from 'yeoman-generator';
+import * as path from "path";
+import * as io from "fs-extra";
 
 export class ConnectIoTGenerator extends Generator {
 
@@ -18,6 +20,12 @@ export class ConnectIoTGenerator extends Generator {
     /** Simply pascal cases the passed in value. */
     pascalCaseValue(value: string) {
         return value[0].toUpperCase() + value.slice(1);
+    }
+
+    getVersion(): string {
+        const packageFile: string = path.join(__dirname, "..", "package.json");
+        const packageContent = io.readJSONSync(packageFile);
+        return (packageContent.version);
     }
 
     /**
