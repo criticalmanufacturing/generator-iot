@@ -10,7 +10,7 @@
             "name": "Start PackagePacker",
             "program": "${workspaceRoot}/node_modules/yo/lib/cli.js",
             "args": [
-                "${workspaceRoot}/generator-iot/generators/packagePacker/index.js",
+                "${workspaceRoot}/generators/packagePacker/index.js",
                 "-a=C:/cmf/repos/Product/IoMT/dependencies/IoTNodeAddons",
                 "-d",
                 "-o=."
@@ -18,6 +18,48 @@
             "cwd": "C:/cmf/repos/Product/IoMT/src/driver-fileraw",
             "outFiles": [],
             "outputCapture": "std"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Create Task Library",
+            "program": "${workspaceRoot}/node_modules/yo/lib/cli.js",
+            "args": [
+                "${workspaceRoot}/generators/tasksLibrary/index.js"
+            ],
+            "cwd": "C:/cmf/repos/DS/BBraunBaseline/Features/Cmf.Custom.Baseline/Cmf.Custom.Baseline.IoT/Cmf.Custom.Baseline.IoT.Packages/src/",
+            "outFiles": [],
+            "outputCapture": "std",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Create Task",
+            "program": "${workspaceRoot}/node_modules/yo/lib/cli.js",
+            "args": [
+                "${workspaceRoot}/generators/task/index.js"
+            ],
+            "cwd": "C:/cmf/repos/DS/BBraunBaseline/Features/Cmf.Custom.Baseline/Cmf.Custom.Baseline.IoT/Cmf.Custom.Baseline.IoT.Packages/src/controller-engine-custom-tasks",
+            "outFiles": [],
+            "outputCapture": "std",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Create Converter",
+            "program": "${workspaceRoot}/node_modules/yo/lib/cli.js",
+            "args": [
+                "${workspaceRoot}/generators/converter/index.js"
+            ],
+            "cwd": "C:/cmf/repos/DS/BBraunBaseline/Features/Cmf.Custom.Baseline/Cmf.Custom.Baseline.IoT/Cmf.Custom.Baseline.IoT.Packages/src/controller-engine-custom-tasks",
+            "outFiles": [],
+            "outputCapture": "std",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
         }
     ]
 }

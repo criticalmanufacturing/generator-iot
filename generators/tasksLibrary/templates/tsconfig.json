@@ -3,7 +3,8 @@
         "module": "commonjs",
         "target": "es6",
         "lib": [
-            "es2017", "dom"
+            "es2017",
+            "dom"
         ],
         "sourceMap": true,
         "forceConsistentCasingInFileNames": true,
@@ -25,7 +26,6 @@
         "strictPropertyInitialization": false
     },
     "exclude": [
-        "test",
         "node_modules"
     ]
 }

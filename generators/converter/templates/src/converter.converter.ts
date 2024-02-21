@@ -21,8 +21,7 @@ export class <%= className %>Converter implements Converter.ConverterInstance<<%
 
         // >>TODO: Add converter code
         this._logger.error("The code for the converter was not yet developed");
-        throw new Error(">>TODO: Not implemented yet")
+        throw new Error(">>TODO: Not implemented yet");
 
     }
-
 }

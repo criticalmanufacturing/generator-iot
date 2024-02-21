@@ -22,7 +22,7 @@ class GeneratorTask extends ConnectIoTGenerator {
                 "dataType": "",
                 "displayName": "Activate",
                 "defaultValue": ""
-            }        
+            }
         },
         outputs: {
             "success": {
@@ -96,8 +96,8 @@ class GeneratorTask extends ConnectIoTGenerator {
         }
 
         this.values.dependsOnProtocol = await this.askScalar("Is this task specific for any protocol? If so, list the names separated by comma", ValueType.Text, this.values.dependsOnProtocol);
-        this.values.dependsOnScope = JSON.stringify(await this.askMultipleChoices("On which scopes this library can be used", ["ConnectIoT", "FactoryAutomation", "EnterpriseIntegration"], ["ConnectIoT", "FactoryAutomation", "EnterpriseIntegration"]));
-        
+        this.values.dependsOnScope = await this.askMultipleChoices("On which scopes this library can be used", ["ConnectIoT", "FactoryAutomation", "EnterpriseIntegration"], ["ConnectIoT", "FactoryAutomation", "EnterpriseIntegration"]);
+
         await this.handleInputs();
         await this.handleOutputs();
         await this.handleSettings();
@@ -106,7 +106,7 @@ class GeneratorTask extends ConnectIoTGenerator {
 
         // Values converted
         this.values.className = this.pascalCaseValue(this.values.name);
-        this.values.dependsOnProtocol = (this.values.dependsOnProtocol.trim()) === "" ? "[]" : JSON.stringify(this.values.dependsOnProtocol.split(","));
+        this.values.dependsOnProtocol = (this.values.dependsOnProtocol.trim()) === "" ? "[]" : this.values.dependsOnProtocol = JSON.parse(JSON.stringify(this.values.dependsOnProtocol.split(",")));
     }
 
     // Inputs
@@ -137,12 +137,12 @@ class GeneratorTask extends ConnectIoTGenerator {
                     const name = await this.askScalar("Input Name: ", ValueType.Text, "newInput");
                     input.displayName = await this.askScalar("Input Display Name: ", ValueType.Text, this.pascalCaseValue(name));
                     // input.type = <any>(await this.askChoice("Input Type: ", ["Static", "Activate"], input.type));
-                    
+
                     if (input.type === TaskInputTypeType.Static) {
                         input.dataType = await this.askValueType("Input Data Type:", <any>input.dataType, false);
                         input.defaultValue = await this.askScalar("Input Default Value: ", ValueType.Text, input.defaultValue ?? "");
                     }
-                    
+
                     if (input.type === TaskInputTypeType.Static && input.defaultValue === "" && input.displayName === name) {
                         this.values.inputs[name] = input.dataType;
                     } else {
@@ -169,21 +169,21 @@ class GeneratorTask extends ConnectIoTGenerator {
                             displayName: inputName,
                         };
 
-                        if (typeof(inputToEdit) === "string") {
+                        if (typeof (inputToEdit) === "string") {
                             input.dataType = <any>inputToEdit;
                         } else {
                             input = inputToEdit;
                         }
-    
+
                         const name = await this.askScalar("Input Name: ", ValueType.Text, inputName);
                         input.displayName = await this.askScalar("Input Display Name: ", ValueType.Text, input.displayName);
                         // input.type = <any>(await this.askChoice("Input Type: ", ["Static", "Activate"], input.type));
-                        
+
                         if (input.type === TaskInputTypeType.Static) {
                             input.dataType = await this.askValueType("Input Data Type:", <any>input.dataType, false);
                             input.defaultValue = await this.askScalar("Input Default Value: ", ValueType.Text, input.defaultValue ?? "");
                         }
-                        
+
                         if (input.type === TaskInputTypeType.Static && input.defaultValue === "" && input.displayName === name) {
                             this.values.inputs[name] = input.dataType;
                         } else {
@@ -196,7 +196,7 @@ class GeneratorTask extends ConnectIoTGenerator {
     }
 
     private async askInputsChoice(): Promise<string> {
-        if (!this.asking) { return("") } // Yo executes all methods from the class... This is an utility
+        if (!this.asking) { return ("") } // Yo executes all methods from the class... This is an utility
 
         console.log("");
         console.log("Current Inputs:");
@@ -206,7 +206,7 @@ class GeneratorTask extends ConnectIoTGenerator {
 
                 if (typeof (input) === "string") {
                     console.log("\x1b[32m", `${inputName} -> ${inputName} (${input})`, "\x1b[0m");
-                } else  if (input.type !== TaskInputTypeType.Activate) { 
+                } else if (input.type !== TaskInputTypeType.Activate) {
                     console.log("\x1b[32m", `${inputName} -> ${input.displayName ?? inputName} (${input.dataType}, default=${JSON.stringify(input.defaultValue ?? "")})`, "\x1b[0m");
                 }
             }
@@ -222,9 +222,9 @@ class GeneratorTask extends ConnectIoTGenerator {
         if (!this.asking) { return; } // Yo executes all methods from the class... This is an utility
         let choice = "";
         while ((choice = await this.askOutputsChoice()) !== "Done") {
-             // Create the list to be used with Remove and Edit
-             const allOutputs = ["**NONE**"];
-             for (const outputName in this.values.outputs) {
+            // Create the list to be used with Remove and Edit
+            const allOutputs = ["**NONE**"];
+            for (const outputName in this.values.outputs) {
                 if (this.values.outputs.hasOwnProperty(outputName)) {
                     const output: TaskOutputType | string = this.values.outputs[outputName];
                     if (typeof (output) === "string" || output.type === TaskOutputTypeType.Static) {
@@ -244,11 +244,11 @@ class GeneratorTask extends ConnectIoTGenerator {
                     const name = await this.askScalar("Output Name: ", ValueType.Text, "newOutput");
                     output.displayName = await this.askScalar("Output Display Name: ", ValueType.Text, this.pascalCaseValue(name));
                     // output.type = <any>(await this.askChoice("Output Type: ", ["Static", "Success", "Error"], output.type));
-                    
+
                     if (output.type === TaskOutputTypeType.Static) {
                         output.dataType = await this.askValueType("Output Data Type:", <any>output.dataType, false);
                     }
-                    
+
                     if (output.type === TaskOutputTypeType.Static && output.displayName === name) {
                         this.values.outputs[name] = output.dataType;
                     } else {
@@ -274,20 +274,20 @@ class GeneratorTask extends ConnectIoTGenerator {
                             displayName: outputName,
                         };
 
-                        if (typeof(outputToEdit) === "string") {
+                        if (typeof (outputToEdit) === "string") {
                             output.dataType = <any>outputToEdit;
                         } else {
                             output = outputToEdit;
                         }
-    
+
                         const name = await this.askScalar("Output Name: ", ValueType.Text, outputName);
                         output.displayName = await this.askScalar("Output Display Name: ", ValueType.Text, output.displayName);
                         // output.type = <any>(await this.askChoice("Output Type: ", ["Static", "Success", "Error"], output.type));
-                        
+
                         if (output.type === TaskOutputTypeType.Static) {
                             output.dataType = await this.askValueType("Output Data Type:", <any>output.dataType, false);
                         }
-                        
+
                         if (output.type === TaskOutputTypeType.Static && output.displayName === name) {
                             this.values.outputs[name] = output.dataType;
                         } else {
@@ -300,7 +300,7 @@ class GeneratorTask extends ConnectIoTGenerator {
     }
 
     private async askOutputsChoice(): Promise<string> {
-        if (!this.asking) { return("") } // Yo executes all methods from the class... This is an utility
+        if (!this.asking) { return ("") } // Yo executes all methods from the class... This is an utility
 
         console.log("");
         console.log("Current Outputs:");
@@ -327,7 +327,7 @@ class GeneratorTask extends ConnectIoTGenerator {
 
         let choice = "";
         while ((choice = await this.askSettingsChoice()) !== "Done") {
-            
+
             // Create the list to be used with Remove and Edit
             const allSettings = ["**NONE**"];
             for (const tab in this.values.settings) {
@@ -349,7 +349,7 @@ class GeneratorTask extends ConnectIoTGenerator {
                         settingKey: "settingKey",
                         dataType: "String",
                         defaultValue: "",
-                        settings: { }
+                        settings: {}
                     };
 
                     let location: string = await this.askScalar("Setting location (<Tab>\\<Section>): ", ValueType.Text, "General\\Section1");
@@ -403,14 +403,14 @@ class GeneratorTask extends ConnectIoTGenerator {
     }
 
     private async askSettingsChoice(): Promise<string> {
-        if (!this.asking) { return("") } // Yo executes all methods from the class... This is an utility
+        if (!this.asking) { return ("") } // Yo executes all methods from the class... This is an utility
 
         console.log("");
         console.log("Current Settings:");
         for (const tab in this.values.settings) {
             if (this.values.settings.hasOwnProperty(tab)) {
                 console.log("\x1b[36m", tab, "\x1b[0m");
-                
+
                 for (const section in this.values.settings[tab]) {
                     if (this.values.settings[tab].hasOwnProperty(section)) {
                         console.log("\x1b[33m", "   ", section, "\x1b[0m");
@@ -446,15 +446,15 @@ class GeneratorTask extends ConnectIoTGenerator {
                 }
 
                 // Got here? Then the section is not present
-                this.values.settings[tab][sectionName] = [ setting ];
+                this.values.settings[tab][sectionName] = [setting];
 
                 return;
             }
         }
 
         // ot here, then it is a new tab
-        this.values.settings[tabName] = { };
-        this.values.settings[tabName][sectionName] = [ setting ];
+        this.values.settings[tabName] = {};
+        this.values.settings[tabName][sectionName] = [setting];
     }
 
     private removeSetting(path: string): SettingsSetting | undefined {
@@ -493,15 +493,15 @@ class GeneratorTask extends ConnectIoTGenerator {
             if (this.values.inputs.hasOwnProperty(inputName)) {
                 const value = this.values.inputs[inputName];
 
-                if (typeof(value) === "object" && value.type === TaskInputTypeType.Activate) {
+                if (typeof (value) === "object" && value.type === TaskInputTypeType.Activate) {
                     // Ignore
                 } else {
-                    let type = typeof(value) === "string" ? "string" : (value.dataType ?? "string");
+                    let type = typeof (value) === "string" ? "string" : (value.dataType ?? "string");
                     if (type === "") {
                         type = "string";
                     }
-                    const def = typeof(value) === "string" ? "\"\"" : JSON.stringify(value.defaultValue);
-                    const comment = typeof(value) === "string" ? undefined : value.displayName;
+                    const def = typeof (value) === "string" ? "\"\"" : JSON.stringify(value.defaultValue);
+                    const comment = typeof (value) === "string" ? undefined : value.displayName;
                     if (comment !== undefined) {
                         this.values.inputsInterface += `\t/** ${comment} */\r\n`;
                     }
@@ -515,14 +515,14 @@ class GeneratorTask extends ConnectIoTGenerator {
         for (const outputName in this.values.outputs) {
             if (this.values.outputs.hasOwnProperty(outputName)) {
                 const value = this.values.outputs[outputName];
-                if (typeof(value) === "object" && (value.type === TaskOutputTypeType.Success || TaskOutputTypeType.Error)) {
+                if (typeof (value) === "object" && (value.type === TaskOutputTypeType.Success || TaskOutputTypeType.Error)) {
                     // Ignore
                 } else {
-                    let type = typeof(value) === "string" ? "string" : (value.dataType ?? "string");
+                    let type = typeof (value) === "string" ? "string" : (value.dataType ?? "string");
                     if (type === "") {
                         type = "string";
                     }
-                    const comment = typeof(value) === "string" ? undefined : value.displayName;
+                    const comment = typeof (value) === "string" ? undefined : value.displayName;
                     if (comment !== undefined) {
                         this.values.outputsInterface += `\t/** ${comment} */\r\n`;
                     }
@@ -561,7 +561,7 @@ class GeneratorTask extends ConnectIoTGenerator {
 
         this.injectInFile(destinationFile, "tasks: [", "],", `"${this.values.name}",\r\n`);
 
-        let filesWithRename: Map<string, string> = new  Map<string, string>([
+        let filesWithRename: Map<string, string> = new Map<string, string>([
             ["index.ts", "index.ts"],
             ["task.task.ts", `${this.values.name}.task.ts`],
         ]);
