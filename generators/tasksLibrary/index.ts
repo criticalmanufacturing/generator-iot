@@ -21,6 +21,7 @@ class GeneratorTasksPackage extends ConnectIoTGenerator {
 
     /** Will prompt the user about all settings */
     async prompting() {
+
         this.values.directory = await this.askScalar("What is the directory name?", ValueType.Text, this.values.directory);
         this.values.packageName = await this.askScalar("What is the full package name?", ValueType.Text, this.values.packageName);
         this.values.packageVersion = await this.askScalar("What is the package version?", ValueType.Text, this.values.packageVersion);

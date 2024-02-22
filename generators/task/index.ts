@@ -1,5 +1,6 @@
 import { ConnectIoTGenerator, ValueType, IoTValueType } from "../base";
-import { LibraryMetadata, LibraryTask, SettingsSetting, TaskInputType, TaskInputTypeType, TaskOutputType, TaskOutputTypeType } from "../packagePacker/models/library";
+import { LibraryMetadata, SettingsSetting, TaskInputType, TaskInputTypeType, TaskOutputType, TaskOutputTypeType } from "../packagePacker/models/library";
+import * as io from "fs-extra";
 
 class GeneratorTask extends ConnectIoTGenerator {
 
@@ -7,8 +8,7 @@ class GeneratorTask extends ConnectIoTGenerator {
         name: "blackBox", // camel case
         className: "", // pascal case
         title: "Black Box",
-        icon: "",
-        svg: "",
+        icon: "icon-core-tasks-connect-iot-lg-logmessage",
         isProtocol: false,
         isController: true,
         lifecycle: "Productive",
@@ -71,20 +71,24 @@ class GeneratorTask extends ConnectIoTGenerator {
     // https://www.npmjs.com/package/inquirer
     async prompting() {
 
+        const rootTaskLibraryPath = this.destinationRoot() + "../../../";
+        let taskLibraryPackageJson: any = null;
+        if (io.existsSync(rootTaskLibraryPath)) {
+            const files = io.readdirSync(rootTaskLibraryPath).filter(fn => fn === 'package.json');
+            if (files.length > 0) {
+                taskLibraryPackageJson = JSON.parse(io.readFileSync(files[0], "utf8"));
+                this.values.dependsOnProtocol = taskLibraryPackageJson.criticalManufacturing.tasksLibrary.dependsOnProtocol;
+                this.values.dependsOnScope = taskLibraryPackageJson.criticalManufacturing.tasksLibrary.dependsOnScope;
+            }
+        }
+
         this.asking = true;
         // Basic information request
         this.values.name = this.camelCaseValue(await this.askScalar("What is task name?", ValueType.Text, this.values.name));
         this.values.title = await this.askScalar("What is the task title?", ValueType.Text, this.values.title);
-        this.values.icon = await this.askScalar("What is the icon class name (leave empty to use svg instead)?", ValueType.Text, this.values.icon);
-        if (this.values.icon === "") {
-            this.values.svg = await this.askScalar("What is the svg data (value inside d=\"\")?", ValueType.Text, this.values.svg);
-            if (this.values.svg === "") {
-                // this.values.svg = "M981.333333 319.84v-0.36c0-0.32 0-0.666667-0.04-0.953333v-0.353334c-0.033333-0.373333-0.073333-0.753333-0.126666-1.12v-0.126666a20.56 20.56 0 0 0-0.56-2.666667v-0.08a21.213333 21.213333 0 0 0-1.506667-3.853333l-0.053333-0.093334c-0.24-0.473333-0.493333-0.933333-0.766667-1.38l-118.666667-197.626666a53.593333 53.593333 0 0 0-45.733333-25.893334H210.12a53.593333 53.593333 0 0 0-45.733333 25.893334L45.806667 308.86c-0.273333 0.446667-0.526667 0.9-0.766667 1.333333l-0.053333 0.106667a21.273333 21.273333 0 0 0-1.506667 3.84v0.086667a20.666667 20.666667 0 0 0-0.56 2.666666v0.133334c-0.053333 0.373333-0.093333 0.746667-0.126667 1.12v0.353333c0 0.32 0 0.633333-0.04 0.953333v565.853334a53.393333 53.393333 0 0 0 53.333334 53.333333H928a53.393333 53.393333 0 0 0 53.333333-53.333333V320v-0.16z m-158.3-186.666667L922.32 298.666667h-202.446667L668.666667 128h145.206666a10.72 10.72 0 0 1 9.153334 5.18zM341.333333 341.333333h341.333334v170.666667H341.333333z m282.793334-213.333333L675.333333 298.666667H348.666667l51.2-170.666667z m-423.153334 5.18a10.72 10.72 0 0 1 9.146667-5.18H355.333333l-51.2 170.666667H101.68zM938.666667 885.333333a10.666667 10.666667 0 0 1-10.666667 10.666667H96a10.666667 10.666667 0 0 1-10.666667-10.666667V341.333333h213.333334v192a21.333333 21.333333 0 0 0 21.333333 21.333334h384a21.333333 21.333333 0 0 0 21.333333-21.333334V341.333333h213.333334z m-128-96a21.333333 21.333333 0 0 1 21.333333-21.333333 21.333333 21.333333 0 1 1-21.333333 21.333333z m-64-21.333333a21.333333 21.333333 0 0 1 0 42.666667H618.666667a21.333333 21.333333 0 0 1 0-42.666667z";
-                this.values.icon = "icon-core-tasks-connect-iot-lg-customlbo";
-            }
-        }
-
+        this.values.icon = await this.askScalar("What is the icon class name (if empty will use default icon icon-core-tasks-connect-iot-lg-logmessage)?", ValueType.Text, this.values.icon);
         this.values.isProtocol = await this.askScalar("Is this task used by the protocol driver?", ValueType.Confirm, this.values.isProtocol);
+
         if (this.values.isProtocol) {
             this.values.isController = false; // By default should not be for both
             this.values.isController = await this.askScalar("Will this task be also usable without the driver connection?", ValueType.Confirm, this.values.isController);
@@ -95,8 +99,8 @@ class GeneratorTask extends ConnectIoTGenerator {
             this.values.lifecycleMessage = await this.askScalar("What message should the user see regarding lifecycle?", ValueType.Text, this.values.lifecycleMessage);
         }
 
-        this.values.dependsOnProtocol = await this.askScalar("Is this task specific for any protocol? If so, list the names separated by comma", ValueType.Text, this.values.dependsOnProtocol);
-        this.values.dependsOnScope = await this.askMultipleChoices("On which scopes this library can be used", ["ConnectIoT", "FactoryAutomation", "EnterpriseIntegration"], ["ConnectIoT", "FactoryAutomation", "EnterpriseIntegration"]);
+        this.values.dependsOnProtocol = await this.askMultipleChoices("Is this task specific for any protocol?", this.values.dependsOnProtocol, this.values.dependsOnProtocol);
+        this.values.dependsOnScope = await this.askMultipleChoices("On which scopes this library can be used", this.values.dependsOnScope, this.values.dependsOnScope);
 
         await this.handleInputs();
         await this.handleOutputs();
@@ -106,7 +110,6 @@ class GeneratorTask extends ConnectIoTGenerator {
 
         // Values converted
         this.values.className = this.pascalCaseValue(this.values.name);
-        this.values.dependsOnProtocol = (this.values.dependsOnProtocol.trim()) === "" ? "[]" : this.values.dependsOnProtocol = JSON.parse(JSON.stringify(this.values.dependsOnProtocol.split(",")));
     }
 
     // Inputs
@@ -578,8 +581,7 @@ class GeneratorTask extends ConnectIoTGenerator {
             tasks: [{
                 name: this.values.name,
                 displayName: this.values.title,
-                iconClass: this.values.iconClass === "" ? undefined : this.values.iconClass,
-                iconSVG: this.values.svg === "" ? undefined : this.values.svg,
+                iconClass: this.values.icon,
                 isProtocol: this.values.isProtocol,
                 isController: this.values.isController,
                 lifecycle: this.values.lifecycle,
