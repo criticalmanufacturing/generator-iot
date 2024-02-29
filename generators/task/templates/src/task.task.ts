@@ -3,7 +3,7 @@ import { Task, Dependencies, System, DI, TYPES, Utilities } from "@criticalmanuf
 /** Default values for settings */
 export const SETTINGS_DEFAULTS: <%= className %>Settings = {
     <%- settingsDefaults %>
-}
+};
 
 /**
  * @whatItDoes
@@ -89,4 +89,4 @@ export class <%= className %>Task implements Task.TaskInstance, <%= className %>
 /** <%= className %> Settings object */
 export interface <%= className %>Settings extends System.TaskDefaultSettings {
     <%= settingsInterface %>
-}
+};

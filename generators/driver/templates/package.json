@@ -4,17 +4,14 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "build": "tsc",
-    "lint": "eslint ./**/*.ts",
+    "build": "tsc && tsc -p test/unit/",
     "watchPackage": "tsc --preserveWatchOutput -w",
     "watchTests": "tsc -p test/unit --preserveWatchOutput -w",
-    "start": "npm run build -- -w | node node_modules/nodemon/bin/nodemon src/index.js --ignore test/",
-    "test": "node node_modules/mocha/bin/mocha test/**/*.test.js test/*.test.js --timeout 30000 --exit",
-    "cover": "node node_modules/istanbul/lib/cli cover node_modules/mocha/bin/_mocha test/**/*.test.js test/*.test.js",
-    "vs:buildAndTest": "npm run build && npm run vs:test",
-    "vs:test": "node node_modules/istanbul/lib/cli cover node_modules/mocha/bin/_mocha --report cobertura --report lcov test/*.js test/**/*.js -- --timeout 30000 --exit --reporter mocha-junit-reporter --reporter-options mochaFile=./test/test-results.xml",
+    "test": "npx mocha test/**/*.test.js --timeout 5000 --exit",
+    "build:test:cover": "npm run build && npm run test:cover",
+    "test:cover": "npx nyc -r cobertura -r lcov -r text-summary mocha test/*.test.js test/**/*.test.js -- --timeout 10000 --exit -R mocha-multi-reporters --reporter-options configFile=mocha-multi-reporters-config.json",
     "pretest": "npm run build",
-    "watch": "npm run build -- -w | node node_modules/mocha/bin/mocha --timeout 30000 --exit --reporter min -w test/*.test.js test/**/*.test.js",
+    "watch": "npm run build -- -w | npx mocha --timeout 10000 --exit --reporter min -w test/*.test.js test/**/*.test.js",
     "postinstall": "if exist node_modules\\vinyl-fs\\node_modules\\graceful-fs ren node_modules\\vinyl-fs\\node_modules\\graceful-fs _graceful-fs_incompatible_with_node12"
   },
   "keywords": [

@@ -6,14 +6,17 @@
   "typings": "src/index",
   "scripts": {
     "build": "tsc && tsc -p test/unit/",
+    "build:test:cover": "npm run build && npm run test:cover",
+    "lint": "eslint ./**/*.ts",
+    "lint:fix": "eslint ./**/*.ts --fix",
     "watchPackage": "tsc --preserveWatchOutput -w",
     "watchTests": "tsc -p test/unit --preserveWatchOutput -w",
-    "test": "node node_modules/mocha/bin/mocha test/**/*.test.js --timeout 5000 --exit",
-    "cover": "node node_modules/istanbul/lib/cli cover node_modules/mocha/bin/_mocha test/**/*.test.js test/*.test.js",
-    "vs:buildAndTest": "npm run build && npm run vs:test",
-    "vs:test": "node node_modules/nyc/bin/nyc -r cobertura -r lcov -r text-summary mocha test/*.test.js test/**/*.test.js -- --timeout 10000 --exit -R mocha-multi-reporters --reporter-options configFile=mocha-multi-reporters-config.json",
+    "test": "npx mocha test/**/*.test.js --timeout 5000 --exit",
+    "test:cover": "npx nyc -r cobertura -r lcov -r text-summary mocha test/*.test.js test/**/*.test.js -- --timeout 10000 --exit -R mocha-multi-reporters --reporter-options configFile=mocha-multi-reporters-config.json",
     "pretest": "npm run build",
-    "watch": "npm run build -- -w | node node_modules/mocha/bin/mocha --timeout 10000 --exit --reporter min -w test/*.test.js test/**/*.test.js"
+    "watch": "npm run build -- -w | npx mocha --timeout 10000 --exit --reporter min -w test/*.test.js test/**/*.test.js",
+    "generateTask": "yo @criticalmanufacturing/iot:task",
+    "generateConverter": "yo @criticalmanufacturing/iot:converter"
   },
   "keywords": [
     "CMF",
@@ -38,7 +41,6 @@
   "dependencies": {
     "@criticalmanufacturing/connect-iot-controller-engine": "<%= targetSystemVersionProcessed %>",
     "cmf-lbos": "<%= targetSystemVersionProcessed %>",
-    
     "reflect-metadata": "0.1.13",
     "inversify": "6.0.1",
     "moment": "2.29.4"
@@ -47,11 +49,11 @@
   "criticalManufacturing": {
     "tasksLibrary": {
       "displayName": "<%= identifier %>",
-			"dependsOnScope": <%- dependsOnScope %>,
-			"mandatoryForScope": <%- mandatoryForScope %>,
-			"dependsOnProtocol": <%- dependsOnProtocol %>,
-			"mandatoryForProtocol": <%- mandatoryForProtocol %>,
-			"metadata": {
+      "dependsOnScope": <%- dependsOnScope %>,
+      "mandatoryForScope": <%- mandatoryForScope %>,
+      "dependsOnProtocol": <%- dependsOnProtocol %>,
+      "mandatoryForProtocol": <%- mandatoryForProtocol %>,
+      "metadata": {
         "converters": [],
         "tasks": []
       }

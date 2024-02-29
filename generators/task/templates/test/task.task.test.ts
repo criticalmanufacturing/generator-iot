@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import { Task, System, TYPES, DI } from "@criticalmanufacturing/connect-iot-controller-engine";
 import EngineTestSuite from "@criticalmanufacturing/connect-iot-controller-engine/test";
-<% if(isProtocol === true) { %>import { DriverProxyMock } from "@criticalmanufacturing/connect-iot-controller-engine/test/mocks/driverProxy.mock";<% } %>
+<% if(isProtocol === true) { %>import { DriverProxyMock } from "@criticalmanufacturing/connect-iot-controller-engine/test/mocks/driver-proxy.mock";<% } %>
 // import { DataStoreMock } from "@criticalmanufacturing/connect-iot-controller-engine/test/mocks/dataStore.mock";
 import * as chai from "chai";
 
@@ -25,16 +25,15 @@ describe("<%= className %> Task tests", () => {
         // dataStoreMock = new DataStoreMock();
     });
 
-    const <%= name %>TestFactory = (  settings: <%= className %>Settings | undefined,
-                                            trigger: Function,
-                                            validate: Function): void => {
+	// eslint-disable-next-line @typescript-eslint/ban-types
+    const <%= name %>TestFactory = (settings: <%= className %>Settings | undefined, trigger: Function, validate: Function): void => {
 
         const taskDefinition = {
             class: <%= className %>TaskModule,
             id: "0",
-            settings: settings || <<%= className %>Settings>{
+            settings: (settings || {
                 <%- testSettingsDefaults %>
-            }
+            } as <%= className %>Settings)
         };
 
         EngineTestSuite.createTasks([

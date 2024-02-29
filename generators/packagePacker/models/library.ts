@@ -49,7 +49,7 @@ export interface Library {
     /** List of scopes (separated by comma “,”) this library depends on to be available. Leave empty (default) for no dependency which means, available for all scopes */
     dependsOnScope?: Scope[];
 
-	/** List of protocol drivers (separated by comma “,”) this library is mandatory and will be selected without option to unselect. Example: “@criticalmanufacturing/connect-iot-driver-oib”. Leave empty (default) for none */
+    /** List of protocol drivers (separated by comma “,”) this library is mandatory and will be selected without option to unselect. Example: “@criticalmanufacturing/connect-iot-driver-oib”. Leave empty (default) for none */
     mandatoryForProtocol?: string[];
 
     /** List of scopes (separated by comma “,”) this library is mandatory and will be selected without option to unselect. Leave empty (default) for none */
@@ -100,7 +100,7 @@ export interface LibraryConverterParameter {
     /** Default value serialized */
     defaultValue: any;
     /** List of possible values when the dataType is Enum */
-    enumValues?: string[] | {[label: string]: any}[];
+    enumValues?: string[] | { [label: string]: any }[];
 }
 
 export interface LibraryTask {
@@ -112,8 +112,6 @@ export interface LibraryTask {
     // class: string;
     /* Name of the icon if it was loaded as a font in the gui */
     iconClass?: string;
-    /** Data of the SVG to draw the icon in the button and task (will be ignored if an IconClass is set) */
-    iconSVG?: string;
     /** Flag indicating if this ask is to be related with a protocol scope */
     isProtocol: boolean;
     /** Flag indicating if this task is to be related in a controller scope. Note: It is possible for a task to be usable in both Controller and Protocol scope (Code, EntityInstance, etc) */
@@ -126,11 +124,11 @@ export interface LibraryTask {
     dependsOnProtocol?: string[];
     /** List of scopes (separated by comma “,”) this task depends on to be available. Leave empty (default) for no dependency which means, available for all scopes */
     dependsOnScope?: Scope[];
-    
-    
-    inputs?: {[key: string]: string | TaskInputType};
-    outputs?: {[key: string]: string | TaskOutputType};
-    settings?: {[key: string]: SettingsTab};
+
+
+    inputs?: { [key: string]: string | TaskInputType };
+    outputs?: { [key: string]: string | TaskOutputType };
+    settings?: { [key: string]: SettingsTab };
 }
 
 export const LibraryTaskDefaults: LibraryTask = {
@@ -141,7 +139,7 @@ export const LibraryTaskDefaults: LibraryTask = {
     lifecycle: TaskLifeCycle.Productive,
     lifecycleMessage: "",
     dependsOnProtocol: [],
-    dependsOnScope: [ Scope.ConnectIoT, Scope.FactoryAutomation, Scope.EnterpriseIntegration ],
+    dependsOnScope: [Scope.ConnectIoT, Scope.FactoryAutomation, Scope.EnterpriseIntegration],
 };
 
 export interface TaskInputType {
@@ -175,16 +173,16 @@ export interface SettingsSection {
 export interface SettingsSetting {
     /** Name of the setting */
     name: string;
-    /** Text to display in the Gui, defaults to Name if not defined */ 
+    /** Text to display in the Gui, defaults to Name if not defined */
     displayName?: string;
     /** Key of the settings where the value will be stored. Must be unique within the entire set of settings in the task */
     settingKey: string;
-    /** Data type of the field (used to render) */ 
+    /** Data type of the field (used to render) */
     dataType: string;
     /** Flag indicating if this setting must be filled */
     isMandatory?: boolean;
     /** List of possible values when the Type is Enum */
-    enumValues?: string[] | {[label: string]: any}[];
+    enumValues?: string[] | { [label: string]: any }[];
     /** Text to display in the hint box when hoovered */
     infoMessage?: string;
     /** Value to use as default */
@@ -194,5 +192,5 @@ export interface SettingsSetting {
     timerType != null && timerType !== “CronJob” */
     condition?: string;
     /** Extra settings to use to model the behavior of the field. These settings are different per control to use */
-    settings?: any;    
+    settings?: any;
 }
