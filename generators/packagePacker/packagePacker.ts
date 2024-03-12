@@ -8,6 +8,8 @@ import { DriverTemplatesProcessor } from "./processors/driverTemplates";
 import { LibraryTemplatesProcessor } from "./processors/libraryTemplates";
 import { TYPES } from "./types";
 import { Paths } from "./processors/paths";
+import { Log } from "./processors/log";
+import { ShrinkwrapGenerator } from "./processors/shrinkwrapGenerator";
 
 export class PackagePacker {
     
@@ -22,6 +24,8 @@ export class PackagePacker {
         const version: string = <string>options.v || <string>options.version || "";
         const debug: boolean = <boolean>options.d || <boolean>options.debug || false;
         // let mappedAddons: string | undefined = undefined;
+
+        const _logger: Log = container.get<Log>(TYPES.Logger);
 
         console.log(`Using the following settings:`);
         console.log(`   Source        : ${source}`);
@@ -121,7 +125,13 @@ export class PackagePacker {
         if (configuration.type !== ComponentType.TasksPackage) {
             // Copy necessary files to generate package
 
-            this.copyFile("npm-shrinkwrap.json", source, temp);
+            if (!io.existsSync("npm-shrinkwrap.json")) {
+                _logger.Warn("npm-shrinkwrap.json file not found. Trying to generate it...");
+                container.get<ShrinkwrapGenerator>(TYPES.Processors.ShrinkwrapGenerator).process(source, "npm-shrinkwrap.json");
+                this.copyFile("npm-shrinkwrap.json", source, temp);
+            } else {
+                this.copyFile("npm-shrinkwrap.json", source, temp);
+            }
             this.copyFile(".npmignore", source, temp);
             this.copyFile(".npmrc", source, temp);
             this.copyFile("README.md", source, temp);
