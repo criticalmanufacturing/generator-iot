@@ -1,12 +1,12 @@
 {
   "name": "@criticalmanufacturing/generator-iot",
-  "version": "10.2.11",
+  "version": "10.2.12",
   "description": "Connect IoT Scaffolding",
   "files": [
     "generators/*.js",
     "generators/*/*.js",
     "generators/**/*.js",
-    "generators/*/templates/*.*"
+    "generators/*/templates/**"
   ],
   "keywords": [
     "CMF",
