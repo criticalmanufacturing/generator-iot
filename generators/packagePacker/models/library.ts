@@ -66,6 +66,8 @@ export interface LibraryMetadata {
     converters?: LibraryConverter[];
     /** List of Tasks available in this library */
     tasks?: LibraryTask[];
+    /** Font metadata */
+    font?: any;
 }
 
 /** format of the Metadata portion that represents a single converter  */
@@ -129,6 +131,27 @@ export interface LibraryTask {
     inputs?: { [key: string]: string | TaskInputType };
     outputs?: { [key: string]: string | TaskOutputType };
     settings?: { [key: string]: SettingsTab };
+
+    scripts?: { [key: string]: LibraryTaskScript };
+}
+
+export enum LibraryTaskScriptType {
+    /** Script block */
+    Script = 'Script',
+    /** Points to a generic script instead of the script itself */
+    Reference = 'Reference',
+    // JsonAta = 'JsonAta',
+}
+
+export enum LibraryTaskScriptEncoding {
+    Plain = 'Plain',
+    Base64 = 'Base64',
+}
+
+export interface LibraryTaskScript {
+    type?: LibraryTaskScriptType;
+    encoding?: LibraryTaskScriptEncoding;
+    script: string | string[];
 }
 
 export const LibraryTaskDefaults: LibraryTask = {

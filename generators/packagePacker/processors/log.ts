@@ -2,6 +2,10 @@ import { injectable } from "inversify";
 
 @injectable()
 export class Log {
+    public debug(text: string): void {
+        console.error("\x1b[90m", text, "\x1b[0m");
+    }
+
     public Error(text: string): void {
         console.error("\x1b[31m", text, "\x1b[0m");
     }

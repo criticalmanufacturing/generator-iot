@@ -1,6 +1,6 @@
 {
   "name": "@criticalmanufacturing/generator-iot",
-  "version": "10.2.12",
+  "version": "11.0.0",
   "description": "Connect IoT Scaffolding",
   "files": [
     "generators/*.js",
@@ -16,19 +16,22 @@
   "homepage": "https://github.com/criticalmanufacturing/generator-iot/tree/102x",
   "devDependencies": {
     "@types/chalk": "2.2.0",
-    "@types/fs-extra": "11.0.3",
-    "@types/node": "20.8.10",
-    "@types/uuid": "9.0.6",
-    "@types/yeoman-generator": "5.2.13",
-    "@types/yosay": "2.0.2",
+    "@types/fs-extra": "11.0.4",
+    "@types/node": "20.12.12",
+    "@types/uuid": "9.0.8",
+    "@types/yeoman-generator": "5.2.14",
+    "@types/yosay": "2.0.3",
     "typescript": "5.2.2"
   },
   "dependencies": {
+    "@swc/core": "^1.5.7",
     "@vercel/ncc": "0.38.1",
     "chalk": "5.3.0",
-    "fs-extra": "11.1.1",
+    "fs-extra": "11.2.0",
     "inversify": "6.0.2",
-    "reflect-metadata": "0.1.13",
+    "punycode": "^2.3.1",
+    "reflect-metadata": "0.2.2",
+    "svgtofont": "^4.2.0",
     "uuid": "9.0.1",
     "yeoman-generator": "5.8.0",
     "yo": "4.3.1",

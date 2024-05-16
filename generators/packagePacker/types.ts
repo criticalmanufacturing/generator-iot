@@ -7,6 +7,7 @@ export const TYPES = {
     Processors: {
         DriverTemplates: Symbol("DriverTemplatesProcessor"),
         LibraryTemplates: Symbol("LibraryTemplatesProcessor"),
+        LibraryFontProcessor: Symbol("LibraryFontProcessor"),
         ShrinkwrapGenerator: Symbol("ShrinkwrapGenerator"),
     }
 };

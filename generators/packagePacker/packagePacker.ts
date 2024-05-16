@@ -10,6 +10,8 @@ import { TYPES } from "./types";
 import { Paths } from "./processors/paths";
 import { Log } from "./processors/log";
 import { ShrinkwrapGenerator } from "./processors/shrinkwrapGenerator";
+import { LibraryFontProcessor } from "./processors/libraryFont";
+import { log } from "console";
 
 export class PackagePacker {
     
@@ -164,7 +166,6 @@ export class PackagePacker {
             }
         });
 
-
         // Process any template action
         if (configuration.templates != null) {
             const destination = path.join(temp, "package.json");
@@ -175,8 +176,17 @@ export class PackagePacker {
                     break;
                 case ComponentType.TasksPackage:
                 case ComponentType.TasksLibrary:
-                    container.get<LibraryTemplatesProcessor>(TYPES.Processors.LibraryTemplates).process(configuration.templates, destination);
+                    await container.get<LibraryTemplatesProcessor>(TYPES.Processors.LibraryTemplates).process(configuration.templates, destination);
                     break;
+            }
+        }
+
+         // Process any font action
+         if (configuration.font != null) {
+            const destination = path.join(temp, "package.json");
+
+            if (configuration.type === ComponentType.TasksLibrary) {
+                container.get<LibraryFontProcessor>(TYPES.Processors.LibraryFontProcessor).process(configuration.font, destination);
             }
         }
 

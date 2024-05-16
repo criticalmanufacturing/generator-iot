@@ -40,6 +40,8 @@ export interface Configuration {
     addons?: Addon[];
     /** Templates used to generate the entry in package.json */
     templates?: Template[];
+    /** font to add into the metadata of the tasks library package */
+    font?: string;
     /** List of actions to post perform */
     postActions?: Action[];
 }

@@ -1,6 +1,7 @@
 {
     "type": "TasksLibrary",
     "templates": "${Source}/templates/",
+    "font": "${Source}/font/config.json",
     "postActions": [
     ]
 }

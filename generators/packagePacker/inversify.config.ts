@@ -5,6 +5,7 @@ import { Log } from "./processors/log";
 import { Paths } from "./processors/paths";
 import { DriverTemplatesProcessor } from "./processors/driverTemplates";
 import { LibraryTemplatesProcessor } from "./processors/libraryTemplates";
+import { LibraryFontProcessor } from "./processors/libraryFont";
 import { ShrinkwrapGenerator } from "./processors/shrinkwrapGenerator";
 
 
@@ -16,6 +17,7 @@ container.bind<Paths>(TYPES.Paths).to(Paths).inSingletonScope();
 
 container.bind<DriverTemplatesProcessor>(TYPES.Processors.DriverTemplates).to(DriverTemplatesProcessor).inSingletonScope();
 container.bind<LibraryTemplatesProcessor>(TYPES.Processors.LibraryTemplates).to(LibraryTemplatesProcessor).inSingletonScope();
+container.bind<LibraryFontProcessor>(TYPES.Processors.LibraryFontProcessor).to(LibraryFontProcessor).inSingletonScope();
 container.bind<ShrinkwrapGenerator>(TYPES.Processors.ShrinkwrapGenerator).to(ShrinkwrapGenerator).inSingletonScope();
 
 export { container };
