@@ -155,9 +155,11 @@ export class fontGen {
         config.push(`   "name": "${map.font.fontname}",`);
         config.push(`   "fonts": {`);
 
-        config.push(`      "ttf": "${fs.readFileSync(path.join(map.targetDir, `${map.font.fontname}.ttf`), {encoding: "base64"})}",`);
+        config.push(`      "opentype": "${fs.readFileSync(path.join(map.targetDir, `${map.font.fontname}.eot`), {encoding: "base64"})}",`);
+        config.push(`      "truetype": "${fs.readFileSync(path.join(map.targetDir, `${map.font.fontname}.ttf`), {encoding: "base64"})}",`);
         config.push(`      "woff": "${fs.readFileSync(path.join(map.targetDir, `${map.font.fontname}.woff`), {encoding: "base64"})}",`);
-        config.push(`      "woff2": "${fs.readFileSync(path.join(map.targetDir, `${map.font.fontname}.woff2`), {encoding: "base64"})}"`);
+        config.push(`      "woff2": "${fs.readFileSync(path.join(map.targetDir, `${map.font.fontname}.woff2`), {encoding: "base64"})}",`);
+        config.push(`      "opentype": "${fs.readFileSync(path.join(map.targetDir, `${map.font.fontname}.svg`), {encoding: "base64"})}"`);
 
         config.push(`   },`);
         config.push(`   "icons": {`);

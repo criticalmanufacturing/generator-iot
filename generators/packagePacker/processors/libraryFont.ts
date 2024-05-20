@@ -29,11 +29,8 @@ export class LibraryFontProcessor {
         }
 
         let libraryMetadata: any = json.criticalManufacturing.tasksLibrary;
-        libraryMetadata["font"] = fontContent;
+        libraryMetadata.metadata["font"] = fontContent;
 
-        this._finalTemplates = libraryMetadata.metadata ?? { };
-
-        libraryMetadata.metadata = this._finalTemplates;
         io.writeFileSync(destination, JSON.stringify(json, null, 2), "utf8");
     }
 }
