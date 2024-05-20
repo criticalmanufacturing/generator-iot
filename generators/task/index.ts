@@ -71,7 +71,7 @@ class GeneratorTask extends ConnectIoTGenerator {
     // https://www.npmjs.com/package/inquirer
     async prompting() {
 
-        const rootTaskLibraryPath = this.destinationRoot() + "../../../";
+        const rootTaskLibraryPath = this.destinationRoot();
         let taskLibraryPackageJson: any = null;
         if (io.existsSync(rootTaskLibraryPath)) {
             const files = io.readdirSync(rootTaskLibraryPath).filter(fn => fn === 'package.json');
