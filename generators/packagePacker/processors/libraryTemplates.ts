@@ -23,14 +23,14 @@ export class LibraryTemplatesProcessor {
     public async process(templateRules: string | Template[], destination: string): Promise<void> {
         this._logger.Info(` [Templates] Processing library templates`);
         let json: any = io.readJSONSync(destination);
-        
+
         if (json?.criticalManufacturing?.tasksLibrary == null) {
             throw new Error("Unable to read TasksLibrary section of the package.json file")
         }
 
         let libraryMetadata: any = json.criticalManufacturing.tasksLibrary;
 
-        this._finalTemplates = libraryMetadata.metadata ?? { };
+        this._finalTemplates = libraryMetadata.metadata ?? {};
         if (this._finalTemplates != null && ((this._finalTemplates.converters?.length ?? 0) !== 0 || (this._finalTemplates.tasks?.length ?? 0) !== 0)) {
             this._logger.Warn(" [Templates] Existing templates found in the package.json file found. Merging the new ones with the existing");
         }
@@ -47,7 +47,7 @@ export class LibraryTemplatesProcessor {
                 throw new Error(` [Templates] Directory '${templateRules}' doesn't exist`);
             } else {
                 this._templateDirectory = templateRules;
-            
+
                 const files = io.readdirSync(templateRules);
                 for (let file of files) {
                     if (file.endsWith(".json")) {
@@ -132,7 +132,7 @@ export class LibraryTemplatesProcessor {
     private async mergeTasks(tasks: LibraryTask[]): Promise<void> {
         for (const task of tasks) {
             const newOne = /*await this.preProcessTaskScripts*/(Object.assign({}, LibraryTaskDefaults, task));
-            const b = await  this.preProcessTaskScripts(newOne);
+            const b = await this.preProcessTaskScripts(newOne);
 
             // Check if there is another with the same name
             const existing = (this._finalTemplates.tasks ?? []).find(c => c.name === newOne.name);
@@ -154,7 +154,7 @@ export class LibraryTemplatesProcessor {
     }
 
     private async preProcessTaskScripts(value: any): Promise<any> {
-        if (typeof (value) === "object") {
+        if (value != null && typeof (value) === "object") {
             if (Array.isArray(value)) {
                 for (let i = 0; i < value.length; i++) {
                     value[i] = await this.preProcessTaskScripts(value[i]);
@@ -165,7 +165,7 @@ export class LibraryTemplatesProcessor {
                     value[key] = await this.preProcessTaskScripts(value[key]);
                 }
             }
-        } else if (typeof(value) === "string") {
+        } else if (value != null && typeof (value) === "string") {
             const regex = /\${script\((.*)\)}/i;
             const matches = value.match(regex);
             if (matches != null && matches.length === 2) {
@@ -185,8 +185,8 @@ export class LibraryTemplatesProcessor {
                     value = transpiled.split("\n");
                 }
             }
-        } 
-        
+        }
+
         return value;
     }
 
@@ -195,9 +195,9 @@ export class LibraryTemplatesProcessor {
             jsc: {
                 parser: {
                     syntax: "typescript",
-                    },
+                },
                 transform: {
-                
+
                 },
                 target: "es2016",
                 minify: {
@@ -206,7 +206,7 @@ export class LibraryTemplatesProcessor {
             },
             minify: compress,
         });
-        
+
         return (res.code);
     }
 }
