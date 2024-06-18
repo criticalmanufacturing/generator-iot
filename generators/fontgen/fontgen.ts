@@ -159,7 +159,7 @@ export class fontGen {
         config.push(`      "truetype": "${fs.readFileSync(path.join(map.targetDir, `${map.font.fontname}.ttf`), {encoding: "base64"})}",`);
         config.push(`      "woff": "${fs.readFileSync(path.join(map.targetDir, `${map.font.fontname}.woff`), {encoding: "base64"})}",`);
         config.push(`      "woff2": "${fs.readFileSync(path.join(map.targetDir, `${map.font.fontname}.woff2`), {encoding: "base64"})}",`);
-        config.push(`      "opentype": "${fs.readFileSync(path.join(map.targetDir, `${map.font.fontname}.svg`), {encoding: "base64"})}"`);
+        config.push(`      "svg": "${fs.readFileSync(path.join(map.targetDir, `${map.font.fontname}.svg`), {encoding: "base64"})}"`);
 
         config.push(`   },`);
         config.push(`   "icons": {`);

@@ -182,7 +182,11 @@ export class LibraryTemplatesProcessor {
                     const scriptFile = path.resolve(this._templateDirectory, matches[1].toString());
                     const scriptContent = io.readFileSync(scriptFile).toString();
                     const transpiled = await this.transpile(scriptContent, false);
-                    value = transpiled.split("\n");
+                    value = {
+                        type: "Script",
+                        encoding: "Plain",
+                        script: transpiled.split("\n"),
+                    };
                 }
             }
         } 
