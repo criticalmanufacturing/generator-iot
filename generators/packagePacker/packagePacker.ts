@@ -185,7 +185,7 @@ export class PackagePacker {
          if (configuration.font != null) {
             const destination = path.join(temp, "package.json");
 
-            if (configuration.type === ComponentType.TasksLibrary) {
+            if (configuration.type === ComponentType.TasksLibrary || configuration.type === ComponentType.TasksPackage) {
                 container.get<LibraryFontProcessor>(TYPES.Processors.LibraryFontProcessor).process(configuration.font, destination);
             }
         }

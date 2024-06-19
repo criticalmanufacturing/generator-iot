@@ -28,7 +28,7 @@ class GeneratorPackagePacker extends ConnectIoTGenerator {
      * Will copy the templates for the framework tailoring all the files with the base framework it's extending from.
      */
     public async copyTemplates(): Promise<void> {
-        console.log(`Using scaffolding version '${this.getVersion()}'\n`);
+        console.log(`**Using scaffolding version '${this.getVersion()}'\n`);
 
 
         const generator = new PackagePacker();
