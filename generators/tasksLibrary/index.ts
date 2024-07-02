@@ -8,7 +8,7 @@ class GeneratorTasksPackage extends ConnectIoTGenerator {
         packageVersion: "1.0.0",
         identifier: "My Tasks Library",
         identifierLower: "",
-        targetSystemVersion: "10.2.0",
+        targetSystemVersion: "11.0.0",
         dependsOnScope: "[]",
         mandatoryForScope: "[]",
         dependsOnProtocol: "",
@@ -70,7 +70,7 @@ class GeneratorTasksPackage extends ConnectIoTGenerator {
         });
 
         // Package implementation classes
-        files = ["metadata.ts"];
+        files = ["index.ts"];
         files.forEach((template) => {
             this.fs.copyTpl(this.templatePath("src", template), this.destinationPath(this.values.directory, "src", template), this.values);
         });

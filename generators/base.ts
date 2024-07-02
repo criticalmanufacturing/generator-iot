@@ -113,6 +113,27 @@ export class ConnectIoTGenerator extends Generator {
     }
 
     /**
+     * append a value into the end of a file (only if the token doesn't exist yet)
+     * @param file File to process
+     * @param value Value to inject
+     */
+    appendInFile(file: string, value: string): any {
+        let fileContent = this.fs.read(file).split("\r\n");
+        let alreadyInjected = false;
+
+        // search start
+        fileContent.forEach((line, index) => {
+            if (line.trim().toLocaleLowerCase().includes(value.trim().toLocaleLowerCase())) {
+                alreadyInjected = true;
+            }
+        });
+
+        if (!alreadyInjected) {
+            this.fs.append(file, value);
+        }
+    }
+
+    /**
      * Inject a value between two tokens. 
      * Useful to add code to existing code (with indentation)
      * @param file File to process

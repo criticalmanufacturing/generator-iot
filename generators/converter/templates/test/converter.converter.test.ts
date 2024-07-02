@@ -1,7 +1,7 @@
 import "reflect-metadata";
-import { Task, System, TYPES, DI, Converter } from "@criticalmanufacturing/connect-iot-controller-engine";
+import { Converter } from "@criticalmanufacturing/connect-iot-controller-engine";
 import EngineTestSuite from "@criticalmanufacturing/connect-iot-controller-engine/test";
-import * as chai from "chai";
+// import * as chai from "chai";
 import { <%= className %>Converter } from "../../../../src/converters/<%= name %>/<%= name %>.converter";
 
 describe("<%= title %> converter", () => {

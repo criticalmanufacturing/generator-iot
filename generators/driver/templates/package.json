@@ -12,7 +12,7 @@
     "test:cover": "npx nyc -r cobertura -r lcov -r text-summary mocha test/*.test.js test/**/*.test.js -- --timeout 10000 --exit -R mocha-multi-reporters --reporter-options configFile=mocha-multi-reporters-config.json",
     "pretest": "npm run build",
     "watch": "npm run build -- -w | npx mocha --timeout 10000 --exit --reporter min -w test/*.test.js test/**/*.test.js",
-    "postinstall": "if exist node_modules\\vinyl-fs\\node_modules\\graceful-fs ren node_modules\\vinyl-fs\\node_modules\\graceful-fs _graceful-fs_incompatible_with_node12"
+    "packagePacker": "yo @criticalmanufacturing/iot:packagePacker -o ."
   },
   "keywords": [
     "CMF",
@@ -47,10 +47,6 @@
     "yargs": "17.7.1",
     "uuid": "9.0.0",
     "fs-extra": "11.1.0"
-  },
-  "__CMF_ONLY__cmfLinkDependencies": {
-    "@criticalmanufacturing/connect-iot-common": "file:../common",
-    "@criticalmanufacturing/connect-iot-driver": "file:../driver"
   },
   "author": "Critical Manufacturing",
   "criticalManufacturing": {

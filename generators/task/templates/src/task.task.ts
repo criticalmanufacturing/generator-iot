@@ -1,4 +1,4 @@
-import { Task, Dependencies, System, DI, TYPES, Utilities } from "@criticalmanufacturing/connect-iot-controller-engine";
+import { Task, Dependencies, System, DI, TYPES, TaskBase } from "@criticalmanufacturing/connect-iot-controller-engine";
 
 /** Default values for settings */
 export const SETTINGS_DEFAULTS: <%= className %>Settings = {
@@ -26,39 +26,27 @@ export const SETTINGS_DEFAULTS: <%= className %>Settings = {
  * See {@see <%= className %>Settings}
  */
 @Task.Task()
-export class <%= className %>Task implements Task.TaskInstance, <%= className %>Settings {
+export class <%= className %>Task extends TaskBase implements  <%= className %>Settings {
 
     /** Accessor helper for untyped properties and output emitters. */
     // [key: string]: any;
 
     /** **Inputs** */
-    /** Activate task execution */
-    public activate: any = undefined;
 
-    <%- inputsInterface %>
+<%- inputsInterface %>
 
     /** **Outputs** */
-    /** To output a success notification */
-    public success: Task.Output<boolean> = new Task.Output<boolean>();
-    /** To output an error notification */
-    public error: Task.Output<Error> = new Task.Output<Error>();
 
-    <%- outputsInterface %>
+<%- outputsInterface %>
 
     /** Properties Settings */
     <%= settingsInterface %>
-
-    @DI.Inject(TYPES.Dependencies.Logger)
-    private _logger: Dependencies.Logger;
-<% if(isProtocol === true) { %>
-    @DI.Inject(TYPES.System.Driver)
-    private _driverProxy: System.DriverProxy;<% } %>
 
     /**
      * When one or more input values is changed this will be triggered,
      * @param changes Task changes
      */
-    async onChanges(changes: Task.Changes): Promise<void> {
+    public override async onChanges(changes: Task.Changes): Promise<void> {
         if (changes["activate"]) {
             // It is advised to reset the activate to allow being reactivated without the value being different
             this.activate = undefined;
@@ -73,15 +61,16 @@ export class <%= className %>Task implements Task.TaskInstance, <%= className %>
     }
 
     /** Right after settings are loaded, create the needed dynamic outputs. */
-    async onBeforeInit(): Promise<void> {
+    public override async onBeforeInit(): Promise<void> {
     }
 
     /** Initialize this task, register any event handler, etc */
-    async onInit(): Promise<void> {
+    public override async onInit(): Promise<void> {
+        this.sanitizeSettings(SETTINGS_DEFAULTS);
     }
 
     /** Cleanup internal data, unregister any event handler, etc */
-    async onDestroy(): Promise<void> {
+    public override async onDestroy(): Promise<void> {
     }
 }
 
@@ -89,4 +78,4 @@ export class <%= className %>Task implements Task.TaskInstance, <%= className %>
 /** <%= className %> Settings object */
 export interface <%= className %>Settings extends System.TaskDefaultSettings {
     <%= settingsInterface %>
-};
+}

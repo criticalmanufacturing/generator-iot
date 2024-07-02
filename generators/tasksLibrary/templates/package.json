@@ -16,7 +16,8 @@
     "pretest": "npm run build",
     "watch": "npm run build -- -w | npx mocha --timeout 10000 --exit --reporter min -w test/*.test.js test/**/*.test.js",
     "generateTask": "yo @criticalmanufacturing/iot:task",
-    "generateConverter": "yo @criticalmanufacturing/iot:converter"
+    "generateConverter": "yo @criticalmanufacturing/iot:converter",
+    "packagePacker": "yo @criticalmanufacturing/iot:packagePacker -o ."
   },
   "keywords": [
     "CMF",
@@ -40,7 +41,6 @@
   },
   "dependencies": {
     "@criticalmanufacturing/connect-iot-controller-engine": "<%= targetSystemVersionProcessed %>",
-    "cmf-lbos": "<%= targetSystemVersionProcessed %>",
     "reflect-metadata": "0.1.13",
     "inversify": "6.0.1",
     "moment": "2.29.4"
