@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { Task, System, TYPES, DI } from "@criticalmanufacturing/connect-iot-controller-engine";
+import { Task } from "@criticalmanufacturing/connect-iot-controller-engine";
 import EngineTestSuite from "@criticalmanufacturing/connect-iot-controller-engine/test";
 <% if(isProtocol === true) { %>import { DriverProxyMock } from "@criticalmanufacturing/connect-iot-controller-engine/test/mocks/driver-proxy.mock";<% } %>
 // import { DataStoreMock } from "@criticalmanufacturing/connect-iot-controller-engine/test/mocks/dataStore.mock";
@@ -9,7 +9,6 @@ import {
     <%= className %>Task,
     <%= className %>Settings
 } from "../../../../src/tasks/<%= name %>/<%= name %>.task";
-import <%= className %>TaskModule from "../../../../src/tasks/<%= name %>/index";
 
 describe("<%= className %> Task tests", () => {
 
@@ -29,7 +28,7 @@ describe("<%= className %> Task tests", () => {
     const <%= name %>TestFactory = (settings: <%= className %>Settings | undefined, trigger: Function, validate: Function): void => {
 
         const taskDefinition = {
-            class: <%= className %>TaskModule,
+            class: <%= className %>Task,
             id: "0",
             settings: (settings || {
                 <%- testSettingsDefaults %>

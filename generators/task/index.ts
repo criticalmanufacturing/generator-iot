@@ -49,8 +49,8 @@ class GeneratorTask extends ConnectIoTGenerator {
             }
         },
 
-        inputsInterface: "",
-        outputsInterface: "",
+        inputsInterface: "   ",
+        outputsInterface: "   ",
         settingsInterface: "",
         settingsDefaults: "",
         testSettingsDefaults: "",
@@ -557,15 +557,14 @@ class GeneratorTask extends ConnectIoTGenerator {
         this.values.testSettingsDefaults = this.values.testSettingsDefaults.trim();
 
         // Add new task entry in metadata file
-        const destinationFile = this.destinationPath("src", "metadata.ts");
+        const destinationFile = this.destinationPath("src", "index.ts");
         if (!this.fs.exists(destinationFile)) {
-            this.env.error(new Error("Unable to find 'metadata.ts' file. Make sure you are running the command from the root directory (same as package.json)"));
+            this.env.error(new Error("Unable to find 'index.ts' file. Make sure you are running the command from the root directory (same as package.json)"));
         }
 
-        this.injectInFile(destinationFile, "tasks: [", "],", `"${this.values.name}",\r\n`);
+        this.appendInFile(destinationFile, `export { ${this.values.className}Task } from "./tasks/${this.values.name}/${this.values.name}.task";\r\n`);
 
         let filesWithRename: Map<string, string> = new Map<string, string>([
-            ["index.ts", "index.ts"],
             ["task.task.ts", `${this.values.name}.task.ts`],
         ]);
         filesWithRename.forEach((value, key) => {

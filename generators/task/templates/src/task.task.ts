@@ -1,4 +1,4 @@
-import { Task, Dependencies, System, DI, TYPES, Utilities } from "@criticalmanufacturing/connect-iot-controller-engine";
+import { Task, Dependencies, System, DI, TYPES } from "@criticalmanufacturing/connect-iot-controller-engine";
 
 /** Default values for settings */
 export const SETTINGS_DEFAULTS: <%= className %>Settings = {
@@ -35,7 +35,7 @@ export class <%= className %>Task implements Task.TaskInstance, <%= className %>
     /** Activate task execution */
     public activate: any = undefined;
 
-    <%- inputsInterface %>
+<%- inputsInterface %>
 
     /** **Outputs** */
     /** To output a success notification */
@@ -43,7 +43,7 @@ export class <%= className %>Task implements Task.TaskInstance, <%= className %>
     /** To output an error notification */
     public error: Task.Output<Error> = new Task.Output<Error>();
 
-    <%- outputsInterface %>
+<%- outputsInterface %>
 
     /** Properties Settings */
     <%= settingsInterface %>
@@ -89,4 +89,4 @@ export class <%= className %>Task implements Task.TaskInstance, <%= className %>
 /** <%= className %> Settings object */
 export interface <%= className %>Settings extends System.TaskDefaultSettings {
     <%= settingsInterface %>
-};
+}

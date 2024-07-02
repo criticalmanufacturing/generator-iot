@@ -85,16 +85,15 @@ class GeneratorConverter extends ConnectIoTGenerator {
      */
     copyTemplates() {
 
-        // Add new converter entry in metadata file
-        const destinationFile = this.destinationPath("src", "metadata.ts");
+        const destinationFile = this.destinationPath("src", "index.ts");
         if (!this.fs.exists(destinationFile)) {
-            this.env.error(new Error("Unable to find 'metadata.ts' file. Make sure you are running the command from the root directory (same as package.json)"));
+            this.env.error(new Error("Unable to find 'index.ts' file. Make sure you are running the command from the root directory (same as package.json)"));
         }
 
-        this.injectInFile(destinationFile, "converters: [", "]", `"${this.values.name}",\r\n`);
+        this.appendInFile(destinationFile, `export { ${this.values.className}Converter } from "./converters/${this.values.name}/${this.values.name}.converter";\r\n`);
+
 
         let filesWithRename: Map<string, string> = new  Map<string, string>([
-            ["index.ts", "index.ts"],
             ["converter.converter.ts", `${this.values.name}.converter.ts`],
         ]);
         filesWithRename.forEach((value, key) => {

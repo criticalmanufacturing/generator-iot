@@ -67,7 +67,7 @@ class GeneratorTasksPackage extends ConnectIoTGenerator {
         });
 
         // Package implementation classes
-        files = ["metadata.ts"];
+        files = ["index.ts"];
         files.forEach((template) => {
             this.fs.copyTpl(this.templatePath("src", template), this.destinationPath(this.values.directory, "src", template), this.values);
         });
