@@ -1,4 +1,4 @@
-import { Converter, DI, Dependencies, TYPES, Task } from "@criticalmanufacturing/connect-iot-controller-engine";
+import { Converter, DI, Dependencies, TYPES } from "@criticalmanufacturing/connect-iot-controller-engine";
 
 /**
  * @whatItDoes

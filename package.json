@@ -1,6 +1,6 @@
 {
   "name": "@criticalmanufacturing/generator-iot",
-  "version": "11.0.4",
+  "version": "11.0.5",
   "description": "Connect IoT Scaffolding",
   "files": [
     "generators/*.js",
@@ -13,7 +13,7 @@
     "IoT",
     "yeoman-generator"
   ],
-  "homepage": "https://github.com/criticalmanufacturing/generator-iot/tree/102x",
+  "homepage": "https://github.com/criticalmanufacturing/generator-iot/tree/110x",
   "devDependencies": {
     "@types/chalk": "2.2.0",
     "@types/fs-extra": "11.0.4",
