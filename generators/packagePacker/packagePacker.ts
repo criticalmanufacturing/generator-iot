@@ -14,7 +14,7 @@ import { LibraryFontProcessor } from "./processors/libraryFont";
 import { log } from "console";
 
 export class PackagePacker {
-    
+
 
     public async go(options: { [name: string]: any }) {
 
@@ -171,7 +171,7 @@ export class PackagePacker {
             const destination = path.join(temp, "package.json");
 
             switch (configuration.type) {
-                case ComponentType.Component: 
+                case ComponentType.Component:
                     container.get<DriverTemplatesProcessor>(TYPES.Processors.DriverTemplates).process(configuration.templates, destination);
                     break;
                 case ComponentType.TasksPackage:
@@ -181,8 +181,8 @@ export class PackagePacker {
             }
         }
 
-         // Process any font action
-         if (configuration.font != null) {
+        // Process any font action
+        if (configuration.font != null) {
             const destination = path.join(temp, "package.json");
 
             if (configuration.type === ComponentType.TasksLibrary || configuration.type === ComponentType.TasksPackage) {
@@ -205,11 +205,11 @@ export class PackagePacker {
                 .replace("${Addons}", addons);
 
             switch (action.type) {
-                case ActionType.DeleteFile: this.deleteFile (actionSource); break;
-                case ActionType.DeleteDirectory: this.deleteDirectory (actionSource); break;
-                case ActionType.CopyDirectory: this.copyDirectory (actionSource, actionDestination); break;
-                case ActionType.CopyFile: this.copyFile (action.file || "", actionSource, actionDestination); break;
-                case ActionType.MoveFile: this.moveFile (action.file || "", actionSource, actionDestination); break;
+                case ActionType.DeleteFile: this.deleteFile(actionSource); break;
+                case ActionType.DeleteDirectory: this.deleteDirectory(actionSource); break;
+                case ActionType.CopyDirectory: this.copyDirectory(actionSource, actionDestination); break;
+                case ActionType.CopyFile: this.copyFile(action.file || "", actionSource, actionDestination); break;
+                case ActionType.MoveFile: this.moveFile(action.file || "", actionSource, actionDestination); break;
                 case ActionType.RenameFile: this.renameFile(actionSource, actionDestination); break;
                 case ActionType.ReplaceText: this.replaceTextInFile(actionSource, action.search || "", action.replace || "", action.isRegularExpression || false); break;
             }
@@ -235,7 +235,7 @@ export class PackagePacker {
         // Create Package and place it in the destination
         if (destination !== "") {
             this.createDirectory(destination);
-            this.run ("npm.cmd", [ "pack" ], temp);
+            this.run("npm.cmd", ["pack"], temp);
             for (let packedPackage of this.findByExtension(temp, "*.tgz")) {
                 this.moveFile(packedPackage, temp, destination);
             }
@@ -415,7 +415,8 @@ export class PackagePacker {
     private run(command: string, args: string[], cwd?: string): boolean {
         console.info(`  [Run] ${cwd != null ? cwd + "> " : ""}${command} ${args.join(" ")}`);
         const child = spawnSync(command, args, {
-            cwd: cwd
+            cwd: cwd,
+            shell: true
         });
 
         if (child.error != null) {
@@ -480,7 +481,7 @@ export class PackagePacker {
     private setPackageJsonAsPacked(file: string): void {
         const contents = JSON.parse(io.readFileSync(file, "utf8"));
         if (contents.criticalManufacturing == null) {
-            contents.criticalManufacturing = { };
+            contents.criticalManufacturing = {};
         }
         contents.criticalManufacturing.isPacked = true;
         io.writeFileSync(file, JSON.stringify(contents, null, 2), "utf8");
@@ -496,25 +497,25 @@ export class PackagePacker {
         if (extension.startsWith("*.")) {
             extension = extension.substring(1);
         }
-    
+
         basePath = basePath ?? "";
-    
+
         const result: string[] = [];
-    
+
         const files = io.readdirSync(searchPath);
         for (let i = 0; i < files.length; i++) {
             const filename = path.join(searchPath, files[i]);
             const stat = io.lstatSync(filename);
-    
+
             if (stat.isDirectory()) {
                 result.push(...this.findByExtension(filename, extension, basePath + `/${path.basename(filename)}`));
             } else if (filename.endsWith(extension) || extension === "*") {
                 result.push(path.join(basePath, path.basename(filename)));
             }
         }
-    
+
         return (result);
-    
+
     }
 
     /**
