@@ -1,4 +1,4 @@
-import { Task, Dependencies, System, DI, TYPES, TaskBase } from "@criticalmanufacturing/connect-iot-controller-engine";
+import { Task, System, TaskBase } from "@criticalmanufacturing/connect-iot-controller-engine";
 
 /** Default values for settings */
 export const SETTINGS_DEFAULTS: <%= className %>Settings = {
@@ -26,7 +26,7 @@ export const SETTINGS_DEFAULTS: <%= className %>Settings = {
  * See {@see <%= className %>Settings}
  */
 @Task.Task()
-export class <%= className %>Task extends TaskBase implements  <%= className %>Settings {
+export class <%= className %>Task extends TaskBase implements <%= className %>Settings {
 
     /** Accessor helper for untyped properties and output emitters. */
     // [key: string]: any;
