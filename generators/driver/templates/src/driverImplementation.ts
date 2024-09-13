@@ -44,7 +44,8 @@ export class <%= identifier %>DeviceDriver extends DeviceDriverBase {
     public async setCommunicationConfiguration(communication: any): Promise<void> {
         this._communicationSettings = Object.assign({}, <%= identifierCamel %>DefaultCommunicationSettings, communication);
 
-        let pJson = require("../package.json");
+        // eslint-disable-next-line
+        const pjson = require("../package.json");
         validateCommunicationParameters(pJson, this._communicationSettings);
 
         // Prepare the extended data
@@ -65,6 +66,7 @@ export class <%= identifier %>DeviceDriver extends DeviceDriverBase {
         try {
             // Connect to the equipment
             // ...
+            this.logger.info(`Using the following configurations: ${JSON.stringify(this._communicationSettings, undefined, " ")}`);
 
             // Notify the communication was a success and it is now ready for the setup process
             this.setCommunicationState(CommunicationState.Setup);

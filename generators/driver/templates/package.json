@@ -4,9 +4,11 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "build": "tsc && tsc -p test/unit/",
+    "build": "tsc && tsc -p test/integration/",
+    "lint": "eslint ./**/*.ts",
+    "lint:fix": "eslint ./**/*.ts --fix",
     "watchPackage": "tsc --preserveWatchOutput -w",
-    "watchTests": "tsc -p test/unit --preserveWatchOutput -w",
+    "watchTests": "tsc -p test/integration --preserveWatchOutput -w",
     "test": "npx mocha test/**/*.test.js --timeout 5000 --exit",
     "build:test:cover": "npm run build && npm run test:cover",
     "test:cover": "npx nyc -r cobertura -r lcov -r text-summary mocha test/*.test.js test/**/*.test.js -- --timeout 10000 --exit -R mocha-multi-reporters --reporter-options configFile=mocha-multi-reporters-config.json",
