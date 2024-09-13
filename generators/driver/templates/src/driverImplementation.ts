@@ -66,7 +66,10 @@ export class <%= identifier %>DeviceDriver extends DeviceDriverBase {
         try {
             // Connect to the equipment
             // ...
-            this.logger.info(`Using the following configurations: ${JSON.stringify(this._communicationSettings, undefined, " ")}`);
+
+            // Provide an empty object as a fallback to avoid errors
+            const { $id, ...cleanCommunicationSettings } = this._communicationSettings || {};
+            this.logger.info(`Using the following configurations: ${JSON.stringify(cleanCommunicationSettings, undefined, " ")}`);
 
             // Notify the communication was a success and it is now ready for the setup process
             this.setCommunicationState(CommunicationState.Setup);
