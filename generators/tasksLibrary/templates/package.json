@@ -43,7 +43,9 @@
     "@criticalmanufacturing/connect-iot-controller-engine": "<%= targetSystemVersionProcessed %>",
     "reflect-metadata": "0.1.13",
     "inversify": "6.0.1",
-    "moment": "2.29.4"
+    "moment": "2.29.4",
+    "cmf-lbos": "<%= targetSystemVersionProcessed %>",
+    "zone.js": "0.14.7"
   },
   "author": "Critical Manufacturing",
   "criticalManufacturing": {
