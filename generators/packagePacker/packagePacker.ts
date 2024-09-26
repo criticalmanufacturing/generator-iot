@@ -11,7 +11,6 @@ import { Paths } from "./processors/paths";
 import { Log } from "./processors/log";
 import { ShrinkwrapGenerator } from "./processors/shrinkwrapGenerator";
 import { LibraryFontProcessor } from "./processors/libraryFont";
-import { log } from "console";
 
 export class PackagePacker {
 
@@ -20,8 +19,8 @@ export class PackagePacker {
 
         const source: string = <string>options.i || <string>options.input || process.cwd();
         const destination: string = <string>options.o || <string>options.output || "";
-        let temp: string = <string>options.t || <string>options.temp || `${source}\\__TEMP__`;
-        const configurationFile: string = <string>options.c || <string>options.config || `${source}\\packConfig.json`;
+        let temp: string = <string>options.t || <string>options.temp || path.join(source, "__TEMP__");
+        const configurationFile: string = <string>options.c || <string>options.config || path.join(source, "packConfig.json");
         const addons: string = <string>options.a || <string>options.addons;
         const version: string = <string>options.v || <string>options.version || "";
         const debug: boolean = <boolean>options.d || <boolean>options.debug || false;
@@ -96,21 +95,26 @@ export class PackagePacker {
         //     // Tasks packages don't export anything
         //     this.generateTasksPackageExportFile(path.join(source, "src", "metadata.js"), path.join(source, "src", "index.js"));
         // }
+        const main: string = io.readJSONSync(path.join(source, "package.json"))?.main;
+        const mainSplitted: string[] = main?.split("/");
+        const index = mainSplitted?.[mainSplitted.length - 1];
+        mainSplitted?.pop();
+        const srcDirectory = mainSplitted?.join("/") ?? "src";
 
         // Pack package
         const packs = configuration.packs || [];
         if (packs.length === 0) {
             if (configuration.type === ComponentType.TasksPackage) {
                 packs.push({
-                    directory: "src",
+                    directory: srcDirectory,
                     source: "public-api-runtime.js",
-                    destination: "index.js",
+                    destination: index,
                 });
             } else {
                 packs.push({
-                    directory: "src",
-                    source: "index.js",
-                    destination: "index.js",
+                    directory: srcDirectory,
+                    source: index,
+                    destination: index,
                 });
             }
         }
@@ -138,6 +142,12 @@ export class PackagePacker {
             this.copyFile(".npmrc", source, temp);
             this.copyFile("README.md", source, temp);
             this.copyFile("package.json", source, temp);
+
+            // normalize package.json main
+            const packageJSONTemp = io.readJSONSync(path.join(temp, "package.json"));
+            packageJSONTemp.main = "src/index.js"
+
+            io.writeJSONSync(path.join(temp, "package.json"), packageJSONTemp);
         }
 
         if (configuration.type === ComponentType.TasksPackage) {

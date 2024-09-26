@@ -1,6 +1,7 @@
-  
+
 import { ConnectIoTGenerator, ValueType, IoTValueType } from "../base";
 import { PackagePacker } from "./packagePacker";
+import * as path from "path";
 
 class GeneratorPackagePacker extends ConnectIoTGenerator {
 
@@ -9,8 +10,8 @@ class GeneratorPackagePacker extends ConnectIoTGenerator {
 
         this.option("i", { alias: "input", type: String, default: process.cwd(), description: "Location of the package to pack" });
         this.option("o", { alias: "output", type: String, default: "", description: "Location of the generated package will be stored" });
-        this.option("t", { alias: "temp", type: String, default: `${process.cwd()}\\__TEMP__`, description: "Temporary location to use" });
-        this.option("c", { alias: "config", type: String, default: `${process.cwd()}\\packConfig.json`, description: "Location of the Configuration to use" });
+        this.option("t", { alias: "temp", type: String, default: path.join(process.cwd(), "__TEMP__"), description: "Temporary location to use" });
+        this.option("c", { alias: "config", type: String, default: path.join(process.cwd(), "packConfig.json"), description: "Location of the Configuration to use" });
         this.option("a", { alias: "addons", type: String, default: "", description: "Location of the compiled addons" });
         this.option("d", { alias: "debug", type: Boolean, default: false, description: "Debug Mode (doesn't delete temporary directory after processing)" });
         this.option("v", { alias: "version", type: String, default: "", description: "Version to use to generate the package" });
