@@ -2,6 +2,7 @@ import { container } from "./inversify.config";
 import { spawnSync } from "child_process";
 import * as io from "fs-extra";
 import * as path from "path";
+import * as os from "node:os";
 import { Configuration, Action, ActionType, Addon, ComponentType } from "./configuration";
 const ncc = require("@vercel/ncc");
 import { DriverTemplatesProcessor } from "./processors/driverTemplates";
@@ -245,7 +246,12 @@ export class PackagePacker {
         // Create Package and place it in the destination
         if (destination !== "") {
             this.createDirectory(destination);
-            this.run("npm.cmd", ["pack"], temp);
+
+            if (os.platform() === "win32") {
+                this.run("npm.cmd", ["pack"], temp);
+            } else {
+                this.run("npm", ["pack"], temp);
+            }
             for (let packedPackage of this.findByExtension(temp, "*.tgz")) {
                 this.moveFile(packedPackage, temp, destination);
             }
