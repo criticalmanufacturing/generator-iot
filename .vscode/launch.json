@@ -22,6 +22,20 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Create Driver",
+            "program": "${workspaceRoot}/node_modules/yo/lib/cli.js",
+            "args": [
+                "${workspaceRoot}/generators/driver/index.js"
+            ],
+            "cwd": "C:/Temp",
+            "outFiles": [],
+            "outputCapture": "std",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Create Task Library",
             "program": "${workspaceRoot}/node_modules/yo/lib/cli.js",
             "args": [
