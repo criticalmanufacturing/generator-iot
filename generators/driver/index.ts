@@ -66,7 +66,7 @@ class DriverConfig extends ConnectIoTGenerator {
         });
 
         // Tests
-        files = ["connection.test.ts"];
+        files = ["connection.test.ts", "tsconfig.json"];
         files.forEach((template) => {
             this.fs.copyTpl(this.templatePath("test", "integration", template), this.destinationPath(this.values.directory, "test", "integration", template), this.values);
         });

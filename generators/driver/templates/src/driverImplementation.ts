@@ -45,7 +45,7 @@ export class <%= identifier %>DeviceDriver extends DeviceDriverBase {
         this._communicationSettings = Object.assign({}, <%= identifierCamel %>DefaultCommunicationSettings, communication);
 
         // eslint-disable-next-line
-        const pjson = require("../package.json");
+        const pJson = require("../package.json");
         validateCommunicationParameters(pJson, this._communicationSettings);
 
         // Prepare the extended data
@@ -68,7 +68,7 @@ export class <%= identifier %>DeviceDriver extends DeviceDriverBase {
             // ...
 
             // Provide an empty object as a fallback to avoid errors
-            const { $id, ...cleanCommunicationSettings } = this._communicationSettings || {};
+            const { $id, ...cleanCommunicationSettings } = <any> this._communicationSettings || {};
             this.logger.info(`Using the following configurations: ${JSON.stringify(cleanCommunicationSettings, undefined, " ")}`);
 
             // Notify the communication was a success and it is now ready for the setup process
