@@ -2,12 +2,12 @@ import { Template, TemplateType } from "../models/template";
 import { LibraryConverter, LibraryConverterDefaults, LibraryMetadata, LibraryTask, LibraryTaskDefaults } from "../models/library";
 
 import { Log } from "./log";
+import { Transpiler } from "./transpiler";
 import * as io from "fs-extra";
 import * as path from "path";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../types";
 import { Paths } from "./paths";
-import { transform } from "@swc/core";
 
 @injectable()
 export class LibraryTemplatesProcessor {
@@ -16,19 +16,21 @@ export class LibraryTemplatesProcessor {
     private _logger: Log;
     @inject(TYPES.Paths)
     private _paths: Paths;
+    @inject(TYPES.Transpiler)
+    private _transpiler: Transpiler;
 
     private _finalTemplates: LibraryMetadata = {};
     private _templateDirectory: string;
 
     public async process(templateRules: string | Template[], destination: string): Promise<void> {
         this._logger.Info(` [Templates] Processing library templates`);
-        let json: any = io.readJSONSync(destination);
+        const json: any = io.readJSONSync(destination);
 
         if (json?.criticalManufacturing?.tasksLibrary == null) {
-            throw new Error("Unable to read TasksLibrary section of the package.json file")
+            throw new Error("Unable to read TasksLibrary section of the package.json file");
         }
 
-        let libraryMetadata: any = json.criticalManufacturing.tasksLibrary;
+        const libraryMetadata: any = json.criticalManufacturing.tasksLibrary;
 
         this._finalTemplates = libraryMetadata.metadata ?? {};
         if (this._finalTemplates != null && ((this._finalTemplates.converters?.length ?? 0) !== 0 || (this._finalTemplates.tasks?.length ?? 0) !== 0)) {
@@ -49,7 +51,7 @@ export class LibraryTemplatesProcessor {
                 this._templateDirectory = templateRules;
 
                 const files = io.readdirSync(templateRules);
-                for (let file of files) {
+                for (const file of files) {
                     if (file.endsWith(".json")) {
                         await this.merge(path.join(templateRules, file));
                     }
@@ -58,7 +60,7 @@ export class LibraryTemplatesProcessor {
             }
         } else {
             // Process each template entry
-            for (let templateRule of templateRules) {
+            for (const templateRule of templateRules) {
                 switch (templateRule.type) {
                     case TemplateType.Index:
                         await this.processIndex(this._paths.transform(templateRule.source));
@@ -91,7 +93,7 @@ export class LibraryTemplatesProcessor {
         if (!Array.isArray(files)) {
             this._logger.Error(` [Templates] Index file '${indexFile}' doesn't contain an array of files to process!`);
         } else {
-            for (let file of files) {
+            for (const file of files) {
                 await this.merge(path.join(indexPath, file));
             }
         }
@@ -136,7 +138,7 @@ export class LibraryTemplatesProcessor {
     private async mergeTasks(tasks: LibraryTask[]): Promise<void> {
         for (const task of tasks) {
             const newOne = /*await this.preProcessTaskScripts*/(Object.assign({}, LibraryTaskDefaults, task));
-            const b = await this.preProcessTaskScripts(newOne);
+            await this._transpiler.preProcessTaskScripts(this._templateDirectory, newOne);
 
             // Check if there is another with the same name
             const existing = (this._finalTemplates.tasks ?? []).find(c => c.name === newOne.name);
@@ -155,63 +157,5 @@ export class LibraryTemplatesProcessor {
                 this._logger.Info(` [Templates]   Found new task '${newOne.displayName ?? newOne.name}'`);
             }
         }
-    }
-
-    private async preProcessTaskScripts(value: any): Promise<any> {
-        if (value != null) {
-            if (typeof (value) === "object") {
-                if (Array.isArray(value)) {
-                    for (let i = 0; i < value.length; i++) {
-                        value[i] = await this.preProcessTaskScripts(value[i]);
-                    }
-                } else {
-                    const keys = Object.keys(value);
-                    for (const key of keys) {
-                        value[key] = await this.preProcessTaskScripts(value[key]);
-                    }
-                }
-            } else if (typeof (value) === "string") {
-                const regex = /\${script\((.*)\)}/i;
-                const matches = value.match(regex);
-                if (matches != null && matches.length === 2) {
-                    this._logger.debug(` [Templates]   Processing Script '${matches[1]}'`);
-                    const scriptFile = path.resolve(this._templateDirectory, matches[1].toString());
-                    const scriptContent = io.readFileSync(scriptFile).toString();
-                    const transpiled = await this.transpile(scriptContent, false);
-                    value = Buffer.from(transpiled).toString("base64");
-                } else {
-                    const regex = /\${script\[\]\((.*)\)}/i;
-                    const matches = value.match(regex);
-                    if (matches != null && matches.length === 2) {
-                        this._logger.debug(` [Templates]   Processing Script as [] '${matches[1]}'`);
-                        const scriptFile = path.resolve(this._templateDirectory, matches[1].toString());
-                        const scriptContent = io.readFileSync(scriptFile).toString();
-                        const transpiled = await this.transpile(scriptContent, false);
-                        value = transpiled.split("\n");
-                    }
-                }
-            }
-        }
-        return value;
-    }
-
-    private async transpile(code: string, compress: boolean): Promise<string> {
-        const res = await transform(code, {
-            jsc: {
-                parser: {
-                    syntax: "typescript",
-                },
-                transform: {
-
-                },
-                target: "es2016",
-                minify: {
-                    compress: compress,
-                }
-            },
-            minify: compress,
-        });
-
-        return (res.code);
     }
 }

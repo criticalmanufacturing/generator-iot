@@ -1,5 +1,4 @@
-import { Template, TemplateType } from "../models/template";
-import { LibraryConverter, LibraryConverterDefaults, LibraryMetadata, LibraryTask, LibraryTaskDefaults } from "../models/library";
+import { LibraryMetadata } from "../models/library";
 
 import { Log } from "./log";
 import * as io from "fs-extra";
@@ -22,13 +21,13 @@ export class LibraryFontProcessor {
 
         this._logger.Info(` [Font] Processing library font in '${fontConfigPath}'`);
         const fontContent: any = io.readJSONSync(fontConfigPath);
-        let json: any = io.readJSONSync(destination);
-        
+        const json: any = io.readJSONSync(destination);
+
         if (json?.criticalManufacturing?.tasksLibrary == null) {
-            throw new Error("Unable to read TasksLibrary section of the package.json file")
+            throw new Error("Unable to read TasksLibrary section of the package.json file");
         }
 
-        let libraryMetadata: any = json.criticalManufacturing.tasksLibrary;
+        const libraryMetadata: any = json.criticalManufacturing.tasksLibrary;
         libraryMetadata.metadata["font"] = fontContent;
 
         io.writeFileSync(destination, JSON.stringify(json, null, 2), "utf8");
