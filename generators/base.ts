@@ -1,4 +1,4 @@
-import * as Generator from 'yeoman-generator';
+import * as Generator from "yeoman-generator";
 import * as path from "path";
 import * as io from "fs-extra";
 
@@ -8,8 +8,8 @@ export class ConnectIoTGenerator extends Generator {
         super(args, opts);
 
         // Disable the conflicts by forcing everything
-        if ((<any>this).conflicter != null) {
-            (<any>this).conflicter.force = true;
+        if ((this as any).conflicter != null) {
+            (this as any).conflicter.force = true;
         }
     }
 
@@ -43,7 +43,7 @@ export class ConnectIoTGenerator extends Generator {
             case ValueType.Password: valueType = "password"; break;
         }
 
-        let answer = await this.prompt([{
+        const answer = await this.prompt([{
             type: valueType,
             name: "result",
             message: question,
@@ -60,12 +60,12 @@ export class ConnectIoTGenerator extends Generator {
      * @param allowEnum Should the Enum be a possibility
      */
     async askValueType(question: string, def: IoTValueType, allowEnum: boolean = false): Promise<IoTValueType> {
-        let choices = ["Any", "String", "Integer", "Long", "Decimal", "Boolean", "DateTime", "Object", "Buffer"];
+        const choices = ["Any", "String", "Integer", "Long", "Decimal", "Boolean", "DateTime", "Object", "Buffer"];
         if (allowEnum === true) {
             choices.push("Enum");
         }
 
-        let answer = await this.prompt([{
+        const answer = await this.prompt([{
             type: "list",
             name: "result",
             message: question,
@@ -73,17 +73,17 @@ export class ConnectIoTGenerator extends Generator {
             default: def,
         }]);
 
-        return (<IoTValueType>(<any>IoTValueType)[answer.result]);
+        return ((IoTValueType as any)[answer.result] as IoTValueType);
     }
 
     /**
      * Ask for a choice out of a set of choices
-     * @param question Question to ask 
+     * @param question Question to ask
      * @param choices Available choices
      * @param def Default value
      */
     async askChoice(question: string, choices: string[], def: string): Promise<string> {
-        let answer = await this.prompt([{
+        const answer = await this.prompt([{
             type: "list",
             name: "result",
             message: question,
@@ -101,7 +101,7 @@ export class ConnectIoTGenerator extends Generator {
      * @param def Default choices
      */
     async askMultipleChoices(question: string, choices: string[], def: string[]): Promise<string[]> {
-        let answer = await this.prompt([{
+        const answer = await this.prompt([{
             type: "checkbox",
             name: "result",
             message: question,
@@ -118,7 +118,7 @@ export class ConnectIoTGenerator extends Generator {
      * @param value Value to inject
      */
     appendInFile(file: string, value: string): any {
-        let fileContent = this.fs.read(file).split("\r\n");
+        const fileContent = this.fs.read(file).split("\r\n");
         let alreadyInjected = false;
 
         // search start
@@ -134,7 +134,7 @@ export class ConnectIoTGenerator extends Generator {
     }
 
     /**
-     * Inject a value between two tokens. 
+     * Inject a value between two tokens.
      * Useful to add code to existing code (with indentation)
      * @param file File to process
      * @param startToken Identifier of the start of the block
@@ -142,7 +142,7 @@ export class ConnectIoTGenerator extends Generator {
      * @param value Value to inject
      */
     injectInFile(file: string, startToken: string, endToken: string, value: string): any {
-        let fileContent = this.fs.read(file).split("\r\n");
+        const fileContent = this.fs.read(file).split("\r\n");
         let startIndex = -1;
         let endIndex = -1;
         let alreadyInjected = false;
@@ -178,11 +178,11 @@ export class ConnectIoTGenerator extends Generator {
             this.log(`** ${file} doesn't contain the necessary tokens to insert ${value}`);
         }
     }
-   
+
     /**
      * Return the JavaScript corresponding type for the IoT data type
      * @param type IoT data type to translate
-     */    
+     */
     toJSType(type: IoTValueType): string {
         switch (type) {
             case IoTValueType.Any: return ("any");
@@ -197,12 +197,12 @@ export class ConnectIoTGenerator extends Generator {
         return ("notSupportedPleaseFix");
     }
 
-    
+
 
      /**
      * Return the TypeScript name corresponding type for the IoT data type
      * @param type IoT data type to translate
-     */  
+     */
     toIotType(type: IoTValueType): string {
         switch (type) {
             case IoTValueType.Any: return ("undefined");
