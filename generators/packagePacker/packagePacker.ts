@@ -211,83 +211,83 @@ export class PackagePacker {
                     await container.get<LibraryBusinessScenariosProcessor>(TYPES.Processors.LibraryBusinessScenarios).process(configuration.businessScenarios, destination);
                     break;
             }
-
-            // Process any font action
-            if (configuration.font != null) {
-                destination = path.join(temp, "package.json");
-
-                if (configuration.type === ComponentType.TasksLibrary || configuration.type === ComponentType.TasksPackage) {
-                    container.get<LibraryFontProcessor>(TYPES.Processors.LibraryFontProcessor).process(configuration.font, destination);
-                }
-            }
-
-            // process Post actions
-            (configuration.postActions || []).forEach((action: Action) => {
-                const actionSource: string = (action.source || "")
-                    .replace("${Source}", source)
-                    .replace("${Temp}", temp)
-                    .replace("${Destination}", destination)
-                    .replace("${Addons}", addons);
-
-                const actionDestination: string = (action.destination || "")
-                    .replace("${Source}", source)
-                    .replace("${Temp}", temp)
-                    .replace("${Destination}", destination)
-                    .replace("${Addons}", addons);
-
-                switch (action.type) {
-                    case ActionType.DeleteFile: this.deleteFile(actionSource); break;
-                    case ActionType.DeleteDirectory: this.deleteDirectory(actionSource); break;
-                    case ActionType.CopyDirectory: this.copyDirectory(actionSource, actionDestination); break;
-                    case ActionType.CopyFile: this.copyFile(action.file || "", actionSource, actionDestination); break;
-                    case ActionType.MoveFile: this.moveFile(action.file || "", actionSource, actionDestination); break;
-                    case ActionType.RenameFile: this.renameFile(actionSource, actionDestination); break;
-                    case ActionType.ReplaceText: this.replaceTextInFile(actionSource, action.search || "", action.replace || "", action.isRegularExpression || false); break;
-                }
-            });
-
-
-            // Place index.js into src directory
-            this.createDirectory(path.join(temp, "src"));
-            if (configuration.type === ComponentType.TasksPackage) {
-                this.moveFile("index.js", temp, path.join(temp, "src"));
-            } else {
-                for (const pack of packs) {
-                    // Fix issue with nconf
-                    // https://github.com/zeit/ncc/issues/451
-                    ["argv", "env", "file", "literal", "memory"].forEach((toFix: string) => {
-                        this.replaceTextInFile(path.join(temp, pack.destination || "index.js"), `arg === \"${toFix}.js\"`, `arg === \"${toFix}\"`, false);
-                    });
-
-                    this.moveFile(pack.destination || "index.js", temp, path.join(temp, "src"));
-                }
-            }
-
-            // Create Package and place it in the destination
-            if (destination !== "") {
-                this.createDirectory(destination);
-
-                if (os.platform() === "win32") {
-                    this.run("npm.cmd", ["pack"], temp);
-                } else {
-                    this.run("npm", ["pack"], temp);
-                }
-                for (const packedPackage of this.findByExtension(temp, "*.tgz")) {
-                    this.moveFile(packedPackage, temp, destination);
-                }
-            }
-
-
-            // Delete temp
-            if (debug === false) {
-                this.deleteDirectory(temp);
-            } else {
-                console.warn("\x1b[33m", `Directory '${temp}' was *NOT* deleted`, "\x1b[0m");
-            }
-
-            console.log("");
-            console.log("\x1b[32m", "** Finished **", "\x1b[0m");
         }
+
+        // Process any font action
+        if (configuration.font != null) {
+            destination = path.join(temp, "package.json");
+
+            if (configuration.type === ComponentType.TasksLibrary || configuration.type === ComponentType.TasksPackage) {
+                container.get<LibraryFontProcessor>(TYPES.Processors.LibraryFontProcessor).process(configuration.font, destination);
+            }
+        }
+
+        // process Post actions
+        (configuration.postActions || []).forEach((action: Action) => {
+            const actionSource: string = (action.source || "")
+                .replace("${Source}", source)
+                .replace("${Temp}", temp)
+                .replace("${Destination}", destination)
+                .replace("${Addons}", addons);
+
+            const actionDestination: string = (action.destination || "")
+                .replace("${Source}", source)
+                .replace("${Temp}", temp)
+                .replace("${Destination}", destination)
+                .replace("${Addons}", addons);
+
+            switch (action.type) {
+                case ActionType.DeleteFile: this.deleteFile(actionSource); break;
+                case ActionType.DeleteDirectory: this.deleteDirectory(actionSource); break;
+                case ActionType.CopyDirectory: this.copyDirectory(actionSource, actionDestination); break;
+                case ActionType.CopyFile: this.copyFile(action.file || "", actionSource, actionDestination); break;
+                case ActionType.MoveFile: this.moveFile(action.file || "", actionSource, actionDestination); break;
+                case ActionType.RenameFile: this.renameFile(actionSource, actionDestination); break;
+                case ActionType.ReplaceText: this.replaceTextInFile(actionSource, action.search || "", action.replace || "", action.isRegularExpression || false); break;
+            }
+        });
+
+
+        // Place index.js into src directory
+        this.createDirectory(path.join(temp, "src"));
+        if (configuration.type === ComponentType.TasksPackage) {
+            this.moveFile("index.js", temp, path.join(temp, "src"));
+        } else {
+            for (const pack of packs) {
+                // Fix issue with nconf
+                // https://github.com/zeit/ncc/issues/451
+                ["argv", "env", "file", "literal", "memory"].forEach((toFix: string) => {
+                    this.replaceTextInFile(path.join(temp, pack.destination || "index.js"), `arg === \"${toFix}.js\"`, `arg === \"${toFix}\"`, false);
+                });
+
+                this.moveFile(pack.destination || "index.js", temp, path.join(temp, "src"));
+            }
+        }
+
+        // Create Package and place it in the destination
+        if (destination !== "") {
+            this.createDirectory(destination);
+
+            if (os.platform() === "win32") {
+                this.run("npm.cmd", ["pack"], temp);
+            } else {
+                this.run("npm", ["pack"], temp);
+            }
+            for (const packedPackage of this.findByExtension(temp, "*.tgz")) {
+                this.moveFile(packedPackage, temp, destination);
+            }
+        }
+
+
+        // Delete temp
+        if (debug === false) {
+            this.deleteDirectory(temp);
+        } else {
+            console.warn("\x1b[33m", `Directory '${temp}' was *NOT* deleted`, "\x1b[0m");
+        }
+
+        console.log("");
+        console.log("\x1b[32m", "** Finished **", "\x1b[0m");
     }
 
     /**

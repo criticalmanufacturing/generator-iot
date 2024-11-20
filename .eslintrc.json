@@ -16,7 +16,7 @@
             ],
             "parserOptions": {
                 "project": [
-                    "tsconfig.json"
+                    "./tsconfig.json"
                 ],
                 "createDefaultProgram": true,
                 "warnOnUnsupportedTypeScriptVersion": false
@@ -26,6 +26,10 @@
                 "plugin:@typescript-eslint/recommended"
             ],
             "rules": {
+                "complexity": [
+                    "off",
+                    15
+                ],
                 "mocha/no-skipped-tests": "error",
                 "mocha/no-exclusive-tests": "error",
                 "prefer-spread": "off",

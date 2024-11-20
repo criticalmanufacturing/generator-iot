@@ -3,7 +3,7 @@ import { injectable } from "inversify";
 @injectable()
 export class Log {
     public debug(text: string): void {
-        console.error("\x1b[90m", text, "\x1b[0m");
+        console.debug("\x1b[90m", text, "\x1b[0m");
     }
 
     public Error(text: string): void {
@@ -19,6 +19,6 @@ export class Log {
     }
 
     public Warn(text: string): void {
-        console.log("\x1b[33m", text, "\x1b[0m");
+        console.warn("\x1b[33m", text, "\x1b[0m");
     }
 }

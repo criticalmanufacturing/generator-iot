@@ -25,7 +25,7 @@ export class LibraryBusinessScenariosProcessor {
         this._logger.Info(` [BusinessScenarios] Processing Business Scenarios`);
         const json: any = io.readJSONSync(destination);
 
-        let businessScenarioMetadata: BusinessScenario[] = json.criticalManufacturing.businessScenarios;
+        let businessScenarioMetadata: BusinessScenario[] = json?.criticalManufacturing?.businessScenarios;
 
         this._finalBusinessScenarios = businessScenarioMetadata ?? [];
         if (this._finalBusinessScenarios != null && this._finalBusinessScenarios?.length > 0) {
@@ -64,7 +64,7 @@ export class LibraryBusinessScenariosProcessor {
         }
 
         businessScenarioMetadata = this._finalBusinessScenarios;
-        io.writeFileSync(destination, JSON.stringify(json, null, 2), "utf8");
+        io.writeFileSync(destination, JSON.stringify(businessScenarioMetadata, null, 2), "utf8");
     }
 
     /**
@@ -103,6 +103,11 @@ export class LibraryBusinessScenariosProcessor {
     }
 
     private async processBusinessScenario(newBusinessScenario: BusinessScenario): Promise<void> {
+
+        if (newBusinessScenario == null || Object.keys(newBusinessScenario).length === 0) {
+            return;
+        }
+
         await this._transpiler.preProcessTaskScripts(this._businessScenariosDirectory, newBusinessScenario);
 
         // Check if there is another with the same name

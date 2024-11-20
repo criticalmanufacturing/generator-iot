@@ -10,20 +10,16 @@
         "declaration": true,
         "pretty": true,
         "strict": true,
-        "emitDecoratorMetadata": true,
+        "emitDecoratorMetadata": false,
         "experimentalDecorators": true,
         "moduleResolution": "node",
         "allowSyntheticDefaultImports": true,
         "skipLibCheck": true
     },
     "include": [
-        "generators/*",
-        "generators/*/*",
-        "generators/*/test/*"
+        "./*"
     ],
     "exclude": [
         "node_modules",
-        "**/*.spec.ts",
-        "templates"
     ]
 }
