@@ -35,7 +35,7 @@ export enum TaskOutputTypeType {
 }
 /**
  * An Automation Task Library is a set of metadata that contains enough information to produce one or multiple
- * Tasks to be used in the Workflow Designer without requiring any code or development skills. It is also 
+ * Tasks to be used in the Workflow Designer without requiring any code or development skills. It is also
  * intended to allow the user to see the settings of a task that was created in previous versions of the
  * installed system
  */
@@ -59,7 +59,7 @@ export interface Library {
 }
 
 /**
- * describe the format of the Metadata portion of the Tasks Library 
+ * describe the format of the Metadata portion of the Tasks Library
  */
 export interface LibraryMetadata {
     /** List of Converters available in this library version */
@@ -137,15 +137,15 @@ export interface LibraryTask {
 
 export enum LibraryTaskScriptType {
     /** Script block */
-    Script = 'Script',
+    Script = "Script",
     /** Points to a generic script instead of the script itself */
-    Reference = 'Reference',
+    Reference = "Reference",
     // JsonAta = 'JsonAta',
 }
 
 export enum LibraryTaskScriptEncoding {
-    Plain = 'Plain',
-    Base64 = 'Base64',
+    Plain = "Plain",
+    Base64 = "Base64",
 }
 
 export interface LibraryTaskScript {

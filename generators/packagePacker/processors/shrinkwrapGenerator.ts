@@ -3,7 +3,6 @@ import * as io from "fs-extra";
 import * as path from "path";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../types";
-import { Paths } from "./paths";
 
 @injectable()
 export class ShrinkwrapGenerator {
@@ -11,7 +10,7 @@ export class ShrinkwrapGenerator {
     @inject(TYPES.Logger)
     private _logger: Log;
 
-    public process(source: string , fileName: string): void {
+    public process(source: string, fileName: string): void {
         let lockFilePath = path.join(source, "package-lock.json");
         let isWorkspaces = false;
         if (!io.existsSync(lockFilePath)) {
@@ -24,7 +23,7 @@ export class ShrinkwrapGenerator {
                     levels.push("..");
                 }
 
-                lockFilePath = path.resolve(source, ...levels, "package-lock.json")
+                lockFilePath = path.resolve(source, ...levels, "package-lock.json");
                 if (io.existsSync(lockFilePath)) {
                     isWorkspaces = true;
                     break;
@@ -43,8 +42,8 @@ export class ShrinkwrapGenerator {
                 this._logger.Info(`Reading original package from '${packageJsonLocation}'`);
                 const packageJson = io.readJSONSync(packageJsonLocation);
                 this._logger.Info(`Reading lock file from '${lockFilePath}'`);
-                const lockJson = io.readJSONSync(lockFilePath);            
-                
+                const lockJson = io.readJSONSync(lockFilePath);
+
                 // now, cleanup the file
                 const prefix = source.slice(path.dirname(lockFilePath).length + 1).replace("\\", "/");
 
@@ -57,7 +56,7 @@ export class ShrinkwrapGenerator {
                 }
 
                 // Reprocess the important packages (@criticalmanufacturing/);
-                for(const dep of dependencies) {
+                for (const dep of dependencies) {
                     if (dep.startsWith("@criticalmanufacturing/")) {
                         const importantPack = this.searchImportantPackage(lockJson.packages ?? {}, dep);
                         for (const key in importantPack.dependencies ?? {}) {
@@ -90,7 +89,7 @@ export class ShrinkwrapGenerator {
                 });
 
 
-                this._logger.Info(`Generating '${fileName}' file with relevant dependencies information for this package`)
+                this._logger.Info(`Generating '${fileName}' file with relevant dependencies information for this package`);
                 io.writeJSONSync(path.join(source, fileName), {
                     name: packageJson.name,
                     version: packageJson.version,
@@ -106,7 +105,7 @@ export class ShrinkwrapGenerator {
         const result: any = {};
         for (const key in full) {
             if (key === ("node_modules/" + search) || key.startsWith("node_modules/" + search + "/") || full[key].name === search) {
-                result[key] = full[key]
+                result[key] = full[key];
             }
         }
 
@@ -116,7 +115,7 @@ export class ShrinkwrapGenerator {
     private searchImportantPackage(full: any, search: string): any {
         for (const key in full) {
             if (full[key].name === search) {
-               return (full[key]);
+                return (full[key]);
             }
         }
 
