@@ -21,6 +21,8 @@
     "@types/uuid": "9.0.8",
     "@types/yeoman-generator": "5.2.14",
     "@types/yosay": "2.0.3",
+    "@typescript-eslint/eslint-plugin": "7.13.1",
+    "@typescript-eslint/parser": "7.13.1",
     "typescript": "5.2.2"
   },
   "dependencies": {
@@ -35,13 +37,17 @@
     "uuid": "9.0.1",
     "yeoman-generator": "5.8.0",
     "yo": "4.3.1",
-    "yosay": "2.0.2"
+    "yosay": "2.0.2",
+    "eslint": "^8.53.0",
+    "eslint-plugin-mocha": "10.4.3"
   },
   "license": "GPL-3.0",
   "author": "Critical Manufacturing",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
+    "lint": "eslint ./**/*.ts",
+    "lint:fix": "eslint ./**/*.ts --fix",
     "prepublishOnly": "npm run build"
   }
 }

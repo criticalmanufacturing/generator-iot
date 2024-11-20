@@ -15,7 +15,7 @@
                 "-d",
                 "-o=."
             ],
-            "cwd": "C:/cmf/repos/Product/IoMT/src/driver-fileraw",
+            "cwd": "C:/cmf/repos/MonoRepo/Product/Platform/ConnectIoT/src/connect-iot-business-scenarios-general",
             "outFiles": [],
             "outputCapture": "std"
         },

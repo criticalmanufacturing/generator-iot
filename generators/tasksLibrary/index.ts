@@ -28,7 +28,7 @@ class GeneratorTasksPackage extends ConnectIoTGenerator {
         this.values.packageVersion = await this.askScalar("What is the package version?", ValueType.Text, this.values.packageVersion);
         this.values.identifier = await this.askScalar("What is the library name?", ValueType.Text, this.values.identifier);
         this.values.identifierLower = this.values.identifier.trim().toLocaleLowerCase().replaceAll(" ", "");
-        
+
         this.values.targetSystemVersion = await this.askScalar("What is the target system (MES) version", ValueType.Text, this.values.targetSystemVersion);
 
         this.values.dependsOnScope = JSON.stringify(await this.askMultipleChoices("On which scopes this library can be used", ["ConnectIoT", "FactoryAutomation", "EnterpriseIntegration"], ["ConnectIoT", "FactoryAutomation", "EnterpriseIntegration"]));
@@ -47,12 +47,13 @@ class GeneratorTasksPackage extends ConnectIoTGenerator {
     /** Copy all files to destination directory with the settings defined in the previous step */
     copyTemplates() {
         // Base files:
-        let filesWithRename: Map<string, string> = new Map<string, string>([
+        const filesWithRename: Map<string, string> = new Map<string, string>([
             ["_iot_.gitattributes", ".gitattributes"],
             ["_iot_.gitignore", ".gitignore"],
             ["_iot_.npmignore", ".npmignore"],
             ["_iot_.npmrc", ".npmrc"],
             ["_iot_.connect_iot_package_done", ".connect_iot_package_done"],
+            ["_package.json", "package.json"],
         ]);
         filesWithRename.forEach((value, key) => {
             this.fs.copyTpl(this.templatePath(key), this.destinationPath(this.values.directory, value), this.values);
@@ -101,5 +102,5 @@ class GeneratorTasksPackage extends ConnectIoTGenerator {
     }
 }
 
-declare var module: any;
+declare let module: any;
 (module).exports = GeneratorTasksPackage;
