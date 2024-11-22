@@ -106,7 +106,11 @@ describe("LibraryBusinessScenariosProcessor", () => {
         await processor.process(mockPath, "path/to/package.json");
 
         // Assert
-        const businessScenarioMetadata = [{ name: "TestScenario" }];
+        const businessScenarioMetadata = {
+            criticalManufacturing: {
+                businessScenarios: [{ name: "TestScenario" }]
+            }
+        };
         expect((io.writeFileSync as sinon.SinonStub).calledWith("path/to/package.json", JSON.stringify(businessScenarioMetadata, null, 2)), "utf8").to.be.true;
     });
 
@@ -135,7 +139,14 @@ describe("LibraryBusinessScenariosProcessor", () => {
         await processor.process(mockPath, "path/to/package.json");
 
         // Assert
-        const businessScenarioMetadata = [{ name: "TestScenario1" }, { name: "TestScenario2" }];
+        const businessScenarioMetadata = {
+            criticalManufacturing: {
+                businessScenarios: [
+                    { name: "TestScenario1" },
+                    { name: "TestScenario2" }
+                ]
+            }
+        };
         expect((io.writeFileSync as sinon.SinonStub).calledWith("path/to/package.json", JSON.stringify(businessScenarioMetadata, null, 2)), "utf8").to.be.true;
     });
 
@@ -160,7 +171,13 @@ describe("LibraryBusinessScenariosProcessor", () => {
         await processor.process([{ source: indexFile, type: "Index" } as any], "path/to/package.json");
 
         // Assert
-        const businessScenarioMetadata = [{ name: "IndexedScenario" }];
+        const businessScenarioMetadata = {
+            criticalManufacturing: {
+                businessScenarios: [
+                    { name: "IndexedScenario" }
+                ]
+            }
+        };
         expect((io.writeFileSync as sinon.SinonStub).calledWith("path/to/package.json", JSON.stringify(businessScenarioMetadata, null, 2)), "utf8").to.be.true;
     });
 

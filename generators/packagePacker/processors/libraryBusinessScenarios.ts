@@ -25,9 +25,11 @@ export class LibraryBusinessScenariosProcessor {
         this._logger.Info(` [BusinessScenarios] Processing Business Scenarios`);
         const json: any = io.readJSONSync(destination);
 
-        let businessScenarioMetadata: BusinessScenario[] = json?.criticalManufacturing?.businessScenarios;
+        json.criticalManufacturing = json?.criticalManufacturing ?? {};
+        json.criticalManufacturing.businessScenarios = json.criticalManufacturing.businessScenarios ?? [];
+        let businessScenarioMetadata: BusinessScenario[] = json.criticalManufacturing.businessScenarios;
 
-        this._finalBusinessScenarios = businessScenarioMetadata ?? [];
+        this._finalBusinessScenarios = businessScenarioMetadata;
         if (this._finalBusinessScenarios != null && this._finalBusinessScenarios?.length > 0) {
             this._logger.Warn(" [BusinessScenarios] Existing business scenarios found in the package.json file found. Merging the new ones with the existing");
         }
@@ -64,7 +66,8 @@ export class LibraryBusinessScenariosProcessor {
         }
 
         businessScenarioMetadata = this._finalBusinessScenarios;
-        io.writeFileSync(destination, JSON.stringify(businessScenarioMetadata, null, 2), "utf8");
+
+        io.writeFileSync(destination, JSON.stringify(json, null, 2), "utf8");
     }
 
     /**
