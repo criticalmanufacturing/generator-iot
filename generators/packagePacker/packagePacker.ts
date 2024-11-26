@@ -1,9 +1,11 @@
+/* eslint-disable no-useless-escape */
 import { container } from "./inversify.config";
 import { spawnSync } from "child_process";
 import * as io from "fs-extra";
 import * as path from "path";
 import * as os from "node:os";
 import { Configuration, Action, ActionType, Addon, ComponentType } from "./configuration";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const ncc = require("@vercel/ncc");
 import { DriverTemplatesProcessor } from "./processors/driverTemplates";
 import { LibraryTemplatesProcessor } from "./processors/libraryTemplates";
@@ -12,19 +14,20 @@ import { Paths } from "./processors/paths";
 import { Log } from "./processors/log";
 import { ShrinkwrapGenerator } from "./processors/shrinkwrapGenerator";
 import { LibraryFontProcessor } from "./processors/libraryFont";
+import { LibraryBusinessScenariosProcessor } from "./processors/libraryBusinessScenarios";
 
 export class PackagePacker {
 
 
     public async go(options: { [name: string]: any }) {
 
-        const source: string = <string>options.i || <string>options.input || process.cwd();
-        const destination: string = <string>options.o || <string>options.output || "";
-        let temp: string = <string>options.t || <string>options.temp || path.join(source, "__TEMP__");
-        const configurationFile: string = <string>options.c || <string>options.config || path.join(source, "packConfig.json");
-        const addons: string = <string>options.a || <string>options.addons;
-        const version: string = <string>options.v || <string>options.version || "";
-        const debug: boolean = <boolean>options.d || <boolean>options.debug || false;
+        const source: string = options.i as string || options.input as string || process.cwd();
+        let destination: string = options.o as string || options.output as string || "";
+        let temp: string = options.t as string || options.temp as string || path.join(source, "__TEMP__");
+        const configurationFile: string = options.c as string || options.config as string || path.join(source, "packConfig.json");
+        const addons: string = options.a as string || options.addons as string;
+        const version: string = options.v as string || options.version as string || "";
+        const debug: boolean = options.d as boolean || options.debug as boolean || false;
         // let mappedAddons: string | undefined = undefined;
 
         const _logger: Log = container.get<Log>(TYPES.Logger);
@@ -105,18 +108,23 @@ export class PackagePacker {
         // Pack package
         const packs = configuration.packs || [];
         if (packs.length === 0) {
-            if (configuration.type === ComponentType.TasksPackage) {
-                packs.push({
-                    directory: srcDirectory,
-                    source: "public-api-runtime.js",
-                    destination: index,
-                });
-            } else {
-                packs.push({
-                    directory: srcDirectory,
-                    source: index,
-                    destination: index,
-                });
+
+            switch (configuration.type) {
+                case ComponentType.TasksPackage:
+                    packs.push({
+                        directory: srcDirectory,
+                        source: "public-api-runtime.js",
+                        destination: index,
+                    });
+                    break;
+                case ComponentType.BusinessScenario:
+                    break;
+                default:
+                    packs.push({
+                        directory: srcDirectory,
+                        source: index,
+                        destination: index,
+                    });
             }
         }
 
@@ -146,7 +154,7 @@ export class PackagePacker {
 
             // normalize package.json main
             const packageJSONTemp = io.readJSONSync(path.join(temp, "package.json"));
-            packageJSONTemp.main = "src/index.js"
+            packageJSONTemp.main = "src/index.js";
 
             io.writeJSONSync(path.join(temp, "package.json"), packageJSONTemp);
         }
@@ -172,14 +180,14 @@ export class PackagePacker {
             this.createDirectory(path.join(temp, "addons"));
             this.createDirectory(destinationAddonDir);
 
-            for (let addonFile of this.findByExtension(sourceAddonDir, addon.fileMask)) {
+            for (const addonFile of this.findByExtension(sourceAddonDir, addon.fileMask)) {
                 this.copyFile(addonFile, sourceAddonDir, destinationAddonDir);
             }
         });
 
         // Process any template action
         if (configuration.templates != null) {
-            const destination = path.join(temp, "package.json");
+            destination = path.join(temp, "package.json");
 
             switch (configuration.type) {
                 case ComponentType.Component:
@@ -192,9 +200,22 @@ export class PackagePacker {
             }
         }
 
+        // Process any business Scenarios
+        if (configuration.businessScenarios != null) {
+            destination = path.join(temp, "package.json");
+
+            switch (configuration.type) {
+                case ComponentType.TasksPackage:
+                case ComponentType.TasksLibrary:
+                case ComponentType.BusinessScenario:
+                    await container.get<LibraryBusinessScenariosProcessor>(TYPES.Processors.LibraryBusinessScenarios).process(configuration.businessScenarios, destination);
+                    break;
+            }
+        }
+
         // Process any font action
         if (configuration.font != null) {
-            const destination = path.join(temp, "package.json");
+            destination = path.join(temp, "package.json");
 
             if (configuration.type === ComponentType.TasksLibrary || configuration.type === ComponentType.TasksPackage) {
                 container.get<LibraryFontProcessor>(TYPES.Processors.LibraryFontProcessor).process(configuration.font, destination);
@@ -252,7 +273,7 @@ export class PackagePacker {
             } else {
                 this.run("npm", ["pack"], temp);
             }
-            for (let packedPackage of this.findByExtension(temp, "*.tgz")) {
+            for (const packedPackage of this.findByExtension(temp, "*.tgz")) {
                 this.moveFile(packedPackage, temp, destination);
             }
         }
@@ -383,7 +404,7 @@ export class PackagePacker {
         } else {
             console.error("\x1b[31m", ` [FAIL] Directory '${source}' doesn't exist!!!`, "\x1b[0m");
         }
-    }
+    };
 
 
     /**
@@ -517,10 +538,10 @@ export class PackagePacker {
         basePath = basePath ?? "";
 
         const result: string[] = [];
-
         const files = io.readdirSync(searchPath);
-        for (let i = 0; i < files.length; i++) {
-            const filename = path.join(searchPath, files[i]);
+
+        for (const file of files) {
+            const filename = path.join(searchPath, file);
             const stat = io.lstatSync(filename);
 
             if (stat.isDirectory()) {
@@ -531,7 +552,6 @@ export class PackagePacker {
         }
 
         return (result);
-
     }
 
     /**
@@ -541,7 +561,7 @@ export class PackagePacker {
      * @param endToken Token that identifies the end
      */
     private linesBetweenTokens(contents: string, startToken: string, endToken: string): string[] {
-        let fileContent = contents.split("\n");
+        const fileContent = contents.split("\n");
         let startIndex = -1;
         let endIndex = -1;
 
@@ -659,14 +679,14 @@ export class PackagePacker {
     private async packPackage(SourceDirectory: string, sourceFile: string, destinationDirectory: string, destinationFile: string): Promise<void> {
         const nccInput: string = path.join(SourceDirectory, sourceFile);
         const nccOptions: any = { minify: false, sourceMap: false, sourceMapRegister: false, quiet: true };
-        const { code, map, assets } = await ncc(nccInput, nccOptions);
+        const { code, assets } = await ncc(nccInput, nccOptions);
 
-        for (let [assetName, assetCode] of Object.entries(assets)) {
+        for (const [assetName, assetCode] of Object.entries(assets)) {
             const assetSize = Math.round(
-                Buffer.byteLength((<Buffer>(<any>assetCode).source), "utf8") / 1024
+                Buffer.byteLength(((assetCode as any).source as Buffer), "utf8") / 1024
             );
 
-            this.createFile(path.join(destinationDirectory, assetName), (<Buffer>(<any>assetCode).source));
+            this.createFile(path.join(destinationDirectory, assetName), ((assetCode as any).source as Buffer));
             console.log(`  [PACKING] ${assetSize}Kb \t ${assetName} `);
         }
 

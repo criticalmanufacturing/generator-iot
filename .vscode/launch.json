@@ -15,8 +15,24 @@
                 "-d",
                 "-o=."
             ],
-            "cwd": "C:/cmf/repos/Product/IoMT/src/driver-fileraw",
+            "cwd": "C:/cmf/repos/MonoRepo/Product/Platform/ConnectIoT/src/connect-iot-business-scenarios-general",
             "outFiles": [],
+            "outputCapture": "std"
+        },
+        {
+            "name": "Run tests on Package Packer",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+            "stopOnEntry": false,
+            "args": [
+                "test/**/*.test.js",
+                "test/*.test.js",
+                "--no-timeouts"
+            ],
+            "cwd": "${workspaceRoot}/generators/packagePacker",
+            "runtimeExecutable": null,
+            "sourceMaps": true,
             "outputCapture": "std"
         },
         {

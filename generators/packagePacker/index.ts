@@ -1,5 +1,5 @@
 
-import { ConnectIoTGenerator, ValueType, IoTValueType } from "../base";
+import { ConnectIoTGenerator } from "../base";
 import { PackagePacker } from "./packagePacker";
 import * as path from "path";
 
@@ -46,5 +46,5 @@ class GeneratorPackagePacker extends ConnectIoTGenerator {
     }
 }
 
-declare var module: any;
+declare let module: any;
 (module).exports = GeneratorPackagePacker;

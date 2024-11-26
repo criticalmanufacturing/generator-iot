@@ -8,6 +8,8 @@ export enum ComponentType {
     TasksPackage = "TasksPackage",
     /** Tasks library (must process the metadata file) */
     TasksLibrary = "TasksLibrary",
+    /** Business Scenario Package */
+    BusinessScenario = "BusinessScenario",
 }
 
 /** Possible action to perform */
@@ -40,6 +42,8 @@ export interface Configuration {
     addons?: Addon[];
     /** Templates used to generate the entry in package.json */
     templates?: Template[];
+    /** Directory that holds business scenarios */
+    businessScenarios?: string;
     /** font to add into the metadata of the tasks library package */
     font?: string;
     /** List of actions to post perform */

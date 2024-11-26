@@ -14,13 +14,40 @@
     "yeoman-generator"
   ],
   "homepage": "https://github.com/criticalmanufacturing/generator-iot/tree/111x",
+  "scripts": {
+    "build": "tsc",
+    "test": "mocha ./generators/packagePacker/test/*.test.js --timeout 30000 --exit",
+    "test:coverage": "nyc -r cobertura -r lcov -r text-summary npm run test -R mocha-multi-reporters --reporter-options configFile=mocha-multi-reporters-config.json",
+    "watch": "npm run watchPackage",
+    "watchPackage": "tsc --preserveWatchOutput -w",
+    "watchTests": "tsc -p ./generators/packagePacker/test --preserveWatchOutput -w",
+    "lint": "eslint ./**/*.ts",
+    "lint:fix": "eslint ./**/*.ts --fix",
+    "prepublishOnly": "npm run build"
+  },
   "devDependencies": {
-    "@types/chalk": "2.2.0",
+    "@types/chai": "4.3.16",
+    "@types/chai-as-promised": "7.1.2",
+    "@types/chai-spies": "1.0.6",
     "@types/fs-extra": "11.0.4",
+    "@types/mocha": "10.0.7",
     "@types/node": "20.12.12",
+    "@types/sinon": "^17.0.3",
     "@types/uuid": "9.0.8",
     "@types/yeoman-generator": "5.2.14",
     "@types/yosay": "2.0.3",
+    "@typescript-eslint/eslint-plugin": "7.13.1",
+    "@typescript-eslint/parser": "7.13.1",
+    "chai": "4.4.1",
+    "chai-as-promised": "7.1.2",
+    "eslint": "^8.53.0",
+    "eslint-plugin-mocha": "10.4.3",
+    "sinon": "^19.0.2",
+    "mocha": "10.4.0",
+    "mocha-junit-reporter": "2.2.1",
+    "mocha-lcov-reporter": "1.3.0",
+    "mocha-multi-reporters": "1.5.1",
+    "nyc": "17.0.0",
     "typescript": "5.2.2"
   },
   "dependencies": {
@@ -38,10 +65,5 @@
     "yosay": "2.0.2"
   },
   "license": "GPL-3.0",
-  "author": "Critical Manufacturing",
-  "scripts": {
-    "build": "tsc",
-    "watch": "tsc -w",
-    "prepublishOnly": "npm run build"
-  }
+  "author": "Critical Manufacturing"
 }

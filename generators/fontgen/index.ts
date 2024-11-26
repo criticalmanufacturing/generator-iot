@@ -1,6 +1,5 @@
-import { ConnectIoTGenerator, ValueType, IoTValueType } from "../base";
+import { ConnectIoTGenerator } from "../base";
 import { fontGen } from "./fontgen";
-
 
 class GeneratorFontGen extends ConnectIoTGenerator {
 
@@ -26,7 +25,7 @@ class GeneratorFontGen extends ConnectIoTGenerator {
      */
     public async copyTemplates(): Promise<void> {
         const generator = new fontGen();
-        await generator.go(this.destinationPath(), this.destinationPath(".."))
+        await generator.go(this.destinationPath(), this.destinationPath(".."));
     }
 
     /**
@@ -39,5 +38,5 @@ class GeneratorFontGen extends ConnectIoTGenerator {
     }
 }
 
-declare var module: any;
+declare let module: any;
 (module).exports = GeneratorFontGen;

@@ -1,5 +1,6 @@
 import { ConnectIoTGenerator } from "../base";
-var yosay = require("yosay");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const yosay = require("yosay");
 
 class GeneratorApp extends ConnectIoTGenerator {
 
@@ -10,7 +11,7 @@ class GeneratorApp extends ConnectIoTGenerator {
 
         this.log(yosay(`Welcome to the Connect IoT ${this.getVersion()} scaffolding tool!`));
 
-        this.log(this.usage()); // .help() show all command line parameters 
+        this.log(this.usage()); // .help() show all command line parameters
         this.log("");
         console.log("\x1b[36m", "Deployment apps:", "\x1b[0m");
         console.log("\x1b[33m", "  packagePacker", "\x1b[0m", " -> Create a self-packaged package for deployment");
@@ -31,5 +32,5 @@ class GeneratorApp extends ConnectIoTGenerator {
 }
 
 
-declare var module: any;
+declare let module: any;
 (module).exports = GeneratorApp;

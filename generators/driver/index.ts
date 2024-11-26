@@ -31,12 +31,13 @@ class DriverConfig extends ConnectIoTGenerator {
     /** Copy all files to destination directory with the settings defined in the previous step */
     copyTemplates() {
         // Base files:
-        let filesWithRename: Map<string, string> = new Map<string, string>([
+        const filesWithRename: Map<string, string> = new Map<string, string>([
             ["_iot_.gitattributes", ".gitattributes"],
             ["_iot_.gitignore", ".gitignore"],
             ["_iot_.npmignore", ".npmignore"],
             ["_iot_.npmrc", ".npmrc"],
             ["_iot_.connect_iot_package_done", ".connect_iot_package_done"],
+            ["_.eslintrc.json", ".eslintrc.json"],
         ]);
         filesWithRename.forEach((value, key) => {
             this.fs.copyTpl(this.templatePath(key), this.destinationPath(this.values.directory, value), this.values);
@@ -80,5 +81,5 @@ class DriverConfig extends ConnectIoTGenerator {
     }
 }
 
-declare var module: any;
+declare let module: any;
 (module).exports = DriverConfig;

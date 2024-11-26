@@ -18,8 +18,8 @@ export class DriverTemplatesProcessor {
     private _protocolDatatypes: Array<JsonDatatype> = [];
 
     public process(templateRules: string | Template[], destination: string): void {
-        let json: any = io.readJSONSync(destination);
-        let automationProtocol: any = json.criticalManufacturing.automationProtocol;
+        const json: any = io.readJSONSync(destination);
+        const automationProtocol: any = json.criticalManufacturing.automationProtocol;
 
         this._protocolDatatypes = automationProtocol.dataTypes ?? [];
         this._finalTemplates = automationProtocol.templates ?? {};
@@ -37,14 +37,14 @@ export class DriverTemplatesProcessor {
             templateRules = this._paths.transform(templateRules);
 
             const files = io.readdirSync(templateRules);
-            for (let file of files) {
+            for (const file of files) {
                 if (file.endsWith(".json")) {
                     this.merge(path.join(templateRules, file));
                 }
             }
         } else {
             // Process each template entry
-            for (let templateRule of templateRules) {
+            for (const templateRule of templateRules) {
                 switch (templateRule.type) {
                     case TemplateType.Index:
                         this.processIndex(this._paths.transform(templateRule.source));
@@ -77,7 +77,7 @@ export class DriverTemplatesProcessor {
         if (!Array.isArray(files)) {
             this._logger.Error(` [Templates] Index file '${indexFile}' doesn't contain an array of files to process!`);
         } else {
-            for (let file of files) {
+            for (const file of files) {
                 this.merge(path.join(indexPath, file));
             }
         }
@@ -154,7 +154,7 @@ export class DriverTemplatesProcessor {
             }
 
             if (validateEvent) {
-                for (let property of newOne.EventProperties ?? []) {
+                for (const property of newOne.EventProperties ?? []) {
                     if ((this._finalTemplates.property ?? []).find(p => p.Name === property.Property) == null) {
                         this._logger.Error(` [Templates]   Event '${event.Name}' has a reference to the unknown property '${property.Property}'`);
                     }
@@ -202,7 +202,7 @@ export class DriverTemplatesProcessor {
             order = iteration + 1;
         }
         if (set.has(order)) {
-            throw new Error(`In '${type}' '${name}', parameter '${item}' has a repeated order '${order}'`)
+            throw new Error(`In '${type}' '${name}', parameter '${item}' has a repeated order '${order}'`);
         }
         set.add(order);
         return set;

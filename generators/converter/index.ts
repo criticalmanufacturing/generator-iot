@@ -5,7 +5,7 @@ class GeneratorConverter extends ConnectIoTGenerator {
 
     private values: any = {
         name: "somethingToSomething", // camel case
-        className: "",                    // pascal case
+        className: "", // pascal case
         title: "Something To Something",
         input: IoTValueType.Any,
         output: IoTValueType.Any,
@@ -44,8 +44,8 @@ class GeneratorConverter extends ConnectIoTGenerator {
         if (this.values.hasParameters) {
             let more: boolean = true;
             while (more) {
-                let name: string = await this.askScalar("Parameter Name: ", ValueType.Text, "");
-                let type: IoTValueType = await this.askValueType("Parameter Type: ", IoTValueType.String, true);
+                const name: string = await this.askScalar("Parameter Name: ", ValueType.Text, "");
+                const type: IoTValueType = await this.askValueType("Parameter Type: ", IoTValueType.String, true);
 
                 this.values.parameters.set(name, type);
                 more = await this.askScalar("More parameters?", ValueType.Confirm, true);
@@ -61,7 +61,7 @@ class GeneratorConverter extends ConnectIoTGenerator {
 
         // parameters
         if (this.values.hasParameters === true) {
-            let parameters: Map<string, IoTValueType> = this.values.parameters;
+            const parameters: Map<string, IoTValueType> = this.values.parameters;
             parameters.forEach((value, key) => {
                 let val = this.toIotType(value);
                 if (value === IoTValueType.Any || value === IoTValueType.Enum) {
@@ -93,13 +93,13 @@ class GeneratorConverter extends ConnectIoTGenerator {
         this.appendInFile(destinationFile, `export { ${this.values.className}Converter } from "./converters/${this.values.name}/${this.values.name}.converter";\r\n`);
 
 
-        let filesWithRename: Map<string, string> = new  Map<string, string>([
+        const filesWithRename: Map<string, string> = new Map<string, string>([
             ["converter.converter.ts", `${this.values.name}.converter.ts`],
         ]);
         filesWithRename.forEach((value, key) => {
             this.fs.copyTpl(this.templatePath("src", key), this.destinationPath("src", "converters", this.values.name, value), this.values);
         });
-        
+
         // this.fs.copyTpl(this.templatePath("src", "i18n", "converter.default.ts"), this.destinationPath("src", "converters", this.values.name, "i18n", `${this.values.name}.default.ts`), this.values);
 
         // test
@@ -107,11 +107,11 @@ class GeneratorConverter extends ConnectIoTGenerator {
 
 
         // Create the Json template
-        var parameters: any = undefined;
+        let parameters: any = undefined;
         if (this.values.hasParameters === true) {
             parameters = {};
 
-            let inputParameters: Map<string, IoTValueType> = this.values.parameters;
+            const inputParameters: Map<string, IoTValueType> = this.values.parameters;
             inputParameters.forEach((value, key) => {
                 if (value !== IoTValueType.Enum) {
                     parameters[key] = value;
@@ -120,7 +120,7 @@ class GeneratorConverter extends ConnectIoTGenerator {
                         // displayName: key, // Future...
                         dataType: value,
                         enumValues: [ "First Option", "Second Option", "etc" ]
-                    }
+                    };
                 }
             });
         }
@@ -151,5 +151,5 @@ class GeneratorConverter extends ConnectIoTGenerator {
     }
 }
 
-declare var module: any;
+declare let module: any;
 (module).exports = GeneratorConverter;
