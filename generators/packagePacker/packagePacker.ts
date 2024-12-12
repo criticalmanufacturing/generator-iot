@@ -22,7 +22,7 @@ export class PackagePacker {
     public async go(options: { [name: string]: any }) {
 
         const source: string = options.i as string || options.input as string || process.cwd();
-        let destination: string = options.o as string || options.output as string || "";
+        const destination: string = options.o as string || options.output as string || "";
         let temp: string = options.t as string || options.temp as string || path.join(source, "__TEMP__");
         const configurationFile: string = options.c as string || options.config as string || path.join(source, "packConfig.json");
         const addons: string = options.a as string || options.addons as string;
@@ -187,38 +187,38 @@ export class PackagePacker {
 
         // Process any template action
         if (configuration.templates != null) {
-            destination = path.join(temp, "package.json");
+            const destinationTemplates = path.join(temp, "package.json");
 
             switch (configuration.type) {
                 case ComponentType.Component:
-                    container.get<DriverTemplatesProcessor>(TYPES.Processors.DriverTemplates).process(configuration.templates, destination);
+                    container.get<DriverTemplatesProcessor>(TYPES.Processors.DriverTemplates).process(configuration.templates, destinationTemplates);
                     break;
                 case ComponentType.TasksPackage:
                 case ComponentType.TasksLibrary:
-                    await container.get<LibraryTemplatesProcessor>(TYPES.Processors.LibraryTemplates).process(configuration.templates, destination);
+                    await container.get<LibraryTemplatesProcessor>(TYPES.Processors.LibraryTemplates).process(configuration.templates, destinationTemplates);
                     break;
             }
         }
 
         // Process any business Scenarios
         if (configuration.businessScenarios != null) {
-            destination = path.join(temp, "package.json");
+            const destinationBusinessScenarios = path.join(temp, "package.json");
 
             switch (configuration.type) {
                 case ComponentType.TasksPackage:
                 case ComponentType.TasksLibrary:
                 case ComponentType.BusinessScenario:
-                    await container.get<LibraryBusinessScenariosProcessor>(TYPES.Processors.LibraryBusinessScenarios).process(configuration.businessScenarios, destination);
+                    await container.get<LibraryBusinessScenariosProcessor>(TYPES.Processors.LibraryBusinessScenarios).process(configuration.businessScenarios, destinationBusinessScenarios);
                     break;
             }
         }
 
         // Process any font action
         if (configuration.font != null) {
-            destination = path.join(temp, "package.json");
+            const destinationFont = path.join(temp, "package.json");
 
             if (configuration.type === ComponentType.TasksLibrary || configuration.type === ComponentType.TasksPackage) {
-                container.get<LibraryFontProcessor>(TYPES.Processors.LibraryFontProcessor).process(configuration.font, destination);
+                container.get<LibraryFontProcessor>(TYPES.Processors.LibraryFontProcessor).process(configuration.font, destinationFont);
             }
         }
 
