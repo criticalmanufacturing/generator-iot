@@ -122,6 +122,51 @@ describe("Transpiler", () => {
         });
         expect(readFileSyncStub.calledOnce).to.be.true;
         expect(transpileStub.calledOnce).to.be.true;
+        expect(transpileStub.calledWithExactly("dummy-script-content", false)).to.be.true;
+        expect(logStub.debug.calledOnce).to.be.true;
+    });
+
+    it("should process only values inside token", async () => {
+        const value = {
+            key1: "${script(some/path/script1.ts)}",
+            key2: "TestScript",
+        };
+        const templateDirectory = "/template/directory";
+
+        transpileStub = sinon.stub(transpiler, "transpile").resolves("transpiled-code");
+        readFileSyncStub = sinon.stub(io, "readFileSync").returns("*********// PackagePacker: Start of Script\r\ndummy-script-content\r\n// PackagePacker: End of Script\r\n*********");
+
+        const result = await transpiler.preProcessTaskScripts(templateDirectory, value);
+
+        expect(result).to.deep.equal({
+            key1: Buffer.from("transpiled-code").toString("base64"),
+            key2: "TestScript",
+        });
+        expect(readFileSyncStub.calledOnce).to.be.true;
+        expect(transpileStub.calledOnce).to.be.true;
+        expect(transpileStub.calledWithExactly("dummy-script-content", false)).to.be.true;
+        expect(logStub.debug.calledOnce).to.be.true;
+    });
+
+    it("should process only values inside the async token", async () => {
+        const value = {
+            key1: "${script(some/path/script1.ts)}",
+            key2: "TestScript",
+        };
+        const templateDirectory = "/template/directory";
+
+        transpileStub = sinon.stub(transpiler, "transpile").resolves("transpiled-code");
+        readFileSyncStub = sinon.stub(io, "readFileSync").returns("*********// PackagePacker: Start of Async Script\r\ndummy-script-content\r\n// PackagePacker: End of Async Script\r\n*********");
+
+        const result = await transpiler.preProcessTaskScripts(templateDirectory, value);
+
+        expect(result).to.deep.equal({
+            key1: Buffer.from("transpiled-code").toString("base64"),
+            key2: "TestScript",
+        });
+        expect(readFileSyncStub.calledOnce).to.be.true;
+        expect(transpileStub.calledOnce).to.be.true;
+        expect(transpileStub.calledWithExactly("(async () => {\r\ndummy-script-content\r\n})();", false)).to.be.true;
         expect(logStub.debug.calledOnce).to.be.true;
     });
 
