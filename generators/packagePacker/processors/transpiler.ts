@@ -43,14 +43,24 @@ export class Transpiler {
             const scriptFile = path.resolve(templateDirectory, pathMatch);
             const scriptContent = io.readFileSync(scriptFile).toString();
 
-            const regexTokenMatcher = /\/\/\s+PackagePacker:\s+Start\s+of\s+Script([\s\S]*?)\/\/\s+PackagePacker:\s+End\s+of\s+Script/i;
-            const matches = scriptContent.match(regexTokenMatcher);
+            const regexTokenMatcherForPackagePacker = /\/\/\s+PackagePacker:\s+Start\s+of\s+Script([\s\S]*?)\/\/\s+PackagePacker:\s+End\s+of\s+Script/i;
+            const regexTokenMatcherForAsyncPackagePacker = /\/\/\s+PackagePacker:\s+Start\s+of\s+Async\s+Script([\s\S]*?)\/\/\s+PackagePacker:\s+End\s+of\s+Async\s+Script/i;
+
+            const matches = scriptContent.match(regexTokenMatcherForPackagePacker);
+            const matchesAsync = scriptContent.match(regexTokenMatcherForAsyncPackagePacker);
             if (matches != null && matches.length === 2) {
                 // Check for hooks
                 // Start Hook -> // PackagePacker: Start of Script
                 // End Hook -> // PackagePacker: End of Script
-                return await this.transpile(matches[1], false);
-            } else {
+                return await this.transpile(matches[1].trim(), false);
+            } else if (matchesAsync != null && matchesAsync.length === 2) {
+                // Check for hooks and Add start '(async () => {' declaration and end '})();'
+                // Start Hook -> // PackagePacker: Start of Async Script
+                // End Hook -> // PackagePacker: End of Async Script
+                const script = "(async () => {\r\n" + matchesAsync[1].trim() + "\r\n})();";
+                return await this.transpile(script, false);
+            }
+            else {
                 return await this.transpile(scriptContent, false);
             }
         };
