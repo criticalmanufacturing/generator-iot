@@ -18,17 +18,15 @@ import { LibraryBusinessScenariosProcessor } from "./processors/libraryBusinessS
 
 export class PackagePacker {
 
-
     public async go(options: { [name: string]: any }) {
 
         const source: string = options.i as string || options.input as string || process.cwd();
         const destination: string = options.o as string || options.output as string || "";
-        let temp: string = options.t as string || options.temp as string || path.join(source, "__TEMP__");
+        const temp: string = options.t as string || options.temp as string || path.join(source, "__TEMP__");
         const configurationFile: string = options.c as string || options.config as string || path.join(source, "packConfig.json");
         const addons: string = options.a as string || options.addons as string;
         const version: string = options.v as string || options.version as string || "";
         const debug: boolean = options.d as boolean || options.debug as boolean || false;
-        // let mappedAddons: string | undefined = undefined;
 
         const _logger: Log = container.get<Log>(TYPES.Logger);
 
@@ -59,46 +57,25 @@ export class PackagePacker {
             process.exit(1);
         }
 
-        // JS: No longer need - Node already supports UNCs
-        // Network drive for the addons=Map + mklink
-        // if (addons.startsWith("\\\\")) {
-        //     this.run("net", [ "use", addons]);
-        //     mappedAddons = path.join(os.tmpdir(), uuid.v4());
-
-        //     const command = `mklink /d "${mappedAddons}" "${addons}"`;
-        //     const output = childProcess.execSync(command).toString().trim();
-        //     console.log(output);
-
-        //     console.log(`   Addons (map)  : ${mappedAddons}`);
-        // }
-
         const paths = container.get<Paths>(TYPES.Paths);
         paths.setup(source, destination, temp, addons);
-
-        // Monkey patch the ncc to allow parsing package.json files with unicode starting values
-        // This will only perform once, but attempted every time
-        // this.replaceTextInFile(path.resolve(__dirname, "..", "node_modules", "@zeit", "ncc", "dist", "ncc", "index.js.cache.js"), "r=JSON.parse(n.toString(\"utf-8\"))", "r=JSON.parse(n.toString(\"utf-8\").trim())", false);
-
 
         const configuration: Configuration = JSON.parse(io.readFileSync(configurationFile, "utf8"));
 
         // Prepare temp Directory
+        this.deleteDirectory(temp);
+        this.createDirectory(temp);
         if (configuration.type === ComponentType.TasksPackage) {
-            temp = io.readJSONSync(path.join(source, "ng-package.json")).dest;
+            const dist = io.readJSONSync(path.join(source, "ng-package.json")).dest;
 
-            if (!io.existsSync(temp)) {
-                console.error("\x1b[31m", `'${temp}' doesn't exist! Did you forget to run 'ng build'?`, "\x1b[0m");
+            if (!io.existsSync(dist)) {
+                console.error("\x1b[31m", `'${dist}' doesn't exist! Did you forget to run 'ng build'?`, "\x1b[0m");
                 process.exit(1);
             }
-        } else {
-            this.deleteDirectory(temp);
-            this.createDirectory(temp);
+
+            this.copyDirectory(dist, temp);
         }
 
-        // if (configuration.type === ComponentType.TasksLibrary) {
-        //     // Tasks packages don't export anything
-        //     this.generateTasksPackageExportFile(path.join(source, "src", "metadata.js"), path.join(source, "src", "index.js"));
-        // }
         const main: string = io.readJSONSync(path.join(source, "package.json"))?.main;
         const mainSplitted: string[] = main?.split("/");
         const index = mainSplitted?.[mainSplitted.length - 1];
@@ -129,7 +106,6 @@ export class PackagePacker {
         }
 
         for (const pack of packs) {
-            // await packPackage(path.join(source, "src"), "index.js", temp, "index.js");
             await this.packPackage(
                 path.join(source, pack.directory),
                 pack.source || "index.js",
@@ -139,7 +115,6 @@ export class PackagePacker {
 
         if (configuration.type !== ComponentType.TasksPackage) {
             // Copy necessary files to generate package
-
             if (!io.existsSync("npm-shrinkwrap.json")) {
                 _logger.Warn("npm-shrinkwrap.json file not found. Trying to generate it...");
                 container.get<ShrinkwrapGenerator>(TYPES.Processors.ShrinkwrapGenerator).process(source, "npm-shrinkwrap.json");
@@ -147,6 +122,7 @@ export class PackagePacker {
             } else {
                 this.copyFile("npm-shrinkwrap.json", source, temp);
             }
+
             this.copyFile(".npmignore", source, temp);
             this.copyFile(".npmrc", source, temp);
             this.copyFile("README.md", source, temp);
