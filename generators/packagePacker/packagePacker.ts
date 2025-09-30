@@ -2,6 +2,7 @@ import { container } from "./inversify.config";
 import { spawnSync } from "child_process";
 import * as io from "fs-extra";
 import * as path from "path";
+import * as os from "node:os";
 import { Configuration, Action, ActionType, Addon, ComponentType } from "./configuration";
 const ncc = require("@vercel/ncc");
 import { DriverTemplatesProcessor } from "./processors/driverTemplates";
@@ -12,7 +13,6 @@ import { Log } from "./processors/log";
 import { ShrinkwrapGenerator } from "./processors/shrinkwrapGenerator";
 
 export class PackagePacker {
-    
 
     public async go(options: { [name: string]: any }) {
 
@@ -169,7 +169,7 @@ export class PackagePacker {
             const destination = path.join(temp, "package.json");
 
             switch (configuration.type) {
-                case ComponentType.Component: 
+                case ComponentType.Component:
                     container.get<DriverTemplatesProcessor>(TYPES.Processors.DriverTemplates).process(configuration.templates, destination);
                     break;
                 case ComponentType.TasksPackage:
@@ -194,16 +194,15 @@ export class PackagePacker {
                 .replace("${Addons}", addons);
 
             switch (action.type) {
-                case ActionType.DeleteFile: this.deleteFile (actionSource); break;
-                case ActionType.DeleteDirectory: this.deleteDirectory (actionSource); break;
-                case ActionType.CopyDirectory: this.copyDirectory (actionSource, actionDestination); break;
-                case ActionType.CopyFile: this.copyFile (action.file || "", actionSource, actionDestination); break;
-                case ActionType.MoveFile: this.moveFile (action.file || "", actionSource, actionDestination); break;
+                case ActionType.DeleteFile: this.deleteFile(actionSource); break;
+                case ActionType.DeleteDirectory: this.deleteDirectory(actionSource); break;
+                case ActionType.CopyDirectory: this.copyDirectory(actionSource, actionDestination); break;
+                case ActionType.CopyFile: this.copyFile(action.file || "", actionSource, actionDestination); break;
+                case ActionType.MoveFile: this.moveFile(action.file || "", actionSource, actionDestination); break;
                 case ActionType.RenameFile: this.renameFile(actionSource, actionDestination); break;
                 case ActionType.ReplaceText: this.replaceTextInFile(actionSource, action.search || "", action.replace || "", action.isRegularExpression || false); break;
             }
         });
-
 
         // Place index.js into src directory
         this.createDirectory(path.join(temp, "src"));
@@ -224,12 +223,16 @@ export class PackagePacker {
         // Create Package and place it in the destination
         if (destination !== "") {
             this.createDirectory(destination);
-            this.run ("npm.cmd", [ "pack" ], temp);
-            for (let packedPackage of this.findByExtension(temp, "*.tgz")) {
+
+            if (os.platform() === "win32") {
+                this.run("npm.cmd", ["pack"], temp);
+            } else {
+                this.run("npm", ["pack"], temp);
+            }
+            for (const packedPackage of this.findByExtension(temp, "*.tgz")) {
                 this.moveFile(packedPackage, temp, destination);
             }
         }
-
 
         // Delete temp
         if (debug === false) {
@@ -469,7 +472,7 @@ export class PackagePacker {
     private setPackageJsonAsPacked(file: string): void {
         const contents = JSON.parse(io.readFileSync(file, "utf8"));
         if (contents.criticalManufacturing == null) {
-            contents.criticalManufacturing = { };
+            contents.criticalManufacturing = {};
         }
         contents.criticalManufacturing.isPacked = true;
         io.writeFileSync(file, JSON.stringify(contents, null, 2), "utf8");
@@ -485,25 +488,25 @@ export class PackagePacker {
         if (extension.startsWith("*.")) {
             extension = extension.substring(1);
         }
-    
+
         basePath = basePath ?? "";
-    
+
         const result: string[] = [];
-    
+
         const files = io.readdirSync(searchPath);
         for (let i = 0; i < files.length; i++) {
             const filename = path.join(searchPath, files[i]);
             const stat = io.lstatSync(filename);
-    
+
             if (stat.isDirectory()) {
                 result.push(...this.findByExtension(filename, extension, basePath + `/${path.basename(filename)}`));
             } else if (filename.endsWith(extension) || extension === "*") {
                 result.push(path.join(basePath, path.basename(filename)));
             }
         }
-    
+
         return (result);
-    
+
     }
 
     /**
