@@ -279,7 +279,9 @@ export class PackagePacker {
         if (io.existsSync(directoryPath)) {
             console.warn(`  [Ignored] '${directoryPath}'`);
         } else {
-            io.mkdirSync(directoryPath, 0o777);
+            io.mkdirSync(directoryPath, {
+                recursive: true
+            });
             console.info(`  [Created] '${directoryPath}'`);
         }
     }
