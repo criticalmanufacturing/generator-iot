@@ -279,9 +279,11 @@ export class PackagePacker {
         if (io.existsSync(directoryPath)) {
             console.warn(`  [Ignored] '${directoryPath}'`);
         } else {
-            io.mkdirSync(directoryPath, {
-                recursive: true
-            });
+            const parentDirectory = path.dirname(directoryPath);
+            if (parentDirectory !== directoryPath && !io.existsSync(parentDirectory)) {
+                this.createDirectory(parentDirectory);
+            }
+            io.mkdirSync(directoryPath);
             console.info(`  [Created] '${directoryPath}'`);
         }
     }
