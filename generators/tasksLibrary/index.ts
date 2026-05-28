@@ -8,7 +8,7 @@ class GeneratorTasksPackage extends ConnectIoTGenerator {
         packageVersion: "1.0.0",
         identifier: "My Tasks Library",
         identifierLower: "",
-        targetSystemVersion: "11.0.0",
+        targetSystemVersion: "11.3.0",
         dependsOnScope: "[]",
         mandatoryForScope: "[]",
         dependsOnProtocol: "",
