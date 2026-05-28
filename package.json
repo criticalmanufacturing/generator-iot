@@ -34,5 +34,8 @@
     "build": "tsc",
     "watch": "tsc -w",
     "prepublishOnly": "npm run build"
+  },
+  "overrides": {
+    "tmp": "0.2.7"
   }
 }
