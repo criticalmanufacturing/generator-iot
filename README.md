@@ -91,6 +91,20 @@ Answer all questions and a new directory with the protocol driver will be availa
 
 ## packagePacker
 
+### Standalone command
+
+For Node.js 18 and later, the package also exposes `cmf-iot-pack`. It calls the same package-packing engine directly and keeps the current user's identity, including when run as root. The source, temporary, and output directories must be writable by that user.
+
+From a project that has this generator installed locally:
+
+```sh
+npx --no-install cmf-iot-pack -i . -o ./runtimePackages
+```
+
+Run `npx --no-install cmf-iot-pack --help` for all options. The input, output, temp, config, addons, debug, and version options use the same names and short aliases as the Yeoman command below. Relative paths are resolved from the directory where the command was invoked. The existing `yo @criticalmanufacturing/iot:packagePacker` command remains available.
+
+### Yeoman command
+
 It is not desirable to have Internet services (NPM, GitHub, etc) as a dependency for the packages that would run on a production environment.
 
 To bypass such dependency, we provide a tool that will pack all the package dependencies from a development environment into a ready-to-be-used package.

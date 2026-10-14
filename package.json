@@ -2,6 +2,9 @@
   "name": "@criticalmanufacturing/generator-iot",
   "version": "10.2.17",
   "description": "Connect IoT Scaffolding",
+  "bin": {
+    "cmf-iot-pack": "generators/packagePacker/cli.js"
+  },
   "files": [
     "generators/*.js",
     "generators/*/*.js",
@@ -38,6 +41,7 @@
   "author": "Critical Manufacturing",
   "scripts": {
     "build": "tsc",
+    "test": "npm run build && node --test test/package-packer.test.js",
     "watch": "tsc -w",
     "prepublishOnly": "npm run build"
   }
